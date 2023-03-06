@@ -1,3 +1,3 @@
-import Gap from './screens/Gap';
+import ButtonCustom from './ButtonCustom';
 
-export {Gap};
+export {ButtonCustom};

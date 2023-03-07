@@ -27,12 +27,11 @@ function AppNavigator() {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
-        // initialRouteName="Splash"
         screenOptions={{
           headerShown: false,
           orientation: 'portrait',
         }}>
-        <Stack.Screen name="LibsDemo" component={LibsDemo} />
+        {/* <Stack.Screen name="LibsDemo" component={LibsDemo} /> */}
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="OnBoarding" component={OnBoarding} />
         <Stack.Screen name="Login" component={Login} />

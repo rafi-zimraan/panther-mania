@@ -1576,6 +1576,11 @@
   resolved "https://registry.npmjs.org/@react-native-community/netinfo/-/netinfo-9.3.7.tgz"
   integrity sha512-+taWmE5WpBp0uS6kf+bouCx/sn89G9EpR4s2M/ReLvctVIFL2Qh8WnWfBxqK9qwgmFha/uqjSr2Gq03OOtiDcw==
 
+"@react-native-picker/picker@^2.4.8":
+  version "2.4.8"
+  resolved "https://registry.npmjs.org/@react-native-picker/picker/-/picker-2.4.8.tgz"
+  integrity sha512-5NQ5XPo1B03YNqKFrV6h9L3CQaHlB80wd4ETHUEABRP2iLh7FHLVObX2GfziD+K/VJb8G4KZcZ23NFBFP1f7bg==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.npmjs.org/@react-native/assets/-/assets-1.0.0.tgz"
@@ -6329,7 +6334,7 @@ react-native-vector-icons@*, react-native-vector-icons@^9.2.0, "react-native-vec
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native@*, "react-native@^0.0.0-0 || 0.60 - 0.71 || 1000.0.0", "react-native@>= 0.30.0", "react-native@>= 0.64.3", react-native@>=0.42.0, react-native@>=0.46, react-native@>=0.59, react-native@>=0.60.0, react-native@>=0.63.3, react-native@0.68.2:
+react-native@*, "react-native@^0.0.0-0 || 0.60 - 0.71 || 1000.0.0", "react-native@>= 0.30.0", "react-native@>= 0.64.3", react-native@>=0.42.0, react-native@>=0.46, react-native@>=0.57, react-native@>=0.59, react-native@>=0.60.0, react-native@>=0.63.3, react-native@0.68.2:
   version "0.68.2"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.68.2.tgz"
   integrity sha512-qNMz+mdIirCEmlrhapAtAG+SWVx6MAiSfCbFNhfHqiqu1xw1OKXdzIrjaBEPihRC2pcORCoCHduHGQe/Pz9Yuw==
@@ -6390,7 +6395,7 @@ react-test-renderer@17.0.2:
     react-shallow-renderer "^16.13.1"
     scheduler "^0.20.2"
 
-react@*, "react@^16.0.0 || ^17.0.0", "react@^16.8.0 || ^17.0.0", "react@>= 15.2.1", "react@>= 17.0.1", react@>=16.13.1, react@>=16.3.0, react@>=16.8.0, react@>=16.8.6, react@>=17.0.0, react@17.0.2:
+react@*, "react@^16.0.0 || ^17.0.0", "react@^16.8.0 || ^17.0.0", "react@>= 15.2.1", "react@>= 17.0.1", react@>=16, react@>=16.13.1, react@>=16.3.0, react@>=16.8.0, react@>=16.8.6, react@>=17.0.0, react@17.0.2:
   version "17.0.2"
   resolved "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==

@@ -9,46 +9,54 @@ import {
   TouchableNativeFeedback,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {images} from '../../assets';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {FormInput} from '../../components';
+import {Picker} from '@react-native-picker/picker';
+import DatePicker from '@react-native-community/datetimepicker';
 
 export default function Register({navigation}) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    setTimeout(() => setReady(true), 1000);
+  }, []);
+
   const [formData, setFormData] = useState({
-    agama: 'a',
-    alamat_lengkap: 'b',
-    alamat_perusahaan: 'c',
-    email: 'contoh@gmail.com',
-    jenis_kelamin: 'e',
-    kabupaten_kota: 'f',
-    kecamatan: 'g',
-    kelurahan: 'h',
-    kontak_darurat: 'i',
-    lat: 'j',
-    lng: 'k',
-    nama_lengkap: 'l',
-    nama_perusahaan: 'm',
-    no_chasis: 'n',
-    no_engine: 'o',
-    no_ktp: 'p',
-    no_polisi: 'q',
-    no_sim: 'r',
-    no_telp: 's',
-    no_whatsapp: 't',
-    password: 'u',
-    password_confirmation: 'v',
-    pekerjaan: 'w',
-    provinsi: 'x',
-    status_menikah: 'y',
-    tahun_kendaraan: 'z',
-    tanggal_lahir: '2023-03-01',
-    tanggal_pajak: '2023-03-01',
-    tempat_lahir: '2023-03-01',
-    type_kendaraan: 'a',
-    ukuran_baju: 'b',
-    warna_kendaraan: 'c',
+    nama_lengkap: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+    jenis_kelamin: 'Laki-laki',
+    ukuran_baju: 'Pilih Ukuran Baju',
+    tempat_lahir: '',
+    tanggal_lahir: 'Pilih Tanggal Lahir',
+    agama: 'Pilih Agama',
+    status_menikah: 'Pilih Status Menikah',
+    alamat_lengkap: '',
+    kelurahan: '',
+    kecamatan: '',
+    provinsi: '',
+    kabupaten_kota: '',
+    nama_perusahaan: '',
+    alamat_perusahaan: '',
+    kontak_darurat: '',
+    no_telp: '',
+    no_whatsapp: '',
+    pekerjaan: '',
+    type_kendaraan: '',
+    tahun_kendaraan: '',
+    no_ktp: '',
+    no_sim: '',
+    no_polisi: '',
+    warna_kendaraan: '',
+    no_chasis: '',
+    no_engine: '',
+    tanggal_pajak: 'Pilih Tanggal Pajak',
+    lat: '',
+    lng: '',
   });
   const [formPhotos, setFormPhotos] = useState({
     photos_members: {
@@ -79,38 +87,36 @@ export default function Register({navigation}) {
   });
 
   const formArray = [
-    'agama',
-    'alamat_lengkap',
-    'alamat_perusahaan',
-    'email',
-    'jenis_kelamin',
-    'kabupaten_kota',
-    'kecamatan',
-    'kelurahan',
-    'kontak_darurat',
-    'lat',
-    'lng',
     'nama_lengkap',
-    'nama_perusahaan',
-    'no_chasis',
-    'no_engine',
-    'no_ktp',
-    'no_polisi',
-    'no_sim',
-    'no_telp',
-    'no_whatsapp',
+    'email',
     'password',
     'password_confirmation',
-    'pekerjaan',
-    'provinsi',
-    'status_menikah',
-    'tahun_kendaraan',
-    'tanggal_lahir',
-    'tanggal_pajak',
-    'tempat_lahir',
-    'type_kendaraan',
+    'jenis_kelamin',
     'ukuran_baju',
+    'tempat_lahir',
+    'tanggal_lahir',
+    'agama',
+    'status_menikah',
+    'alamat_lengkap',
+    'kelurahan',
+    'kecamatan',
+    'provinsi',
+    'kabupaten_kota',
+    'nama_perusahaan',
+    'alamat_perusahaan',
+    'kontak_darurat',
+    'no_telp',
+    'no_whatsapp',
+    'pekerjaan',
+    'type_kendaraan',
+    'tahun_kendaraan',
+    'no_ktp',
+    'no_sim',
+    'no_polisi',
     'warna_kendaraan',
+    'no_chasis',
+    'no_engine',
+    'tanggal_pajak',
   ];
 
   async function submitRegister() {
@@ -211,56 +217,102 @@ export default function Register({navigation}) {
     }
   }
 
-  const exampleResponse = {
-    API: {
-      agama: 'a',
-      alamat_lengkap: 'b',
-      created_at: '2023-03-07T06:26:48.000000Z',
-      email: 'contoh@gmail.com',
-      id: 95,
-      jenis_kelamin: 'e',
-      kabupaten_kota: 'f',
-      kecamatan: 'g',
-      kelurahan: 'h',
-      lat: 'j',
-      lng: 'k',
-      nama_lengkap: 'l',
-      no_chasis: 'n',
-      no_engine: 'o',
-      no_ktp: 'p',
-      no_polisi: 'q',
-      no_sim: 'r',
-      no_telp: 's',
-      no_whatsapp: 't',
-      photos_bukti_tranfer:
-        'rn_image_picker_lib_temp_781b4158-dbe0-4eaa-9eb6-2438d5d03e90.jpg',
-      photos_ktp:
-        'rn_image_picker_lib_temp_e0ec7f84-7a2e-4d5f-ba6f-ee02c192596f.jpg',
-      photos_members:
-        'rn_image_picker_lib_temp_62781ac3-4fbc-4ed3-ac97-069e337cfc1c.jpg',
-      photos_sim:
-        'rn_image_picker_lib_temp_0390ff06-31ba-4a0c-9cb8-b39ec05d159a.jpg',
-      photos_stnk:
-        'rn_image_picker_lib_temp_0f8030bd-3870-48b1-82a8-1d2793b6259c.jpg',
-      provinsi: 'x',
-      status_menikah: 'y',
-      tahun_kendaraan: 'z',
-      tanggal_lahir: '2023-03-01',
-      tanggal_pajak: '2023-03-01',
-      tempat_lahir: '2023-03-01',
-      type_kendaraan: 'a',
-      ukuran_baju: 'b',
-      updated_at: '2023-03-07T06:26:48.000000Z',
-      warna_kendaraan: 'c',
-    },
-    access_token: 'yadayadayada',
-    data: 'User Berhasil Registrasi',
-    token_type: 'Bearer',
-  };
-  const exampleError = {
-    data: {email: ['The email must be a valid email address.']},
-    message: 'ada kesalahan!',
-  };
+  function PickerGender() {
+    return (
+      <Picker
+        style={{flex: 1, color: 'black'}}
+        dropdownIconColor={'grey'}
+        selectedValue={formData.jenis_kelamin}
+        onValueChange={value =>
+          setFormData({...formData, jenis_kelamin: value})
+        }
+        mode={'dropdown'}>
+        <Picker.Item label="Laki-laki" value={'Laki-laki'} />
+        <Picker.Item label="Perempuan" value={'Perempuan'} />
+      </Picker>
+    );
+  }
+  function PickerClothSize() {
+    return (
+      <Picker
+        style={{flex: 1, color: 'black'}}
+        dropdownIconColor={'grey'}
+        selectedValue={formData.ukuran_baju}
+        onValueChange={value => setFormData({...formData, ukuran_baju: value})}
+        mode={'dropdown'}>
+        <Picker.Item
+          label="Pilih Ukuran Baju"
+          value={'Pilih Ukuran Baju'}
+          style={{color: 'grey'}}
+        />
+        {['S', 'M', 'L', 'XL', 'XXL', 'XXXL'].map(v => (
+          <Picker.Item key={v} label={v} value={v} />
+        ))}
+      </Picker>
+    );
+  }
+  function PickerReligion() {
+    return (
+      <Picker
+        style={{flex: 1, color: 'black'}}
+        dropdownIconColor={'grey'}
+        selectedValue={formData.agama}
+        onValueChange={value => setFormData({...formData, agama: value})}
+        mode={'dropdown'}>
+        <Picker.Item
+          label="Pilih Agama"
+          value={'Pilih Agama'}
+          style={{color: 'grey'}}
+        />
+        {['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha'].map(v => (
+          <Picker.Item key={v} label={v} value={v} />
+        ))}
+      </Picker>
+    );
+  }
+  function PickerMarriedStatus() {
+    return (
+      <Picker
+        style={{flex: 1, color: 'black'}}
+        dropdownIconColor={'grey'}
+        selectedValue={formData.status_menikah}
+        onValueChange={value =>
+          setFormData({...formData, status_menikah: value})
+        }
+        mode={'dropdown'}>
+        <Picker.Item
+          label="Pilih Status Menikah"
+          value={'Pilih Status Menikah'}
+          style={{color: 'grey'}}
+        />
+        {['Lajang', 'Duda', 'Janda', 'Menikah'].map(v => (
+          <Picker.Item key={v} label={v} value={v} />
+        ))}
+      </Picker>
+    );
+  }
+
+  const [showDateBirth, setShowDateBirth] = useState(false);
+  const [birthValue, setBirthValue] = useState(new Date());
+  function handleDateBirth(event, selectedDate) {
+    if (event.type == 'set') {
+      setShowDateBirth(false);
+      setBirthValue(selectedDate);
+      const [y, m, d] = selectedDate.toISOString().slice(0, 10).split('-');
+      setFormData({...formData, tanggal_lahir: `${y}-${m}-${d}`});
+    } else setShowDateBirth(false);
+  }
+
+  const [showDateTax, setShowDateTax] = useState(false);
+  const [taxValue, setTaxValue] = useState(new Date());
+  function handleDateTax(event, selectedDate) {
+    if (event.type == 'set') {
+      setShowDateTax(false);
+      setTaxValue(selectedDate);
+      const [y, m, d] = selectedDate.toISOString().slice(0, 10).split('-');
+      setFormData({...formData, tanggal_pajak: `${y}-${m}-${d}`});
+    } else setShowDateTax(false);
+  }
 
   return (
     <View style={{flex: 1}}>
@@ -282,69 +334,120 @@ export default function Register({navigation}) {
             <Text style={styles.headerTitle}>Register</Text>
           </View>
         </TouchableNativeFeedback>
-        <View style={{padding: 20}}>
-          {[...new Array(5).keys()].map((v, i) => (
-            <TouchableNativeFeedback
-              key={i}
-              useForeground
-              onPress={() => {
-                Alert.alert(
-                  '',
-                  'Ambil gambar dari..',
-                  [
-                    {
-                      text: 'Kamera',
-                      onPress: () => handleImagePicker(i, 'camera'),
-                    },
-                    {
-                      text: 'Galeri',
-                      onPress: () => handleImagePicker(i, 'gallery'),
-                    },
-                  ],
-                  {cancelable: true},
-                );
-              }}>
-              <View style={styles.imgContainer}>
-                <Text
-                  style={
-                    styles.textPhotoFieldTitle
-                  }>{`Pilih Foto ${photoFieldTitle(i)}`}</Text>
-                {formPhotos[photoField(i)] && (
-                  <Image
-                    source={{uri: formPhotos[photoField(i)].uri}}
-                    style={{width: '100%', height: 210}}
-                  />
-                )}
-              </View>
-            </TouchableNativeFeedback>
-          ))}
-          {formArray.map((field, i) => (
-            <TextInput
-              key={i}
-              onChangeText={value => setFormData({...formData, [field]: value})}
-              style={{color: 'black'}}
-              placeholder={field}
-              placeholderTextColor={'grey'}
-              underlineColorAndroid={'black'}
-              value={formData[field]}
+        {ready && (
+          <View style={{padding: 20}}>
+            {[...new Array(5).keys()].map((v, i) => (
+              <TouchableNativeFeedback
+                key={i}
+                useForeground
+                onPress={() => {
+                  Alert.alert(
+                    '',
+                    'Ambil gambar dari..',
+                    [
+                      {
+                        text: 'Kamera',
+                        onPress: () => handleImagePicker(i, 'camera'),
+                      },
+                      {
+                        text: 'Galeri',
+                        onPress: () => handleImagePicker(i, 'gallery'),
+                      },
+                    ],
+                    {cancelable: true},
+                  );
+                }}>
+                <View style={styles.imgContainer}>
+                  <Text
+                    style={
+                      styles.textPhotoFieldTitle
+                    }>{`Pilih Foto ${photoFieldTitle(i)}`}</Text>
+                  {formPhotos[photoField(i)] ? (
+                    <Image
+                      source={{uri: formPhotos[photoField(i)].uri}}
+                      style={{width: '100%', height: 210}}
+                    />
+                  ) : (
+                    <Image source={images.imagecontentdefault} />
+                  )}
+                </View>
+              </TouchableNativeFeedback>
+            ))}
+            {formArray.map((field, i) => {
+              // array index for picker field: 4 5 7 8 9
+              const picker = i == 4 || i == 5 || i == 8 || i == 9;
+              const renderPicker =
+                i == 4
+                  ? PickerGender()
+                  : i == 5
+                  ? PickerClothSize()
+                  : i == 8
+                  ? PickerReligion()
+                  : PickerMarriedStatus();
+
+              // array index for date field: 7 29
+              const date = i == 7 || i == 29;
+              const renderDate = () =>
+                i == 7 ? setShowDateBirth(true) : setShowDateTax(true);
+              const dateValue =
+                i == 7 ? formData.tanggal_lahir : formData.tanggal_pajak;
+
+              return (
+                <FormInput
+                  key={i}
+                  onChangeText={value =>
+                    setFormData({...formData, [field]: value})
+                  }
+                  iconIndex={i}
+                  value={formData[field]}
+                  placeholder={formArray[i]}
+                  password={i == 2 || i == 3}
+                  picker={picker}
+                  pickerChildren={renderPicker}
+                  date={date}
+                  onPressDate={renderDate}
+                  dateValue={dateValue}
+                />
+              );
+            })}
+            {showDateBirth && (
+              <DatePicker
+                value={birthValue}
+                onChange={handleDateBirth}
+                maximumDate={new Date()}
+              />
+            )}
+            {showDateTax && (
+              <DatePicker value={taxValue} onChange={handleDateTax} />
+            )}
+            <Button
+              title="log photo fields"
+              onPress={() => console.log(formPhotos)}
             />
-          ))}
-          <Button
-            title="log photo fields"
-            onPress={() => console.log(formPhotos)}
-          />
-          <Button
-            title="log form fields"
-            onPress={() => console.log(formData)}
-          />
-          <Button title="submit gais" onPress={submitRegister} />
-        </View>
+            <Button
+              title="log form fields"
+              onPress={() => console.log(formData)}
+            />
+            <Button title="submit gais" onPress={submitRegister} />
+          </View>
+        )}
       </ScrollView>
+      {!ready && <Text style={styles.textLoading}>Memuat..</Text>}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  textLoading: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color: 'grey',
+    flex: 1,
+    fontStyle: 'italic',
+  },
   textPhotoFieldTitle: {
     position: 'absolute',
     color: 'black',

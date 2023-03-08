@@ -39,7 +39,7 @@ import TwoButtonChoose from '../../components/TwoButtonChoose';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {rfidPostConsume} from '../../services/RfidConsume';
 
-const Register = () => {
+const Awawawawa = () => {
   const date = new Date(Date.now());
   const globalContext = useContext(GlobalContext);
   const dark = globalContext.state.isDark;

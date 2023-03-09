@@ -54,9 +54,9 @@ export default function Register({navigation}) {
     warna_kendaraan: '',
     no_chasis: '',
     no_engine: '',
-    tanggal_pajak: 'Pilih Tanggal Pajak',
-    lat: '',
-    lng: '',
+    tanggal_pajak: 'Pilih Tanggal Pajak Kendaraan',
+    lat: '123123',
+    lng: '123123123',
   });
   const [formPhotos, setFormPhotos] = useState({
     photos_members: {
@@ -87,36 +87,36 @@ export default function Register({navigation}) {
   });
 
   const formArray = [
-    'nama_lengkap',
-    'email',
-    'password',
-    'password_confirmation',
-    'jenis_kelamin',
-    'ukuran_baju',
-    'tempat_lahir',
-    'tanggal_lahir',
-    'agama',
-    'status_menikah',
-    'alamat_lengkap',
-    'kelurahan',
-    'kecamatan',
-    'provinsi',
-    'kabupaten_kota',
-    'nama_perusahaan',
-    'alamat_perusahaan',
-    'kontak_darurat',
-    'no_telp',
-    'no_whatsapp',
-    'pekerjaan',
-    'type_kendaraan',
-    'tahun_kendaraan',
-    'no_ktp',
-    'no_sim',
-    'no_polisi',
-    'warna_kendaraan',
-    'no_chasis',
-    'no_engine',
-    'tanggal_pajak',
+    {field: 'nama_lengkap', name: 'Nama Lengkap'},
+    {field: 'email', name: 'Email'},
+    {field: 'password', name: 'Kata Sandi'},
+    {field: 'password_confirmation', name: 'Konfirmasi Kata Sandi'},
+    {field: 'jenis_kelamin', name: 'Gender'},
+    {field: 'ukuran_baju', name: 'Ukuran Baju'},
+    {field: 'tempat_lahir', name: 'Tempat Lahir'},
+    {field: 'tanggal_lahir', name: 'Tanggal Lahir'},
+    {field: 'agama', name: 'Agama'},
+    {field: 'status_menikah', name: 'Status Menikah'},
+    {field: 'alamat_lengkap', name: 'Alamat Lengkap'},
+    {field: 'kelurahan', name: 'Kelurahan'},
+    {field: 'kecamatan', name: 'Kecamatan'},
+    {field: 'provinsi', name: 'Provinsi'},
+    {field: 'kabupaten_kota', name: 'Kabupaten Kota'},
+    {field: 'nama_perusahaan', name: 'Nama Perusahaan'},
+    {field: 'alamat_perusahaan', name: 'Alamat Perusahaan'},
+    {field: 'kontak_darurat', name: 'Kontak Darurat'},
+    {field: 'no_telp', name: 'Nomor Telepon'},
+    {field: 'no_whatsapp', name: 'Nomor WhatsApp'},
+    {field: 'pekerjaan', name: 'Pekerjaan'},
+    {field: 'type_kendaraan', name: 'Tipe Kendaraan'},
+    {field: 'tahun_kendaraan', name: 'Tahun Kendaraan'},
+    {field: 'no_ktp', name: 'Nomor KTP'},
+    {field: 'no_sim', name: 'Nomor SIM'},
+    {field: 'no_polisi', name: 'Nomor Polisi'},
+    {field: 'warna_kendaraan', name: 'Warna Kendaraan'},
+    {field: 'no_chasis', name: 'Nomor Chasis'},
+    {field: 'no_engine', name: 'Nomor Engine'},
+    {field: 'tanggal_pajak', name: 'Tanggal Pajak'},
   ];
 
   async function submitRegister() {
@@ -144,7 +144,7 @@ export default function Register({navigation}) {
       );
       if (data?.data == 'User Berhasil Registrasi') {
         console.log('sukses daftar masbro');
-      }
+      } else console.log('gagal masbro:', data);
     } catch (error) {
       console.log('error masbro', error.response);
     }
@@ -183,6 +183,23 @@ export default function Register({navigation}) {
     }
   }
 
+  function handleImageMethod(i) {
+    Alert.alert(
+      '',
+      'Ambil gambar dari..',
+      [
+        {
+          text: 'Kamera',
+          onPress: () => handleImagePicker(i, 'camera'),
+        },
+        {
+          text: 'Galeri',
+          onPress: () => handleImagePicker(i, 'gallery'),
+        },
+      ],
+      {cancelable: true},
+    );
+  }
   function photoField(index) {
     switch (index) {
       case 0:
@@ -199,7 +216,6 @@ export default function Register({navigation}) {
         return 'photos_members';
     }
   }
-
   function photoFieldTitle(index) {
     switch (index) {
       case 0:
@@ -340,23 +356,7 @@ export default function Register({navigation}) {
               <TouchableNativeFeedback
                 key={i}
                 useForeground
-                onPress={() => {
-                  Alert.alert(
-                    '',
-                    'Ambil gambar dari..',
-                    [
-                      {
-                        text: 'Kamera',
-                        onPress: () => handleImagePicker(i, 'camera'),
-                      },
-                      {
-                        text: 'Galeri',
-                        onPress: () => handleImagePicker(i, 'gallery'),
-                      },
-                    ],
-                    {cancelable: true},
-                  );
-                }}>
+                onPress={() => handleImageMethod(i)}>
                 <View style={styles.imgContainer}>
                   <Text
                     style={
@@ -373,7 +373,7 @@ export default function Register({navigation}) {
                 </View>
               </TouchableNativeFeedback>
             ))}
-            {formArray.map((field, i) => {
+            {formArray.map(({field, name}, i) => {
               // array index for picker field: 4 5 7 8 9
               const picker = i == 4 || i == 5 || i == 8 || i == 9;
               const renderPicker =
@@ -392,6 +392,21 @@ export default function Register({navigation}) {
               const dateValue =
                 i == 7 ? formData.tanggal_lahir : formData.tanggal_pajak;
 
+              // array index for keyboard type
+              const keyboardType =
+                i == 1
+                  ? 'email-address'
+                  : i == 17 ||
+                    i == 18 ||
+                    i == 19 ||
+                    i == 22 ||
+                    i == 23 ||
+                    i == 24 ||
+                    i == 25 ||
+                    i == 27 ||
+                    i == 28
+                  ? 'phone-pad'
+                  : null;
               return (
                 <FormInput
                   key={i}
@@ -400,13 +415,16 @@ export default function Register({navigation}) {
                   }
                   iconIndex={i}
                   value={formData[field]}
-                  placeholder={formArray[i]}
+                  placeholder={name}
                   password={i == 2 || i == 3}
                   picker={picker}
                   pickerChildren={renderPicker}
                   date={date}
                   onPressDate={renderDate}
                   dateValue={dateValue}
+                  multiline={i == 10}
+                  autoCapitalize={i == 0 ? 'words' : i == 1 ? 'none' : null}
+                  keyboardType={keyboardType}
                 />
               );
             })}

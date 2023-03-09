@@ -20,6 +20,9 @@ export default function FormInput({
   date,
   dateValue = 'Pilih Tanggal',
   onPressDate,
+  multiline,
+  autoCapitalize,
+  keyboardType,
 }) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -109,6 +112,9 @@ export default function FormInput({
           placeholderTextColor={'grey'}
           value={value}
           secureTextEntry={password && !showPassword}
+          multiline={multiline}
+          autoCapitalize={autoCapitalize}
+          keyboardType={keyboardType}
         />
       )}
       {password && (

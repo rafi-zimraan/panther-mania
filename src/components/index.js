@@ -1,4 +1,3 @@
-import ButtonCustom from './ButtonCustom';
-import FormInput from './FormInput';
+import Gap from './screens/Gap';
 
-export {ButtonCustom, FormInput};
+export {Gap};

@@ -1,14 +1,12 @@
 import React from 'react';
-import InternetChecker from './components/InternetChecker';
-import AppNavigator from './routes';
-import AppContextProvider from './Store';
+import {Provider} from 'react-redux';
+import Navigator from './routes/Navigator';
+import {store} from './redux/store';
 
-const App = () => {
+export default function App() {
   return (
-    <AppContextProvider>
-      <AppNavigator />
-      <InternetChecker />
-    </AppContextProvider>
-  );
-};
-export default App;
+    <Provider store={store}>
+      <Navigator />
+    </Provider>
+  )
+}

@@ -1,5 +1,5 @@
 import ButtonAuthMethod from './components/ButtonAuthMethod';
-import ButtonSignUp from './components/ButtonSignUp';
+import ButtonSubmit from './components/ButtonSubmit';
 import FormInput from './components/FormInput';
 
-export {ButtonAuthMethod, FormInput, ButtonSignUp};
+export {ButtonAuthMethod, FormInput, ButtonSubmit};

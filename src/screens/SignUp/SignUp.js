@@ -16,18 +16,17 @@ import {ImgBgPlain} from '../../assets';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Picker} from '@react-native-picker/picker';
 import DatePicker from '@react-native-community/datetimepicker';
-import {ButtonSignUp, FormInput} from '../../features/Auth';
+import {ButtonSubmit, FormInput} from '../../features/Auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchSignUp} from '../../features/Auth/services/signUpServices';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 export default function SignUp({navigation}) {
   const dispatch = useDispatch();
-  const {status_signup} = useSelector(state => state.auth);
+  const {status_signup, token} = useSelector(state => state.auth);
 
   const [ready, setReady] = useState(false);
-  useEffect(() => {
-    setTimeout(() => setReady(true), 1000); // "lazy render"
-  }, []);
+  setTimeout(() => setReady(true), 1000); // "lazy render"
 
   const [formData, setFormData] = useState({
     nama_lengkap: '',
@@ -124,6 +123,16 @@ export default function SignUp({navigation}) {
     {field: 'tanggal_pajak', name: 'Tanggal Pajak'},
   ];
 
+  useEffect(() => {
+    const successSignUp = async () => {
+      await EncryptedStorage.setItem(
+        'user_credential',
+        JSON.stringify({email: formData.email, password: formData.password}),
+      );
+      navigation.replace('Home');
+    };
+    if (token) successSignUp();
+  }, [token]);
   async function submitRegister() {
     let multiPart = new FormData();
     let json = formData;
@@ -436,7 +445,7 @@ export default function SignUp({navigation}) {
             {showDateTax && (
               <DatePicker value={taxValue} onChange={handleDateTax} />
             )}
-            <ButtonSignUp
+            <ButtonSubmit
               onPress={submitRegister}
               loading={status_signup == 'pending'}
               // disabled={disableSignUp}

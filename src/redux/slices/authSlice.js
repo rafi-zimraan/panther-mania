@@ -1,4 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {fetchSignIn} from '../../features/Auth/services/signInServices';
 import {fetchSignUp} from '../../features/Auth/services/signUpServices';
 
 const defaultUserData = {
@@ -33,6 +34,7 @@ const defaultUserData = {
 
 const initialState = {
   status_signup: 'idle',
+  status_signin: 'idle',
   token: null,
   user_data: defaultUserData,
 };
@@ -47,7 +49,7 @@ export const authSlice = createSlice({
     SetUserData(state, action) {
       state.user_data = action.payload;
     },
-    SetUserSignUp(state, action) {
+    SetUserCredential(state, action) {
       state.token = action.payload.access_token;
       state.user_data = action.payload.user_data;
     },
@@ -63,9 +65,19 @@ export const authSlice = createSlice({
       .addCase(fetchSignUp.rejected, state => {
         state.status_signup = 'failed';
       });
+    builder
+      .addCase(fetchSignIn.pending, state => {
+        state.status_signin = 'pending';
+      })
+      .addCase(fetchSignIn.fulfilled, state => {
+        state.status_signin = 'success';
+      })
+      .addCase(fetchSignIn.rejected, state => {
+        state.status_signin = 'failed';
+      });
   },
 });
 
-export const {SetUserToken, SetUserData, SetUserSignUp} = authSlice.actions;
+export const {SetUserToken, SetUserData, SetUserCredential} = authSlice.actions;
 
 export default authSlice.reducer;

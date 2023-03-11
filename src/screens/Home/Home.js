@@ -1,18 +1,20 @@
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {Header, Menu, Products} from '../../features/Home';
-import {BackgroundImage} from '../../components';
+import {Agendas, HomeHeader, Menu, Products} from '../../features/Home';
+import {BackgroundImage, Header} from '../../components';
 
 export default function Home() {
   return (
     <View style={{flex: 1}}>
       <BackgroundImage />
+      <Header />
       <ScrollView>
         <View style={styles.container}>
-          <Header />
+          <HomeHeader />
           <View style={styles.containerContent}>
             <Menu />
             <Products />
+            <Agendas />
           </View>
         </View>
       </ScrollView>

@@ -10,11 +10,12 @@ import {
   SignUp,
   Splash,
 } from '../screens';
+import RNBootSplash from 'react-native-bootsplash';
 
 const Stack = createNativeStackNavigator();
 export default function Navigator() {
   return (
-    <NavigationContainer>
+    <NavigationContainer onReady={() => RNBootSplash.hide()}>
       <Stack.Navigator screenOptions={{headerShown: false}}>
         {/* <Stack.Screen component={LibsTest} name={'LibsTest'} /> */}
         <Stack.Screen component={Splash} name={'Splash'} />

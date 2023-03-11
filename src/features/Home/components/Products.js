@@ -24,9 +24,11 @@ export default function Products() {
         {[...new Array(4).keys()].map((v, i) => (
           <TouchableNativeFeedback key={i} useForeground>
             <View style={styles.btnProduct}>
-              <Image source={ImgShirt} style={{width: '100%', height: '60%'}} />
-              <Text style={styles.textProductTitle}>Baju Kemeja Member</Text>
-              <Text>Rp 250.000,-</Text>
+              <Image source={ImgShirt} style={styles.imgProduct} />
+              <Text style={styles.textProductTitle} numberOfLines={2}>
+                Baju Kemeja Member
+              </Text>
+              <Text style={styles.textPrice}>Rp 250.000,-</Text>
             </View>
           </TouchableNativeFeedback>
         ))}
@@ -46,6 +48,15 @@ export default function Products() {
 }
 
 const styles = StyleSheet.create({
+  textPrice: {
+    fontWeight: 'bold',
+    color: 'green',
+  },
+  imgProduct: {
+    width: '100%',
+    height: '60%',
+    borderRadius: 20,
+  },
   icon: {
     position: 'absolute',
     width: '100%',
@@ -65,6 +76,7 @@ const styles = StyleSheet.create({
   textProductTitle: {
     fontWeight: '500',
     color: 'black',
+    marginVertical: 5,
   },
   btnProduct: {
     backgroundColor: 'white',
@@ -74,6 +86,7 @@ const styles = StyleSheet.create({
     height: 250,
     margin: 10,
     overflow: 'hidden',
+    padding: 10,
   },
   viewProduct: {
     paddingHorizontal: 10,

@@ -5,7 +5,7 @@ import {ImgAppLogo} from '../../../assets';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Gap} from '../../../components';
 
-export default function Header() {
+export default function HomeHeader() {
   const {nama_lengkap} = useSelector(state => state.auth.user_data);
 
   return (
@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   textGreeting: {
-    fontWeight: 'bold',
     fontSize: 18,
     color: 'black',
+    fontWeight: '500',
   },
 });

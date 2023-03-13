@@ -4,6 +4,7 @@ import {
   Text,
   TouchableNativeFeedback,
   View,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import {
@@ -14,8 +15,33 @@ import {
   IconWhatsApp,
 } from '../../../assets';
 import {Gap} from '../../../components';
+import {useNavigation} from '@react-navigation/native';
 
 export default function Menu() {
+  const {navigate} = useNavigation();
+
+  function handleNavigate(index) {
+    const alert = () =>
+      Alert.alert(
+        'Fitur dalam pengembangan',
+        'Nantikan update terbaru dari kami, ya!',
+      );
+    switch (index) {
+      case 0:
+        return alert();
+      case 1:
+        return alert();
+      case 2:
+        return alert();
+      case 3:
+        return alert();
+      case 4:
+        return navigate('UserProfile');
+      default:
+        console.log('index tidak ditemukan');
+    }
+  }
+
   return (
     <View style={styles.container}>
       {[...new Array(5).keys()].map((v, i) => {
@@ -32,7 +58,9 @@ export default function Menu() {
             : {icon: IconUser, title: 'Profil'};
         return (
           <View key={i} style={{alignItems: 'center', marginBottom: 10}}>
-            <TouchableNativeFeedback useForeground>
+            <TouchableNativeFeedback
+              useForeground
+              onPress={() => handleNavigate(i)}>
               <View style={styles.btnMenu}>
                 <Image source={source.icon} style={styles.image} />
               </View>

@@ -9,6 +9,7 @@ import {
   SignIn,
   SignUp,
   Splash,
+  UserProfile,
 } from '../screens';
 import RNBootSplash from 'react-native-bootsplash';
 
@@ -24,6 +25,7 @@ export default function Navigator() {
         <Stack.Screen component={SignIn} name={'SignIn'} />
         <Stack.Screen component={SignUp} name={'SignUp'} />
         <Stack.Screen component={Home} name={'Home'} />
+        <Stack.Screen component={UserProfile} name={'UserProfile'} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -8,10 +8,19 @@ export default function Gap({
   marginRight,
   marginTop,
   marginBottom,
+  flex,
 }) {
   return (
     <View
-      style={{width, height, marginLeft, marginRight, marginTop, marginBottom}}
+      style={{
+        width,
+        height,
+        marginLeft,
+        marginRight,
+        marginTop,
+        marginBottom,
+        flex,
+      }}
     />
   );
 }

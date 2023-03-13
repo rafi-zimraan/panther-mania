@@ -9,10 +9,10 @@ export const fetchSignIn = createAsyncThunk(
     const {email, password, navigation, splash} = params;
     try {
       const {data: response} = await postSignIn({email, password});
-      if (response.data == 'berhasil login!') {
-        const {API, access_token} = response;
-        const {data} = await getUserData(API.id, access_token);
-        dispatch(SetUserCredential({access_token, user_data: data.API[0]}));
+      if (response.message == 'Berhasil login!') {
+        const {token} = response;
+        const {data: dataUser} = await getUserData(token);
+        dispatch(SetUserCredential({token, user_data: dataUser.auth}));
         await EncryptedStorage.setItem(
           'user_credential',
           JSON.stringify({email, password}),

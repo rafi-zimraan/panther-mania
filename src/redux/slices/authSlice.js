@@ -1,40 +1,56 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {fetchSignIn} from '../../features/Auth/services/signInServices';
+import {fetchSignOut} from '../../features/Auth/services/signOutServices';
 import {fetchSignUp} from '../../features/Auth/services/signUpServices';
 
 const defaultUserData = {
+  id: 2279,
+  uuid: '967220230313091628',
+  user_id: 3065,
+  rfid: '',
   nama_lengkap: '',
   email: '',
-  jenis_kelamin: '',
+  gender: '',
+  nomor: '',
+  korwil_uuid: '',
+  korwil: '',
   ukuran_baju: '',
   tempat_lahir: '',
   tanggal_lahir: '',
   agama: '',
-  status_menikah: '',
-  alamat_lengkap: '',
+  status_nikah: '',
+  alamat: '',
   kelurahan: '',
   kecamatan: '',
   provinsi: '',
-  kabupaten_kota: '',
-  no_telp: '',
+  kabupaten: '',
+  kodepos: '',
   no_whatsapp: '',
-  no_ktp: '',
-  no_sim: '',
-  type_kendaraan: '',
-  tahun_kendaraan: '',
-  no_polisi: '',
-  warna_kendaraan: '',
-  no_chasis: '',
-  no_engine: '',
-  tanggal_pajak: '',
-  lat: '',
-  lng: '',
-  id: null,
+  handphone: '',
+  telp_rumah: '',
+  telp_kantor: '',
+  pekerjaan: '',
+  nama_perusahaan: '',
+  alamat_perusahaan: '',
+  sekolah: '',
+  hobby: '',
+  ktp: '',
+  sim: '',
+  panther_type: '',
+  panther_tahun: '',
+  panther_nopol: '',
+  panther_warna: '',
+  panther_no_chasis: '',
+  panther_no_engine: '',
+  panther_pajak: '',
+  aktif: 0,
+  progress: 0,
 };
 
 const initialState = {
   status_signup: 'idle',
   status_signin: 'idle',
+  status_signout: 'idle',
   token: null,
   user_data: defaultUserData,
 };
@@ -50,8 +66,12 @@ export const authSlice = createSlice({
       state.user_data = action.payload;
     },
     SetUserCredential(state, action) {
-      state.token = action.payload.access_token;
+      state.token = action.payload.token;
       state.user_data = action.payload.user_data;
+    },
+    ResetUserCredential(state, action) {
+      state.token = null;
+      state.user_data = defaultUserData;
     },
   },
   extraReducers(builder) {
@@ -75,9 +95,24 @@ export const authSlice = createSlice({
       .addCase(fetchSignIn.rejected, state => {
         state.status_signin = 'failed';
       });
+    builder
+      .addCase(fetchSignOut.pending, state => {
+        state.status_signout = 'pending';
+      })
+      .addCase(fetchSignOut.fulfilled, state => {
+        state.status_signout = 'success';
+      })
+      .addCase(fetchSignOut.rejected, state => {
+        state.status_signout = 'failed';
+      });
   },
 });
 
-export const {SetUserToken, SetUserData, SetUserCredential} = authSlice.actions;
+export const {
+  SetUserToken,
+  SetUserData,
+  SetUserCredential,
+  ResetUserCredential,
+} = authSlice.actions;
 
 export default authSlice.reducer;

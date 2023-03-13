@@ -1,58 +1,79 @@
-import {Button, StyleSheet, Text, View, Image, Alert} from 'react-native';
-import React, {useState} from 'react';
-import {launchCamera} from 'react-native-image-picker';
+import {StyleSheet, Text, View} from 'react-native';
+import React from 'react';
 
 export default function LibsTest() {
-  const [image, setImage] = useState({
-    name: null,
-    uri: null,
-    type: null,
-  });
-  const [imageUrl, setImageUrl] = useState(null);
-
-  async function ambilGambar() {
-    try {
-      const {assets} = await launchCamera({
-        mediaType: 'photo',
-        quality: 0.1,
-      });
-      const {fileName: name, uri, type} = assets[0];
-      setImage({name, uri, type});
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  function hitEndpoint() {
-    const formData = new FormData();
-    formData.append('image', image);
-
-    fetch('https://tirtadisposisi.pondokprogrammer.com/api/post_gambar', {
-      method: 'POST',
-      body: formData,
-    })
-      .then(response => response.json())
-      .then(response => {
-        console.log(response);
-        setImageUrl(response.data.image.image);
-        Alert.alert('', 'Kirim gambar ke WhatsApp?', [
-          {text: 'Kirim'},
-          {text: 'Batal'},
-        ]);
-      })
-      .catch(err => console.log(err.message));
-  }
+  const formDatas = {
+    agama: 'Pilih Agama',
+    alamat_lengkap: '',
+    alamat_perusahaan: '',
+    email: '',
+    handphone: '',
+    jenis_kelamin: 'Laki-laki',
+    kabupaten_kota: '',
+    kecamatan: '',
+    kelurahan: '',
+    kodepos: '',
+    ktp: '',
+    nama_lengkap: '',
+    nama_perusahaan: '',
+    no_chasis: '',
+    no_engine: '',
+    no_polisi: '',
+    password: '',
+    password_confirmation: '',
+    pekerjaan: '',
+    provinsi: '',
+    sekolah: '',
+    sim: '',
+    status_nikah: 'Pilih Status Menikah',
+    tahun_kendaraan: '',
+    tanggal_lahir: 'Pilih Tanggal Lahir',
+    tanggal_pajak: 'Pilih Tanggal Pajak Kendaraan',
+    telp_kantor: '',
+    telp_rumah: '',
+    tempat_lahir: '',
+    type_kendaraan: '',
+    ukuran_baju: 'Pilih Ukuran Baju',
+    warna_kendaraan: '',
+  };
+  const formData = {
+    agama: 'Islam',
+    alamat_lengkap: 'Alamat lengkap',
+    alamat_perusahaan: 'Alamat perusahaan ',
+    email: 'testing4@gmail.com',
+    handphone: '64648487677',
+    jenis_kelamin: 'Perempuan',
+    kabupaten_kota: 'Kabupaten',
+    kecamatan: 'Kecamatan',
+    kelurahan: 'Kelurahan',
+    kodepos: '087679',
+    ktp: '67678497',
+    nama_lengkap: 'Nama Lengkap',
+    nama_perusahaan: 'Nama perusahaan ',
+    no_chasis: '6388386',
+    no_engine: '767677676',
+    no_polisi: '9767997',
+    password: 'rahasia123',
+    password_confirmation: 'rahasia123',
+    pekerjaan: 'Perkejaan',
+    provinsi: 'Provinsi',
+    sekolah: 'Sekolah ',
+    sim: '946794994',
+    status_menikah: 'Menikah',
+    tahun_kendaraan: '9464997',
+    tanggal_lahir: '2023-03-13',
+    tanggal_pajak: '2023-03-13',
+    telp_kantor: '9467679944',
+    telp_rumah: '97978797',
+    tempat_lahir: 'Bandung',
+    type_kendaraan: 'Tipe kendaraan ',
+    ukuran_baju: 'XXXL',
+    warna_kendaraan: 'Warna',
+  };
 
   return (
     <View>
-      <Button title="ambil gambar" onPress={ambilGambar} />
-      {image.uri && (
-        <Image source={{uri: image.uri}} style={{width: 300, height: 300}} />
-      )}
-      <Button title="hit endpoint" onPress={hitEndpoint} />
-      {imageUrl && (
-        <Image source={{uri: imageUrl}} style={{width: 200, height: 200}} />
-      )}
+      <Text>LibsTest</Text>
     </View>
   );
 }

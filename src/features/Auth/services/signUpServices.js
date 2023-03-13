@@ -1,18 +1,33 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {SetUserCredential} from '../../../redux/slices/authSlice';
-import {getUserData, postSignUp} from '../../../utils/services';
-
+import {getUserData, postSignIn, postSignUp} from '../../../utils/services';
+import EncryptedStorage from 'react-native-encrypted-storage';
 // const handleCatch
 
 export const fetchSignUp = createAsyncThunk(
   'fetchSignUp',
-  async (multiPart, {dispatch}) => {
+  async ({formData, navigation}, {dispatch}) => {
     try {
-      const {data: response} = await postSignUp(multiPart);
-      const {data, API, access_token} = response;
-      if (data == 'User Berhasil Registrasi') {
-        const {data} = await getUserData(API.id, access_token);
-        dispatch(SetUserCredential({access_token, user_data: data.API[0]}));
+      const {data: response} = await postSignUp(formData);
+      const {message} = response;
+      if (message == 'Data Member berhasil disimpan. Silahkan login') {
+        const {email, password} = formData;
+        const {data: dataSignIn} = await postSignIn({email, password});
+        await EncryptedStorage.setItem(
+          'user_credential',
+          JSON.stringify({email, password}),
+        );
+        const {data: dataUser} = await getUserData(dataSignIn.token);
+        dispatch(
+          SetUserCredential({
+            token: dataSignIn.token,
+            user_data: dataUser.auth,
+          }),
+        );
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'Home'}],
+        });
       } else console.log('gagal sign up:', response);
       return response;
     } catch (error) {

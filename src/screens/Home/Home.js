@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <View style={{flex: 1}}>
       <BackgroundImage />
-      <Header />
+      {/* <Header /> */}
       <ScrollView>
         <View style={styles.container}>
           <HomeHeader />

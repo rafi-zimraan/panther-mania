@@ -1,81 +1,71 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
+import {
+  LayoutAnimation,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  UIManager,
+  View,
+} from 'react-native';
+
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
 
 export default function LibsTest() {
-  const formDatas = {
-    agama: 'Pilih Agama',
-    alamat_lengkap: '',
-    alamat_perusahaan: '',
-    email: '',
-    handphone: '',
-    jenis_kelamin: 'Laki-laki',
-    kabupaten_kota: '',
-    kecamatan: '',
-    kelurahan: '',
-    kodepos: '',
-    ktp: '',
-    nama_lengkap: '',
-    nama_perusahaan: '',
-    no_chasis: '',
-    no_engine: '',
-    no_polisi: '',
-    password: '',
-    password_confirmation: '',
-    pekerjaan: '',
-    provinsi: '',
-    sekolah: '',
-    sim: '',
-    status_nikah: 'Pilih Status Menikah',
-    tahun_kendaraan: '',
-    tanggal_lahir: 'Pilih Tanggal Lahir',
-    tanggal_pajak: 'Pilih Tanggal Pajak Kendaraan',
-    telp_kantor: '',
-    telp_rumah: '',
-    tempat_lahir: '',
-    type_kendaraan: '',
-    ukuran_baju: 'Pilih Ukuran Baju',
-    warna_kendaraan: '',
-  };
-  const formData = {
-    agama: 'Islam',
-    alamat_lengkap: 'Alamat lengkap',
-    alamat_perusahaan: 'Alamat perusahaan ',
-    email: 'testing4@gmail.com',
-    handphone: '64648487677',
-    jenis_kelamin: 'Perempuan',
-    kabupaten_kota: 'Kabupaten',
-    kecamatan: 'Kecamatan',
-    kelurahan: 'Kelurahan',
-    kodepos: '087679',
-    ktp: '67678497',
-    nama_lengkap: 'Nama Lengkap',
-    nama_perusahaan: 'Nama perusahaan ',
-    no_chasis: '6388386',
-    no_engine: '767677676',
-    no_polisi: '9767997',
-    password: 'rahasia123',
-    password_confirmation: 'rahasia123',
-    pekerjaan: 'Perkejaan',
-    provinsi: 'Provinsi',
-    sekolah: 'Sekolah ',
-    sim: '946794994',
-    status_menikah: 'Menikah',
-    tahun_kendaraan: '9464997',
-    tanggal_lahir: '2023-03-13',
-    tanggal_pajak: '2023-03-13',
-    telp_kantor: '9467679944',
-    telp_rumah: '97978797',
-    tempat_lahir: 'Bandung',
-    type_kendaraan: 'Tipe kendaraan ',
-    ukuran_baju: 'XXXL',
-    warna_kendaraan: 'Warna',
-  };
-
   return (
-    <View>
-      <Text>LibsTest</Text>
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((x, i) => (
+        <Item key={x} i={i} />
+      ))}
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({});
+function Item({i}) {
+  const [open, setopen] = useState(false);
+  const onPress = () => {
+    LayoutAnimation.easeInEaseOut();
+    setopen(!open);
+  };
+  return (
+    <TouchableOpacity style={styles.item} onPress={onPress} activeOpacity={1}>
+      <View style={styles.row}>
+        <Text>Header - {i + 1}</Text>
+        <Text>{open ? 'close' : 'open'}</Text>
+      </View>
+      {open &&
+        [1, 2, 3, 4, 5].map(x => (
+          <Text key={x} style={styles.subItem}>
+            - SOME DATA
+          </Text>
+        ))}
+    </TouchableOpacity>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 50,
+    paddingTop: 5,
+  },
+  item: {
+    width: '100%',
+    borderWidth: 1,
+    paddingHorizontal: 20,
+    overflow: 'hidden',
+    paddingVertical: 10,
+    marginBottom: 5,
+  },
+  subItem: {
+    padding: 5,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+});

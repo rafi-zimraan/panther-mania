@@ -2,6 +2,7 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {SetUserCredential} from '../../../redux/slices/authSlice';
 import {getUserData, postSignIn} from '../../../utils/services';
+import {ToastAndroid} from 'react-native';
 
 export const fetchSignIn = createAsyncThunk(
   'fetchSignIn',
@@ -21,7 +22,10 @@ export const fetchSignIn = createAsyncThunk(
           index: 0,
           routes: [{name: 'Home'}],
         });
-      } else splash && navigation.replace('AuthMethod');
+      } else {
+        ToastAndroid.show(response?.message, ToastAndroid.SHORT);
+        splash && navigation.replace('AuthMethod');
+      }
       return response;
     } catch (error) {
       console.log('error masbro:', error);

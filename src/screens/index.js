@@ -6,6 +6,10 @@ import AuthMethod from './AuthMethod/AuthMethod';
 import OnBoarding from './OnBoarding/OnBoarding';
 import LibsTest from './__test__/LibsTest.test';
 import UserProfile from './UserProfile/UserProfile';
+import ProductDetail from './PantherProduct/ProductDetail';
+import AgendaDetail from './Agenda/AgendaDetail';
+import PantherProduct from './PantherProduct/PantherProduct';
+import Agenda from './Agenda/Agenda';
 
 export {
   Splash,
@@ -16,4 +20,8 @@ export {
   OnBoarding,
   LibsTest,
   UserProfile,
+  ProductDetail,
+  AgendaDetail,
+  PantherProduct,
+  Agenda,
 };

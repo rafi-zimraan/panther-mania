@@ -2,7 +2,7 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import {SetUserCredential} from '../../../redux/slices/authSlice';
 import {getUserData, postSignIn, postSignUp} from '../../../utils/services';
 import EncryptedStorage from 'react-native-encrypted-storage';
-// const handleCatch
+import {ToastAndroid} from 'react-native';
 
 export const fetchSignUp = createAsyncThunk(
   'fetchSignUp',
@@ -24,14 +24,24 @@ export const fetchSignUp = createAsyncThunk(
             user_data: dataUser.auth,
           }),
         );
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'Home'}],
-        });
-      } else console.log('gagal sign up:', response);
+        ToastAndroid.show(
+          `Selamat datang, ${formData?.nama_lengkap}`,
+          ToastAndroid.SHORT,
+        );
+        setTimeout(() => {
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Home'}],
+          });
+        }, 500);
+      } else ToastAndroid.show(`${response?.message}`, ToastAndroid.SHORT);
       return response;
     } catch (error) {
       console.log('error masbro:', error.message);
+      ToastAndroid.show(
+        `Terjadi kesalahan: ${error?.message}`,
+        ToastAndroid.LONG,
+      );
       return error.message;
     }
   },

@@ -11,8 +11,10 @@ import {useSelector} from 'react-redux';
 import {ImgCommunity, ImgShirt} from '../../../assets';
 import {Gap} from '../../../components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/native';
 
 export default function Agendas() {
+  const {navigate} = useNavigation();
   // const {status} = useSelector(state => state)
   return (
     <View>
@@ -34,7 +36,9 @@ export default function Agendas() {
             </View>
           </TouchableNativeFeedback>
         ))}
-        <TouchableNativeFeedback useForeground>
+        <TouchableNativeFeedback
+          useForeground
+          onPress={() => navigate('Agenda')}>
           <View style={styles.btnViewMore}>
             <Icon
               name={'chevron-right'}

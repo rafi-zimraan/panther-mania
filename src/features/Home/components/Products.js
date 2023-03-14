@@ -11,8 +11,10 @@ import {useSelector} from 'react-redux';
 import {ImgShirt} from '../../../assets';
 import {Gap} from '../../../components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/native';
 
 export default function Products() {
+  const {navigate} = useNavigation();
   // const {status} = useSelector(state => state)
   return (
     <View>
@@ -22,7 +24,10 @@ export default function Products() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.viewProduct}>
         {[...new Array(4).keys()].map((v, i) => (
-          <TouchableNativeFeedback key={i} useForeground>
+          <TouchableNativeFeedback
+            key={i}
+            useForeground
+            onPress={() => navigate('ProductDetail', {product_id: i})}>
             <View style={styles.btnProduct}>
               <Image source={ImgShirt} style={styles.imgProduct} />
               <Text style={styles.textProductTitle} numberOfLines={2}>
@@ -32,7 +37,9 @@ export default function Products() {
             </View>
           </TouchableNativeFeedback>
         ))}
-        <TouchableNativeFeedback useForeground>
+        <TouchableNativeFeedback
+          useForeground
+          onPress={() => navigate('PantherProduct')}>
           <View style={styles.btnViewMore}>
             <Icon
               name={'chevron-right'}

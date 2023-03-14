@@ -26,13 +26,6 @@ export default function FormInput({
   showIndex,
 }) {
   const [showPassword, setShowPassword] = useState(false);
-  const [invalid, setInvalid] = useState(false);
-  const invalidCondition =
-    index == 1
-      ? value == ''
-      : index == 2
-      ? value == '' || !value.includes('@') || !value.includes('.')
-      : value == '';
 
   function iconName(i) {
     return i == 0
@@ -121,12 +114,8 @@ export default function FormInput({
       : null;
 
   return (
-    <View style={{margin: 5}}>
-      <View
-        style={{
-          ...styles.container,
-          borderColor: invalidCondition ? 'tomato' : 'black',
-        }}>
+    <View style={{margin: 10}}>
+      <View style={styles.container}>
         <Icon
           name={iconOverride ? iconOverride : iconName(index)}
           color={'white'}
@@ -167,7 +156,6 @@ export default function FormInput({
         )}
         {showIndex && <Text>{index}</Text>}
       </View>
-      <Text style={styles.textError}>{invalid ? 'Isi dengan benar' : ''}</Text>
     </View>
   );
 }
@@ -214,5 +202,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 15,
     backgroundColor: 'white',
+    height: 60,
+    width: '100%',
   },
 });

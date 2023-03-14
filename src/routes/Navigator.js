@@ -2,10 +2,14 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
+  Agenda,
+  AgendaDetail,
   AuthMethod,
   Home,
   LibsTest,
   OnBoarding,
+  PantherProduct,
+  ProductDetail,
   SignIn,
   SignUp,
   Splash,
@@ -26,6 +30,10 @@ export default function Navigator() {
         <Stack.Screen component={SignUp} name={'SignUp'} />
         <Stack.Screen component={Home} name={'Home'} />
         <Stack.Screen component={UserProfile} name={'UserProfile'} />
+        <Stack.Screen component={ProductDetail} name={'ProductDetail'} />
+        <Stack.Screen component={AgendaDetail} name={'AgendaDetail'} />
+        <Stack.Screen component={Agenda} name={'Agenda'} />
+        <Stack.Screen component={PantherProduct} name={'PantherProduct'} />
       </Stack.Navigator>
     </NavigationContainer>
   );

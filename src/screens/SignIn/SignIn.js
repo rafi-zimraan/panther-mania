@@ -8,16 +8,14 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {ImgBgPlain, ImgPMCar} from '../../assets';
-import useOrientation from '../../utils/useOrientation';
 import {ButtonSubmit, FormInput} from '../../features/Auth';
-import {Gap} from '../../components';
+import {BackgroundImage, Gap, Header} from '../../components';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchSignIn} from '../../features/Auth/services/signInServices';
 
 export default function SignIn({navigation}) {
   const dispatch = useDispatch();
   const {status_signin: status} = useSelector(state => state.auth);
-  const {width, height} = useOrientation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -30,11 +28,9 @@ export default function SignIn({navigation}) {
 
   return (
     <View style={{flex: 1}}>
+      <BackgroundImage />
+      <Header title="Masuk" onPress={() => navigation.goBack()} />
       <View style={styles.container}>
-        <Image
-          source={ImgBgPlain}
-          style={{width, height, position: 'absolute'}}
-        />
         <Image
           source={ImgPMCar}
           style={{position: 'absolute', opacity: 0.25}}
@@ -45,14 +41,13 @@ export default function SignIn({navigation}) {
           autoCapitalize={'none'}
           onChangeText={setEmail}
         />
-        <Gap height={15} />
         <FormInput
           placeholder="Kata Sandi"
           password
           iconOverride={'lock'}
           onChangeText={setPassword}
         />
-        <Gap height={15} />
+        <Gap height={20} />
         <ButtonSubmit
           title="MASUK"
           disabled={disableButton}

@@ -38,6 +38,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin: 15,
+    padding: 15,
+    width: '100%',
+    zIndex: 9,
   },
 });

@@ -5,7 +5,7 @@ import DatePicker from '@react-native-community/datetimepicker';
 import {ButtonSubmit, FormInput} from '../../features/Auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchSignUp} from '../../features/Auth/services/signUpServices';
-import {BackgroundImage, Header} from '../../components';
+import {BackgroundImage, Gap, Header} from '../../components';
 
 export default function SignUp({navigation}) {
   const dispatch = useDispatch();
@@ -242,11 +242,12 @@ export default function SignUp({navigation}) {
             {dateTax.visible && (
               <DatePicker value={dateTax.value} onChange={handleDateTax} />
             )}
+            <Gap height={20} />
             <ButtonSubmit
               onPress={() => dispatch(fetchSignUp({formData, navigation}))}
               loading={status_signup == 'pending'}
-              // disabled={disableSignUp}
             />
+            <Gap height={20} />
           </View>
         )}
       </ScrollView>

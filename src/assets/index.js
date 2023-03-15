@@ -11,6 +11,7 @@ import IconCalendar from './icons/timetable.png';
 import IconProduct from './icons/box.png';
 import IconSOS from './icons/sos.png';
 import IconUser from './icons/user.png';
+import IconFlagGreen from './icons/flag.png';
 
 export {
   ImgCommunity,
@@ -20,6 +21,7 @@ export {
   ImgBgOnBoarding,
   ImgBgPlain,
   ImgAppLogo,
+  IconFlagGreen,
   IconWhatsApp,
   IconCalendar,
   IconProduct,

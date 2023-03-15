@@ -24,7 +24,10 @@ export default function Agendas() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.viewAgenda}>
         {[...new Array(4).keys()].map((v, i) => (
-          <TouchableNativeFeedback key={i} useForeground>
+          <TouchableNativeFeedback
+            key={i}
+            useForeground
+            onPress={() => navigate('AgendaDetail')}>
             <View style={styles.btnAgenda}>
               <Image source={ImgCommunity} style={styles.imgAgenda} />
               <Text style={styles.textAgendaTitle} numberOfLines={2}>

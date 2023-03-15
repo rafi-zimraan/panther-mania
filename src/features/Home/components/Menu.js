@@ -30,9 +30,9 @@ export default function Menu() {
       case 0:
         return alert();
       case 1:
-        return alert();
+        return navigate('Agenda');
       case 2:
-        return alert();
+        return navigate('PantherProduct');
       case 3:
         return alert();
       case 4:

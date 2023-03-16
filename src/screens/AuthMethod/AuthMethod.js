@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, Alert} from 'react-native';
 import React from 'react';
 import {ImgBGDefault, ImgPMCar} from '../../assets';
 import useOrientation from '../../utils/useOrientation';

@@ -73,7 +73,15 @@ export default function UserProfile({navigation}) {
           <Text style={styles.textUserDetail}>{handphone}</Text>
           <Text style={styles.textUserDetail}>{panther_nopol}</Text>
           <Gap flex={isPortrait ? 1 : 0} height={isPortrait ? 0 : 100} />
-          <ButtonOption title={'Perbarui Profil'} />
+          <ButtonOption
+            title={'Perbarui Profil'}
+            onPress={() =>
+              Alert.alert(
+                'Fitur dalam pengembangan',
+                'Nantikan update terbaru dari kami, ya!',
+              )
+            }
+          />
           <Gap height={10} />
           <ButtonOption
             title={'Keluar'}

@@ -106,10 +106,7 @@ export default function FormInput({
         index == 20 ||
         index == 24 ||
         index == 25 ||
-        index == 26 ||
-        index == 27 ||
-        index == 29 ||
-        index == 30
+        index == 26
       ? 'phone-pad'
       : null;
 

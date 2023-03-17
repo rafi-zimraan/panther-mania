@@ -18,7 +18,15 @@ export default function AuthMethod({navigation}) {
         style={{width, height, position: 'absolute'}}
       />
       <Image source={ImgPMCar} />
-      <ButtonAuthMethod title="SCAN ID" onPress={() => Alert.alert('Fitur sedang dalam pengembangan', 'Nantikan fitur terbaru dari kami, ya!')} />
+      <ButtonAuthMethod
+        title="SCAN ID"
+        onPress={() =>
+          Alert.alert(
+            'Fitur sedang dalam pengembangan',
+            'Nantikan fitur terbaru dari kami, ya!',
+          )
+        }
+      />
       <Gap height={20} />
       <ButtonAuthMethod
         title="MASUK"

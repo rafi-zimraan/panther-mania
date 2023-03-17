@@ -21,11 +21,26 @@ const Stack = createNativeStackNavigator();
 export default function Navigator() {
   return (
     <NavigationContainer onReady={() => RNBootSplash.hide()}>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          statusBarTranslucent: true,
+          statusBarColor: 'transparent',
+          statusBarStyle: 'dark',
+          statusBarAnimation: 'fade',
+        }}>
         {/* <Stack.Screen component={LibsTest} name={'LibsTest'} /> */}
         <Stack.Screen component={Splash} name={'Splash'} />
         <Stack.Screen component={OnBoarding} name={'OnBoarding'} />
-        <Stack.Screen component={AuthMethod} name={'AuthMethod'} />
+        <Stack.Screen
+          component={AuthMethod}
+          name={'AuthMethod'}
+          options={{
+            statusBarStyle: 'light',
+            // statusBarColor: 'transparent',
+            // statusBarAnimation: 'fade',
+          }}
+        />
         <Stack.Screen component={SignIn} name={'SignIn'} />
         <Stack.Screen component={SignUp} name={'SignUp'} />
         <Stack.Screen component={Home} name={'Home'} />

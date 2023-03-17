@@ -1,15 +1,32 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import {
+  Alert,
+  Button,
+  Image,
+  PermissionsAndroid,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableNativeFeedback,
+  View,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {ImgBgPlain} from '../../assets';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Picker} from '@react-native-picker/picker';
 import DatePicker from '@react-native-community/datetimepicker';
 import {ButtonSubmit, FormInput} from '../../features/Auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchSignUp} from '../../features/Auth/services/signUpServices';
-import {BackgroundImage, Gap, Header} from '../../components';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import {Gap, Header} from '../../components';
+import formExample from './formExample';
+import {API_KEY} from '@env';
 
 export default function SignUp({navigation}) {
   const dispatch = useDispatch();
-  const {status_signup} = useSelector(state => state.auth);
+  const {status_signup, token} = useSelector(state => state.auth);
 
   const [ready, setReady] = useState(false);
   setTimeout(() => setReady(true), 1000); // "lazy render"
@@ -18,7 +35,7 @@ export default function SignUp({navigation}) {
     agama: 'Pilih Agama',
     alamat_lengkap: '',
     alamat_perusahaan: '',
-    email: '',
+    email: 'testing21@gmail.com',
     handphone: '',
     jenis_kelamin: 'Laki-laki',
     kabupaten_kota: '',
@@ -47,6 +64,33 @@ export default function SignUp({navigation}) {
     type_kendaraan: '',
     ukuran_baju: 'Pilih Ukuran Baju',
     warna_kendaraan: '',
+  });
+  const [formPhotos, setFormPhotos] = useState({
+    photos_members: {
+      uri: null,
+      name: null,
+      type: null,
+    },
+    photos_ktp: {
+      uri: null,
+      name: null,
+      type: null,
+    },
+    photos_sim: {
+      uri: null,
+      name: null,
+      type: null,
+    },
+    photos_stnk: {
+      uri: null,
+      name: null,
+      type: null,
+    },
+    photos_bukti_transfer: {
+      uri: null,
+      name: null,
+      type: null,
+    },
   });
 
   const formArray = [
@@ -83,6 +127,122 @@ export default function SignUp({navigation}) {
     {field: 'no_engine', name: 'Nomor Engine'},
     {field: 'tanggal_pajak', name: 'Tanggal Pajak'},
   ];
+
+  useEffect(() => {
+    const successSignUp = async () => {
+      await EncryptedStorage.setItem(
+        'user_credential',
+        JSON.stringify({email: formData.email, password: formData.password}),
+      );
+      navigation.replace('Home');
+    };
+    if (token) successSignUp();
+  }, [token]);
+  async function submitRegister() {
+    let formData = new FormData();
+    let json = formExample;
+
+    for (let p in json) formData.append(p, json[p]);
+
+    formData.append('photos_members', formPhotos.photos_members);
+    formData.append('photos_ktp', formPhotos.photos_ktp);
+    formData.append('photos_bukti_tranfer', formPhotos.photos_bukti_transfer);
+    formData.append('photos_sim', formPhotos.photos_sim);
+    formData.append('photos_stnk', formPhotos.photos_stnk);
+
+    dispatch(fetchSignUp({formData, navigation}));
+  }
+
+  async function handleImagePicker(index, from) {
+    try {
+      const method =
+        from == 'gallery'
+          ? launchImageLibrary({mediaType: 'photo', quality: 0.2})
+          : launchCamera({mediaType: 'photo', quality: 0.2});
+      const {assets} = await method;
+      const {uri, fileName: name, type} = assets[0];
+      switch (index) {
+        case 0:
+          return setFormPhotos({
+            ...formPhotos,
+            photos_members: {uri, name, type},
+          });
+        case 1:
+          return setFormPhotos({...formPhotos, photos_ktp: {uri, name, type}});
+        case 2:
+          return setFormPhotos({...formPhotos, photos_stnk: {uri, name, type}});
+        case 3:
+          return setFormPhotos({...formPhotos, photos_sim: {uri, name, type}});
+        case 4:
+          return setFormPhotos({
+            ...formPhotos,
+            photos_bukti_transfer: {uri, name, type},
+          });
+        default:
+          return console.log(`field dengan index ${index} tidak ditemukan`);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  function handleImageMethod(i) {
+    const PermissionCamera = async () => {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED)
+        handleImagePicker(i, 'camera');
+    };
+
+    Alert.alert(
+      '',
+      'Ambil gambar dari..',
+      [
+        {
+          text: 'Kamera',
+          onPress: () => PermissionCamera(),
+        },
+        {
+          text: 'Galeri',
+          onPress: () => handleImagePicker(i, 'gallery'),
+        },
+      ],
+      {cancelable: true},
+    );
+  }
+  function photoField(index) {
+    switch (index) {
+      case 0:
+        return 'photos_members';
+      case 1:
+        return 'photos_ktp';
+      case 2:
+        return 'photos_stnk';
+      case 3:
+        return 'photos_sim';
+      case 4:
+        return 'photos_bukti_transfer';
+      default:
+        return 'photos_members';
+    }
+  }
+  function photoFieldTitle(index) {
+    switch (index) {
+      case 0:
+        return 'Profil';
+      case 1:
+        return 'KTP';
+      case 2:
+        return 'STNK';
+      case 3:
+        return 'SIM';
+      case 4:
+        return 'Bukti Transfer';
+      default:
+        return 'Tidak diketahui';
+    }
+  }
 
   function PickerGender() {
     return (
@@ -142,8 +302,10 @@ export default function SignUp({navigation}) {
       <Picker
         style={{flex: 1, color: 'black'}}
         dropdownIconColor={'grey'}
-        selectedValue={formData.status_nikah}
-        onValueChange={value => setFormData({...formData, status_nikah: value})}
+        selectedValue={formData.status_menikah}
+        onValueChange={value =>
+          setFormData({...formData, status_menikah: value})
+        }
         mode={'dropdown'}>
         <Picker.Item
           label="Pilih Status Menikah"
@@ -159,37 +321,54 @@ export default function SignUp({navigation}) {
 
   const [showDateBirth, setShowDateBirth] = useState(false);
   const [birthValue, setBirthValue] = useState(new Date());
-  const [dateBirth, setDateBirth] = useState({
-    value: new Date(),
-    visible: false,
-  });
   function handleDateBirth(event, selectedDate) {
     if (event.type == 'set') {
-      setDateBirth({visible: false, value: selectedDate});
+      setShowDateBirth(false);
+      setBirthValue(selectedDate);
       const [y, m, d] = selectedDate.toISOString().slice(0, 10).split('-');
       setFormData({...formData, tanggal_lahir: `${y}-${m}-${d}`});
-    } else setDateBirth({...dateBirth, visible: false});
+    } else setShowDateBirth(false);
   }
 
-  const [dateTax, setDateTax] = useState({
-    value: new Date(),
-    visible: false,
-  });
+  const [showDateTax, setShowDateTax] = useState(false);
+  const [taxValue, setTaxValue] = useState(new Date());
   function handleDateTax(event, selectedDate) {
     if (event.type == 'set') {
-      setDateTax({visible: false, value: selectedDate});
+      setShowDateTax(false);
+      setTaxValue(selectedDate);
       const [y, m, d] = selectedDate.toISOString().slice(0, 10).split('-');
       setFormData({...formData, tanggal_pajak: `${y}-${m}-${d}`});
-    } else setDateTax({...dateTax, visible: false});
+    } else setShowDateTax(false);
   }
 
   return (
     <View style={{flex: 1}}>
-      <BackgroundImage />
+      <Image source={ImgBgPlain} style={styles.imgBackground} />
       <ScrollView stickyHeaderIndices={[0]} stickyHeaderHiddenOnScroll>
         <Header title="Register" onPress={() => navigation.goBack()} />
         {ready && (
           <View style={styles.container}>
+            {/* Image field */}
+            {[...new Array(5).keys()].map((v, i) => (
+              <TouchableNativeFeedback
+                key={i}
+                useForeground
+                onPress={() => handleImageMethod(i)}>
+                <View style={styles.imgContainer}>
+                  <Text
+                    style={
+                      styles.textPhotoFieldTitle
+                    }>{`Pilih Foto ${photoFieldTitle(i)}`}</Text>
+                  {formPhotos[photoField(i)].uri ? (
+                    <Image
+                      source={{uri: formPhotos[photoField(i)].uri}}
+                      style={{width: '100%', height: 210}}
+                    />
+                  ) : null}
+                </View>
+              </TouchableNativeFeedback>
+            ))}
+
             {/* Input, Date & Picker field  distinguished by array index */}
             {formArray.map(({field, name}, i) => {
               // array index for picker field: 4 5 7 8 9
@@ -218,6 +397,7 @@ export default function SignUp({navigation}) {
                   onChangeText={value =>
                     setFormData({...formData, [field]: value})
                   }
+                  showIndex
                   index={i}
                   value={formData[field]}
                   placeholder={name}
@@ -232,19 +412,19 @@ export default function SignUp({navigation}) {
                 />
               );
             })}
-            {dateBirth.visible && (
+            {showDateBirth && (
               <DatePicker
-                value={dateBirth.value}
+                value={birthValue}
                 onChange={handleDateBirth}
                 maximumDate={new Date()}
               />
             )}
-            {dateTax.visible && (
-              <DatePicker value={dateTax.value} onChange={handleDateTax} />
+            {showDateTax && (
+              <DatePicker value={taxValue} onChange={handleDateTax} />
             )}
             <Gap height={20} />
             <ButtonSubmit
-              onPress={() => dispatch(fetchSignUp({formData, navigation}))}
+              onPress={submitRegister}
               loading={status_signup == 'pending'}
             />
             <Gap height={20} />
@@ -315,7 +495,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   container: {
-    padding: 10,
+    padding: 20,
     width: '100%',
     maxWidth: 480,
     alignSelf: 'center',

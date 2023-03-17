@@ -13,6 +13,7 @@ import useOrientation from '../../utils/useOrientation';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchSignIn} from '../../features/Auth/services/signInServices';
+import {Gap} from '../../components';
 
 export default function Splash({navigation}) {
   const dispatch = useDispatch();
@@ -40,6 +41,12 @@ export default function Splash({navigation}) {
 
   return (
     <View style={styles.container}>
+      {/* <StatusBar
+        barStyle={'light-content'}
+        backgroundColor={'transparent'}
+        animated
+      /> */}
+      <Gap height={StatusBar.currentHeight} />
       <Image
         source={ImgBGDefault}
         style={{width, height, position: 'absolute'}}

@@ -1,14 +1,16 @@
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View, StatusBar} from 'react-native';
 import React from 'react';
 import {Agendas, HomeHeader, Menu, Products} from '../../features/Home';
-import {BackgroundImage} from '../../components';
+import {BackgroundImage, Gap} from '../../components';
 
 export default function Home() {
   return (
     <View style={{flex: 1}}>
+      {/* <Gap height={StatusBar.currentHeight} /> */}
       <BackgroundImage />
       <ScrollView>
         <View style={styles.container}>
+          <Gap height={StatusBar.currentHeight} />
           <HomeHeader />
           <View style={styles.containerContent}>
             <Menu />

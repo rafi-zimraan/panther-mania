@@ -60,8 +60,11 @@ export default function UserProfile({navigation}) {
   return (
     <View style={{flex: 1}}>
       <BackgroundImage />
-      <Header title="Profil Anda" onPress={() => navigation.goBack()} />
-      <ScrollView contentContainerStyle={{flex: isPortrait ? 1 : 0}}>
+      <ScrollView
+        contentContainerStyle={{flex: isPortrait ? 1 : 0}}
+        stickyHeaderIndices={[0]}
+        stickyHeaderHiddenOnScroll>
+        <Header title="Profil Anda" onPress={() => navigation.goBack()} />
         <View style={styles.viewProfile}>
           <View style={styles.imgPfp}>
             <Icon name={'account-circle'} size={200} color={'grey'} />

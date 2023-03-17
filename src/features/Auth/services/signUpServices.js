@@ -34,7 +34,10 @@ export const fetchSignUp = createAsyncThunk(
             routes: [{name: 'Home'}],
           });
         }, 500);
-      } else ToastAndroid.show(`${response?.message}`, ToastAndroid.SHORT);
+      } else {
+        console.log(response);
+        ToastAndroid.show(`${response?.message}`, ToastAndroid.SHORT);
+      }
       return response;
     } catch (error) {
       console.log('error masbro:', error.message);

@@ -5,6 +5,7 @@ import {
   TouchableNativeFeedback,
   View,
   Alert,
+  Linking,
 } from 'react-native';
 import React from 'react';
 import {
@@ -26,9 +27,16 @@ export default function Menu() {
         'Fitur dalam pengembangan',
         'Nantikan update terbaru dari kami, ya!',
       );
+    const openWhatsApp = async () => {
+      try {
+        await Linking.openURL(`https://wa.me/6282161196119`);
+      } catch (error) {
+        console.log('open WhatsApp error:', error.message);
+      }
+    };
     switch (index) {
       case 0:
-        return alert();
+        return openWhatsApp();
       case 1:
         return navigate('Agenda');
       case 2:

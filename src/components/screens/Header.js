@@ -1,4 +1,10 @@
-import {StyleSheet, Text, View, TouchableNativeFeedback} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableNativeFeedback,
+  StatusBar,
+} from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -8,7 +14,12 @@ export default function Header({
   onPress,
 }) {
   return (
-    <View style={styles.container}>
+    <View style={styles.container(StatusBar.currentHeight)}>
+      <StatusBar
+        translucent
+        backgroundColor={'transparent'}
+        barStyle={'dark-content'}
+      />
       <TouchableNativeFeedback useForeground onPress={onPress}>
         <View style={styles.btnHeader}>
           <Icon name={iconName} color={'white'} size={32} />
@@ -35,11 +46,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  container: {
+  container: statBarHeight => ({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
     width: '100%',
     zIndex: 9,
-  },
+    marginTop: statBarHeight,
+  }),
 });

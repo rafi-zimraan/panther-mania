@@ -17,6 +17,7 @@ const configMultipart = access => ({
   },
 });
 
+// Auth
 export const postSignUp = formData =>
   axios.post(`${API_SIGNUP}`, formData, configMultipart());
 export const postSignIn = formData =>

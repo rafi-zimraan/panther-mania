@@ -22,7 +22,6 @@ import {fetchSignUp} from '../../features/Auth/services/signUpServices';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {Gap, Header} from '../../components';
 import formExample from './formExample';
-import {API_KEY} from '@env';
 
 export default function SignUp({navigation}) {
   const dispatch = useDispatch();
@@ -66,27 +65,27 @@ export default function SignUp({navigation}) {
     warna_kendaraan: '',
   });
   const [formPhotos, setFormPhotos] = useState({
-    photos_members: {
+    profile: {
       uri: null,
       name: null,
       type: null,
     },
-    photos_ktp: {
+    ktp: {
       uri: null,
       name: null,
       type: null,
     },
-    photos_sim: {
+    sim: {
       uri: null,
       name: null,
       type: null,
     },
-    photos_stnk: {
+    stnk: {
       uri: null,
       name: null,
       type: null,
     },
-    photos_bukti_transfer: {
+    bukti_tf: {
       uri: null,
       name: null,
       type: null,
@@ -132,25 +131,29 @@ export default function SignUp({navigation}) {
     const successSignUp = async () => {
       await EncryptedStorage.setItem(
         'user_credential',
-        JSON.stringify({email: formData.email, password: formData.password}),
+        JSON.stringify({
+          email: formExample.email,
+          password: formExample.password,
+        }),
       );
       navigation.replace('Home');
     };
     if (token) successSignUp();
   }, [token]);
+
   async function submitRegister() {
-    let formData = new FormData();
+    let multiPart = new FormData();
     let json = formExample;
 
-    for (let p in json) formData.append(p, json[p]);
+    for (let p in json) multiPart.append(p, json[p]);
 
-    formData.append('photos_members', formPhotos.photos_members);
-    formData.append('photos_ktp', formPhotos.photos_ktp);
-    formData.append('photos_bukti_tranfer', formPhotos.photos_bukti_transfer);
-    formData.append('photos_sim', formPhotos.photos_sim);
-    formData.append('photos_stnk', formPhotos.photos_stnk);
+    multiPart.append('profile', formPhotos.profile);
+    multiPart.append('ktp', formPhotos.ktp);
+    multiPart.append('bukti_tf', formPhotos.bukti_tf);
+    multiPart.append('sim', formPhotos.sim);
+    multiPart.append('stnk', formPhotos.stnk);
 
-    dispatch(fetchSignUp({formData, navigation}));
+    dispatch(fetchSignUp(multiPart));
   }
 
   async function handleImagePicker(index, from) {
@@ -165,18 +168,18 @@ export default function SignUp({navigation}) {
         case 0:
           return setFormPhotos({
             ...formPhotos,
-            photos_members: {uri, name, type},
+            profile: {uri, name, type},
           });
         case 1:
-          return setFormPhotos({...formPhotos, photos_ktp: {uri, name, type}});
+          return setFormPhotos({...formPhotos, ktp: {uri, name, type}});
         case 2:
-          return setFormPhotos({...formPhotos, photos_stnk: {uri, name, type}});
+          return setFormPhotos({...formPhotos, stnk: {uri, name, type}});
         case 3:
-          return setFormPhotos({...formPhotos, photos_sim: {uri, name, type}});
+          return setFormPhotos({...formPhotos, sim: {uri, name, type}});
         case 4:
           return setFormPhotos({
             ...formPhotos,
-            photos_bukti_transfer: {uri, name, type},
+            bukti_tf: {uri, name, type},
           });
         default:
           return console.log(`field dengan index ${index} tidak ditemukan`);
@@ -214,17 +217,17 @@ export default function SignUp({navigation}) {
   function photoField(index) {
     switch (index) {
       case 0:
-        return 'photos_members';
+        return 'profile';
       case 1:
-        return 'photos_ktp';
+        return 'ktp';
       case 2:
-        return 'photos_stnk';
+        return 'stnk';
       case 3:
-        return 'photos_sim';
+        return 'sim';
       case 4:
-        return 'photos_bukti_transfer';
+        return 'bukti_tf';
       default:
-        return 'photos_members';
+        return 'profile';
     }
   }
   function photoFieldTitle(index) {

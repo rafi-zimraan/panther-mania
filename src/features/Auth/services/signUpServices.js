@@ -6,17 +6,16 @@ import {ToastAndroid} from 'react-native';
 
 export const fetchSignUp = createAsyncThunk(
   'fetchSignUp',
-  async ({formData, navigation}, {dispatch}) => {
+  async (multiPart, {dispatch}) => {
     try {
-      const {data: response} = await postSignUp(formData);
+      const {data: response} = await postSignUp(multiPart);
       const {message} = response;
       if (message == 'Data Member berhasil disimpan. Silahkan login') {
-        const {email, password} = formData;
         const {data: dataSignIn} = await postSignIn({email, password});
-        await EncryptedStorage.setItem(
-          'user_credential',
-          JSON.stringify({email, password}),
-        );
+        // await EncryptedStorage.setItem(
+        //   'user_credential',
+        //   JSON.stringify({email, password}),
+        // );
         const {data: dataUser} = await getUserData(dataSignIn.token);
         dispatch(
           SetUserCredential({
@@ -24,16 +23,16 @@ export const fetchSignUp = createAsyncThunk(
             user_data: dataUser.auth,
           }),
         );
-        ToastAndroid.show(
-          `Selamat datang, ${formData?.nama_lengkap}`,
-          ToastAndroid.SHORT,
-        );
-        setTimeout(() => {
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'Home'}],
-          });
-        }, 500);
+        // ToastAndroid.show(
+        //   `Selamat datang, ${multiPart?.nama_lengkap}`,
+        //   ToastAndroid.SHORT,
+        // );
+        // setTimeout(() => {
+        //   navigation.reset({
+        //     index: 0,
+        //     routes: [{name: 'Home'}],
+        //   });
+        // }, 500);
       } else {
         console.log(response);
         ToastAndroid.show(`${response?.message}`, ToastAndroid.SHORT);

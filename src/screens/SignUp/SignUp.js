@@ -22,6 +22,7 @@ import {fetchSignUp} from '../../features/Auth/services/signUpServices';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {Gap, Header} from '../../components';
 import formExample from './formExample';
+import Geolocation from 'react-native-geolocation-service';
 
 export default function SignUp({navigation}) {
   const dispatch = useDispatch();
@@ -63,6 +64,8 @@ export default function SignUp({navigation}) {
     type_kendaraan: '',
     ukuran_baju: 'Pilih Ukuran Baju',
     warna_kendaraan: '',
+    lat: '',
+    lng: '',
   });
   const [formPhotos, setFormPhotos] = useState({
     profile: {
@@ -128,17 +131,11 @@ export default function SignUp({navigation}) {
   ];
 
   useEffect(() => {
-    const successSignUp = async () => {
-      await EncryptedStorage.setItem(
-        'user_credential',
-        JSON.stringify({
-          email: formExample.email,
-          password: formExample.password,
-        }),
-      );
-      navigation.replace('Home');
+    const getLatLng = async () => {
+      try {
+        Geolocation.getCurrentPosition();
+      } catch (error) {}
     };
-    if (token) successSignUp();
   }, [token]);
 
   async function submitRegister() {
@@ -153,7 +150,7 @@ export default function SignUp({navigation}) {
     multiPart.append('sim', formPhotos.sim);
     multiPart.append('stnk', formPhotos.stnk);
 
-    dispatch(fetchSignUp(multiPart));
+    dispatch(fetchSignUp({multiPart, navigation}));
   }
 
   async function handleImagePicker(index, from) {
@@ -305,10 +302,8 @@ export default function SignUp({navigation}) {
       <Picker
         style={{flex: 1, color: 'black'}}
         dropdownIconColor={'grey'}
-        selectedValue={formData.status_menikah}
-        onValueChange={value =>
-          setFormData({...formData, status_menikah: value})
-        }
+        selectedValue={formData.status_nikah}
+        onValueChange={value => setFormData({...formData, status_nikah: value})}
         mode={'dropdown'}>
         <Picker.Item
           label="Pilih Status Menikah"
@@ -322,26 +317,28 @@ export default function SignUp({navigation}) {
     );
   }
 
-  const [showDateBirth, setShowDateBirth] = useState(false);
-  const [birthValue, setBirthValue] = useState(new Date());
+  const [dateBirth, setDateBirth] = useState({
+    value: new Date(),
+    visible: false,
+  });
   function handleDateBirth(event, selectedDate) {
     if (event.type == 'set') {
-      setShowDateBirth(false);
-      setBirthValue(selectedDate);
+      setDateBirth({visible: false, value: selectedDate});
       const [y, m, d] = selectedDate.toISOString().slice(0, 10).split('-');
       setFormData({...formData, tanggal_lahir: `${y}-${m}-${d}`});
-    } else setShowDateBirth(false);
+    } else setDateBirth({...dateBirth, visible: false});
   }
 
-  const [showDateTax, setShowDateTax] = useState(false);
-  const [taxValue, setTaxValue] = useState(new Date());
+  const [dateTax, setDateTax] = useState({
+    value: new Date(),
+    visible: false,
+  });
   function handleDateTax(event, selectedDate) {
     if (event.type == 'set') {
-      setShowDateTax(false);
-      setTaxValue(selectedDate);
+      setDateTax({visible: false, value: selectedDate});
       const [y, m, d] = selectedDate.toISOString().slice(0, 10).split('-');
       setFormData({...formData, tanggal_pajak: `${y}-${m}-${d}`});
-    } else setShowDateTax(false);
+    } else setDateTax({...dateTax, visible: false});
   }
 
   return (
@@ -400,7 +397,7 @@ export default function SignUp({navigation}) {
                   onChangeText={value =>
                     setFormData({...formData, [field]: value})
                   }
-                  showIndex
+                  // showIndex
                   index={i}
                   value={formData[field]}
                   placeholder={name}
@@ -415,15 +412,15 @@ export default function SignUp({navigation}) {
                 />
               );
             })}
-            {showDateBirth && (
+            {dateBirth.visible && (
               <DatePicker
-                value={birthValue}
+                value={dateBirth.value}
                 onChange={handleDateBirth}
                 maximumDate={new Date()}
               />
             )}
-            {showDateTax && (
-              <DatePicker value={taxValue} onChange={handleDateTax} />
+            {dateTax.visible && (
+              <DatePicker value={dateTax.value} onChange={handleDateTax} />
             )}
             <Gap height={20} />
             <ButtonSubmit

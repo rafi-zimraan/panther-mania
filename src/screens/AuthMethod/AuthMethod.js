@@ -9,7 +9,6 @@ import {useSelector} from 'react-redux';
 export default function AuthMethod({navigation}) {
   const {auth} = useSelector(state => state);
   const {width, height} = useOrientation();
-  // console.log(auth.status_signup);
 
   return (
     <View style={styles.container}>

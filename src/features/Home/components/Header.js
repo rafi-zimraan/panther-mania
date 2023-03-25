@@ -7,6 +7,7 @@ import {Gap} from '../../../components';
 
 export default function HomeHeader() {
   const {nama_lengkap} = useSelector(state => state.auth.user_data);
+
   return (
     <View style={{padding: 20}}>
       <Image source={ImgAppLogo} style={{alignSelf: 'flex-end'}} />

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {API_SINGIN, API_SIGNUP, API_SIGNOUT, API_USER_DATA} from '@env';
+import {API_SIGNIN, API_SIGNUP, API_SIGNOUT, API_USER_DATA} from '@env';
 
 const config = access => ({
   headers: {
@@ -21,7 +21,7 @@ const configMultipart = access => ({
 export const postSignUp = formData =>
   axios.post(`${API_SIGNUP}`, formData, configMultipart());
 export const postSignIn = formData =>
-  axios.post(`${API_SINGIN}`, formData, config());
+  axios.post(`${API_SIGNIN}`, formData, config());
 export const getUserData = access =>
   axios.get(`${API_USER_DATA}`, config(access));
 export const postSignOut = access =>

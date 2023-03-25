@@ -2,7 +2,7 @@ const formExample = {
   agama: 'Islam',
   alamat_lengkap: 'Alamat Lengkap',
   alamat_perusahaan: 'Alamat Perusahaan',
-  email: 'testing123@gmail.com',
+  email: 'testing1234@gmail.com',
   handphone: '083726374822',
   jenis_kelamin: 'Perempuan',
   kabupaten_kota: 'Kabupaten Kota',

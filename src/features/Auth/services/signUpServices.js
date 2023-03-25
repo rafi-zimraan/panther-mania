@@ -4,18 +4,36 @@ import {getUserData, postSignIn, postSignUp} from '../../../utils/services';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {ToastAndroid} from 'react-native';
 
+const showToast = (message, duration = 'SHORT') =>
+  ToastAndroid.show(message, ToastAndroid[duration]);
+
+const catchError = error => {
+  showToast(`Terjadi kesalahan: ${error.message}`);
+  console.log(error);
+};
+
 export const fetchSignUp = createAsyncThunk(
   'fetchSignUp',
-  async (multiPart, {dispatch}) => {
+  async ({multiPart, navigation}, {dispatch}) => {
     try {
-      const {data: response} = await postSignUp(multiPart);
+      const {data: response} = await postSignUp(multiPart, navigation);
       const {message} = response;
       if (message == 'Data Member berhasil disimpan. Silahkan login') {
+        // 3, 11 & 16 are index position for email, password & nama_lengkap
+        const email = multiPart._parts[3][1],
+          password = multiPart._parts[16][1],
+          fullName = multiPart._parts[11][1];
+
         const {data: dataSignIn} = await postSignIn({email, password});
-        // await EncryptedStorage.setItem(
-        //   'user_credential',
-        //   JSON.stringify({email, password}),
-        // );
+        if (
+          dataSignIn?.message ==
+          'Maaf status Anda Unregister, Silahkan Hubungi Admin'
+        )
+          return showToast('Menunggu persetujuan registrasi');
+        await EncryptedStorage.setItem(
+          'user_credential',
+          JSON.stringify({email, password}),
+        );
         const {data: dataUser} = await getUserData(dataSignIn.token);
         dispatch(
           SetUserCredential({
@@ -23,27 +41,20 @@ export const fetchSignUp = createAsyncThunk(
             user_data: dataUser.auth,
           }),
         );
-        // ToastAndroid.show(
-        //   `Selamat datang, ${multiPart?.nama_lengkap}`,
-        //   ToastAndroid.SHORT,
-        // );
-        // setTimeout(() => {
-        //   navigation.reset({
-        //     index: 0,
-        //     routes: [{name: 'Home'}],
-        //   });
-        // }, 500);
+        showToast(`Selamat datang, ${fullName}`);
+        setTimeout(() => {
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Home'}],
+          });
+        }, 500);
       } else {
         console.log(response);
-        ToastAndroid.show(`${response?.message}`, ToastAndroid.SHORT);
+        showToast(`Terjadi kesalahan: ${response.message}`);
       }
       return response;
     } catch (error) {
-      console.log('error masbro:', error.message);
-      ToastAndroid.show(
-        `Terjadi kesalahan: ${error?.message}`,
-        ToastAndroid.LONG,
-      );
+      catchError(error);
       return error.message;
     }
   },

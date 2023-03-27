@@ -2,11 +2,13 @@ import {
   Alert,
   Button,
   Image,
+  Linking,
   PermissionsAndroid,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableNativeFeedback,
   View,
 } from 'react-native';
@@ -48,6 +50,7 @@ export default function SignUp({navigation}) {
     no_chasis: '',
     no_engine: '',
     no_polisi: '',
+    no_whatsapp: '',
     password: '',
     password_confirmation: '',
     pekerjaan: '',
@@ -111,13 +114,14 @@ export default function SignUp({navigation}) {
     {field: 'kecamatan', name: 'Kecamatan'},
     {field: 'provinsi', name: 'Provinsi'},
     {field: 'kabupaten_kota', name: 'Kabupaten Kota'},
-    {field: 'kodepos', name: 'Kode pos'}, // new
+    {field: 'kodepos', name: 'Kode pos'},
     {field: 'nama_perusahaan', name: 'Nama Perusahaan'},
     {field: 'alamat_perusahaan', name: 'Alamat Perusahaan'},
     {field: 'handphone', name: 'Nomor Telepon'},
+    {field: 'no_whatsapp', name: 'Nomor WhatsApp'},
     {field: 'telp_kantor', name: 'Nomor telp Kantor'},
-    {field: 'telp_rumah', name: 'No telp Rumah'}, // new
-    {field: 'sekolah', name: 'Sekolah'}, // new
+    {field: 'telp_rumah', name: 'No telp Rumah'},
+    {field: 'sekolah', name: 'Sekolah'},
     {field: 'pekerjaan', name: 'Pekerjaan'},
     {field: 'type_kendaraan', name: 'Tipe Kendaraan'},
     {field: 'tahun_kendaraan', name: 'Tahun Kendaraan'},
@@ -131,12 +135,66 @@ export default function SignUp({navigation}) {
   ];
 
   useEffect(() => {
-    const getLatLng = async () => {
-      try {
-        Geolocation.getCurrentPosition();
-      } catch (error) {}
-    };
-  }, [token]);
+    getLocationPermission();
+  }, []);
+
+  async function getLocationPermission() {
+    const Permit = PermissionsAndroid;
+
+    try {
+      const grantedFine = await Permit.request(
+        Permit.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      const grantedCoarse = await Permit.request(
+        Permit.PERMISSIONS.ACCESS_COARSE_LOCATION,
+      );
+      if (
+        grantedFine === 'never_ask_again' ||
+        grantedCoarse === 'never_ask_again'
+      ) {
+        ToastAndroid.show('Izin lokasi diperlukan', ToastAndroid.LONG);
+        Alert.alert(
+          'Izin Lokasi',
+          'Izin lokasi diperlukan untuk fitur seperti SOS',
+          [
+            {text: 'Batal', onPress: () => navigation.goBack()},
+            {text: 'Beri Izin', onPress: () => Linking.openSettings()},
+          ],
+          {cancelable: false},
+        );
+        return;
+      } else if (grantedFine === 'granted' && grantedCoarse === 'granted') {
+        Geolocation.getCurrentPosition(
+          ({coords}) => {
+            const {latitude: lat, longitude: lng} = coords;
+            setFormData({...formData, lat, lng});
+          },
+          ({code, message}) => {
+            ToastAndroid.show(
+              `Terjadi kesalahan: ${message}`,
+              ToastAndroid.SHORT,
+            );
+          },
+          {enableHighAccuracy: true},
+        );
+        return;
+      } else
+        return Alert.alert(
+          'Izin Lokasi',
+          'Izin lokasi diperlukan untuk fitur seperti SOS',
+          [
+            {text: 'Batal', onPress: () => navigation.goBack()},
+            {text: 'Beri Izin', onPress: () => getLocationPermission()},
+          ],
+          {cancelable: false},
+        );
+    } catch (error) {
+      ToastAndroid.show(
+        `Terjadi kesalahan: ${error.message}`,
+        ToastAndroid.SHORT,
+      );
+    }
+  }
 
   async function submitRegister() {
     let multiPart = new FormData();
@@ -149,6 +207,10 @@ export default function SignUp({navigation}) {
     multiPart.append('bukti_tf', formPhotos.bukti_tf);
     multiPart.append('sim', formPhotos.sim);
     multiPart.append('stnk', formPhotos.stnk);
+    const email = multiPart._parts[3][1],
+      password = multiPart._parts[17][1],
+      fullName = multiPart._parts[11][1];
+    // console.log(email);
 
     dispatch(fetchSignUp({multiPart, navigation}));
   }
@@ -383,7 +445,7 @@ export default function SignUp({navigation}) {
                   : PickerMarriedStatus();
 
               // array index for date field: 7 29
-              const date = i == 7 || i == 31;
+              const date = i == 7 || i == 32;
               const renderDate = () =>
                 i == 7
                   ? setDateBirth({...dateBirth, visible: true})
@@ -397,7 +459,7 @@ export default function SignUp({navigation}) {
                   onChangeText={value =>
                     setFormData({...formData, [field]: value})
                   }
-                  // showIndex
+                  showIndex
                   index={i}
                   value={formData[field]}
                   placeholder={name}

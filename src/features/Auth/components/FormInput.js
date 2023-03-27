@@ -67,32 +67,34 @@ export default function FormInput({
       : i == 18
       ? 'phone'
       : i == 19
-      ? 'card-account-phone'
+      ? 'whatsapp'
       : i == 20
-      ? 'phone-classic'
+      ? 'card-account-phone'
       : i == 21
-      ? 'school'
+      ? 'phone-classic'
       : i == 22
-      ? 'badge-account'
+      ? 'school'
       : i == 23
-      ? 'car-info'
+      ? 'badge-account'
       : i == 24
-      ? 'car-clock'
+      ? 'car-info'
       : i == 25
-      ? 'card-account-details'
+      ? 'car-clock'
       : i == 26
       ? 'card-account-details'
       : i == 27
-      ? 'card-bulleted'
+      ? 'card-account-details'
       : i == 28
-      ? 'car-info'
+      ? 'card-bulleted'
       : i == 29
       ? 'car-info'
       : i == 30
       ? 'car-info'
       : i == 31
-      ? 'car-clock'
+      ? 'car-info'
       : i == 32
+      ? 'car-clock'
+      : i == 33
       ? 'phone-alert'
       : 'account';
   }
@@ -104,9 +106,10 @@ export default function FormInput({
         index == 18 ||
         index == 19 ||
         index == 20 ||
-        index == 24 ||
+        index == 21 ||
         index == 25 ||
-        index == 26
+        index == 26 ||
+        index == 27
       ? 'phone-pad'
       : null;
 

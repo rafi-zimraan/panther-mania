@@ -45,6 +45,8 @@ export default function UserProfile({navigation}) {
     );
   };
 
+  // console.log(user_data);
+
   function handleSignOut() {
     return Alert.alert(
       'Keluar',

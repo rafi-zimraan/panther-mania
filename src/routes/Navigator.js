@@ -10,6 +10,7 @@ import {
   OnBoarding,
   PantherProduct,
   ProductDetail,
+  SaveOurSouls,
   SignIn,
   SignUp,
   Splash,
@@ -25,7 +26,7 @@ export default function Navigator() {
         screenOptions={{
           headerShown: false,
         }}>
-        {/* <Stack.Screen component={LibsTest} name={'LibsTest'} /> */}
+        <Stack.Screen component={LibsTest} name={'LibsTest'} />
         <Stack.Screen component={Splash} name={'Splash'} />
         <Stack.Screen component={OnBoarding} name={'OnBoarding'} />
         <Stack.Screen component={AuthMethod} name={'AuthMethod'} />
@@ -37,6 +38,7 @@ export default function Navigator() {
         <Stack.Screen component={AgendaDetail} name={'AgendaDetail'} />
         <Stack.Screen component={Agenda} name={'Agenda'} />
         <Stack.Screen component={PantherProduct} name={'PantherProduct'} />
+        <Stack.Screen component={SaveOurSouls} name={'SaveOurSouls'} />
       </Stack.Navigator>
     </NavigationContainer>
   );

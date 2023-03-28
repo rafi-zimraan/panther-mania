@@ -10,8 +10,10 @@ import ProductDetail from './PantherProduct/ProductDetail';
 import AgendaDetail from './Agenda/AgendaDetail';
 import PantherProduct from './PantherProduct/PantherProduct';
 import Agenda from './Agenda/Agenda';
+import SaveOurSouls from './SOS/SaveOurSouls';
 
 export {
+  SaveOurSouls,
   Splash,
   SignIn,
   SignUp,

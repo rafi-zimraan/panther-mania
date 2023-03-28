@@ -21,32 +21,24 @@ import {useNavigation} from '@react-navigation/native';
 export default function Menu() {
   const {navigate} = useNavigation();
 
-  function handleNavigate(index) {
-    const alert = () =>
-      Alert.alert(
-        'Fitur dalam pengembangan',
-        'Nantikan update terbaru dari kami, ya!',
-      );
-    const openWhatsApp = async () => {
-      try {
-        await Linking.openURL(`https://wa.me/6282161196119`);
-      } catch (error) {
-        console.log('open WhatsApp error:', error.message);
+  async function handleNavigate(index) {
+    try {
+      switch (index) {
+        case 0:
+          return await Linking.openURL(`https://wa.me/6282161196119`);
+        case 1:
+          return navigate('Agenda');
+        case 2:
+          return navigate('PantherProduct');
+        case 3:
+          return navigate('SaveOurSouls');
+        case 4:
+          return navigate('UserProfile');
+        default:
+          console.log('index tidak ditemukan');
       }
-    };
-    switch (index) {
-      case 0:
-        return openWhatsApp();
-      case 1:
-        return navigate('Agenda');
-      case 2:
-        return navigate('PantherProduct');
-      case 3:
-        return alert();
-      case 4:
-        return navigate('UserProfile');
-      default:
-        console.log('index tidak ditemukan');
+    } catch (error) {
+      console.log('handleNavigate error:', error.message);
     }
   }
 

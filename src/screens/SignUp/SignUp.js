@@ -22,7 +22,7 @@ import {ButtonSubmit, FormInput} from '../../features/Auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchSignUp} from '../../features/Auth/services/signUpServices';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {Gap, Header} from '../../components';
+import {BackgroundImage, Gap, Header} from '../../components';
 import formExample from './formExample';
 import Geolocation from 'react-native-geolocation-service';
 
@@ -37,7 +37,7 @@ export default function SignUp({navigation}) {
     agama: 'Pilih Agama',
     alamat_lengkap: '',
     alamat_perusahaan: '',
-    email: 'testing21@gmail.com',
+    email: '',
     handphone: '',
     jenis_kelamin: 'Laki-laki',
     kabupaten_kota: '',
@@ -207,9 +207,7 @@ export default function SignUp({navigation}) {
     multiPart.append('bukti_tf', formPhotos.bukti_tf);
     multiPart.append('sim', formPhotos.sim);
     multiPart.append('stnk', formPhotos.stnk);
-    const email = multiPart._parts[3][1],
-      password = multiPart._parts[17][1],
-      fullName = multiPart._parts[11][1];
+
     // console.log(email);
 
     dispatch(fetchSignUp({multiPart, navigation}));
@@ -405,7 +403,7 @@ export default function SignUp({navigation}) {
 
   return (
     <View style={{flex: 1}}>
-      <Image source={ImgBgPlain} style={styles.imgBackground} />
+      <BackgroundImage />
       <ScrollView stickyHeaderIndices={[0]} stickyHeaderHiddenOnScroll>
         <Header title="Register" onPress={() => navigation.goBack()} />
         {ready && (
@@ -459,7 +457,7 @@ export default function SignUp({navigation}) {
                   onChangeText={value =>
                     setFormData({...formData, [field]: value})
                   }
-                  showIndex
+                  // showIndex
                   index={i}
                   value={formData[field]}
                   placeholder={name}

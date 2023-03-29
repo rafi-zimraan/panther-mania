@@ -72,5 +72,5 @@ export default async function useLocation() {
     getPosition();
   }, []);
 
-  return {...coords};
+  return coords;
 }

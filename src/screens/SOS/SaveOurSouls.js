@@ -1,9 +1,14 @@
 import {StyleSheet, Text, View, Linking} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import useLocation from '../../hooks/useLocation';
 
 export default function SaveOurSouls() {
-  const [coords, setCoords] = useState({longitude: '', latitude: ''});
+  const {location, error} = useLocation();
+
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
 
   const userLocations = [
     {
@@ -25,6 +30,7 @@ export default function SaveOurSouls() {
       user_name: 'David',
     },
   ];
+
   return (
     <View style={{flex: 1}}>
       <MapView
@@ -32,9 +38,9 @@ export default function SaveOurSouls() {
         showsMyLocationButton
         style={{flex: 1}}
         provider={PROVIDER_GOOGLE}
-        initialRegion={{
-          latitude: -7.9964694,
-          longitude: 110.295591,
+        region={{
+          latitude: location.latitude,
+          longitude: location.longitude,
           latitudeDelta: 0.015,
           longitudeDelta: 0.0121,
         }}>

@@ -171,7 +171,6 @@ const styles = StyleSheet.create({
   },
   viewImgProduct: {
     height: 350,
-    marginTop: -100,
   },
   container: {
     width: '100%',

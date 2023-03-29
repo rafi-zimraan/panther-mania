@@ -26,7 +26,7 @@ export default function Navigator() {
         screenOptions={{
           headerShown: false,
         }}>
-        <Stack.Screen component={LibsTest} name={'LibsTest'} />
+        {/* <Stack.Screen component={LibsTest} name={'LibsTest'} /> */}
         <Stack.Screen component={Splash} name={'Splash'} />
         <Stack.Screen component={OnBoarding} name={'OnBoarding'} />
         <Stack.Screen component={AuthMethod} name={'AuthMethod'} />

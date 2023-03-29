@@ -15,11 +15,6 @@ export default function Header({
 }) {
   return (
     <View style={styles.container(StatusBar.currentHeight)}>
-      {/* <StatusBar
-        translucent
-        backgroundColor={'transparent'}
-        barStyle={'dark-content'}
-      /> */}
       <TouchableNativeFeedback useForeground onPress={onPress}>
         <View style={styles.btnHeader}>
           <Icon name={iconName} color={'white'} size={32} />
@@ -52,6 +47,7 @@ const styles = StyleSheet.create({
     padding: 15,
     width: '100%',
     zIndex: 9,
-    // marginTop: statBarHeight,
+    marginTop: statBarHeight,
+    // marginBottom: -100,
   }),
 });

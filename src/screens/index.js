@@ -11,8 +11,10 @@ import AgendaDetail from './Agenda/AgendaDetail';
 import PantherProduct from './PantherProduct/PantherProduct';
 import Agenda from './Agenda/Agenda';
 import SaveOurSouls from './SOS/SaveOurSouls';
+import EditUserProfile from './UserProfile/EditUserProfile';
 
 export {
+  EditUserProfile,
   SaveOurSouls,
   Splash,
   SignIn,

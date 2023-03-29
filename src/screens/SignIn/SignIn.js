@@ -1,13 +1,6 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableNativeFeedback,
-  ScrollView,
-} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
 import React, {useState} from 'react';
-import {ImgBgPlain, ImgPMCar} from '../../assets';
+import {ImgPMCar} from '../../assets';
 import {ButtonSubmit, FormInput} from '../../features/Auth';
 import {BackgroundImage, Gap, Header} from '../../components';
 import {useDispatch, useSelector} from 'react-redux';

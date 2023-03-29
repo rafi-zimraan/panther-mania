@@ -198,7 +198,7 @@ export default function SignUp({navigation}) {
 
   async function submitRegister() {
     let multiPart = new FormData();
-    let json = formExample;
+    let json = formData;
 
     for (let p in json) multiPart.append(p, json[p]);
 

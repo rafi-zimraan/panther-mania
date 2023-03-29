@@ -19,10 +19,8 @@ const configMultipart = access => ({
 
 // Auth
 export const postSignUp = formData =>
-  axios.post(`${API_SIGNUP}`, formData, configMultipart());
+  axios.post(API_SIGNUP, formData, configMultipart());
 export const postSignIn = formData =>
-  axios.post(`${API_SIGNIN}`, formData, config());
-export const getUserData = access =>
-  axios.get(`${API_USER_DATA}`, config(access));
-export const postSignOut = access =>
-  axios.post(`${API_SIGNOUT}`, config(access));
+  axios.post(API_SIGNIN, formData, config());
+export const getUserData = access => axios.get(API_USER_DATA, config(access));
+export const postSignOut = access => axios.post(API_SIGNOUT, config(access));

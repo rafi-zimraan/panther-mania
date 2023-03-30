@@ -1,14 +1,20 @@
-import {StyleSheet, Text, View, Linking} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Linking,
+  PermissionsAndroid,
+  Button,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import useLocation from '../../hooks/useLocation';
+import usePermission from '../../hooks/usePermission';
+import {ModalLocation} from '../../features/SOS';
+import {AccessCoarseLocation, AccessFineLocation} from '../../utils/constant';
 
 export default function SaveOurSouls() {
-  const {location, error} = useLocation();
-
-  useEffect(() => {
-    console.log(error);
-  }, [error]);
+  const {location, getCurrentLocation} = useLocation();
 
   const userLocations = [
     {
@@ -33,32 +39,41 @@ export default function SaveOurSouls() {
 
   return (
     <View style={{flex: 1}}>
-      <MapView
-        showsCompass
-        showsMyLocationButton
-        style={{flex: 1}}
-        provider={PROVIDER_GOOGLE}
-        region={{
-          latitude: location.latitude,
-          longitude: location.longitude,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        }}>
-        {userLocations.map((v, i) => (
-          <Marker
-            onSelect={() => console.log('on select')}
-            onCalloutPress={() => console.log('on callout press')}
-            onPress={async () =>
-              await Linking.openURL(`https://wa.me/${v.whatsapp}`)
-            }
-            onDeselect={() => console.log('on deselect')}
-            key={i}
-            coordinate={{
-              latitude: v.latitude,
-              longitude: v.longitude,
-            }}></Marker>
-        ))}
-      </MapView>
+      {!location.loading && (
+        <MapView
+          showsCompass
+          showsMyLocationButton
+          style={{flex: 1}}
+          provider={PROVIDER_GOOGLE}
+          region={{
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.015,
+            longitudeDelta: 0.0121,
+          }}>
+          {userLocations.map((v, i) => (
+            <Marker
+              onSelect={() => console.log('on select')}
+              onCalloutPress={() => console.log('on callout press')}
+              onPress={async () =>
+                await Linking.openURL(`https://wa.me/${v.whatsapp}`)
+              }
+              onDeselect={() => console.log('on deselect')}
+              key={i}
+              coordinate={{
+                latitude: v.latitude,
+                longitude: v.longitude,
+              }}></Marker>
+          ))}
+        </MapView>
+      )}
+      {/* <Button title="start watching" onPress={() => startWatching()} /> */}
+      <ModalLocation />
+      {/* <Text style={{marginVertical: 10}}>
+        {locationFine && locationCoarse
+          ? 'location granted'
+          : 'location isnt granted'}
+      </Text> */}
     </View>
   );
 }

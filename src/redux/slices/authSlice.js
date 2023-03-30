@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import {fetchSignIn} from '../../features/Auth/services/signInServices';
 import {fetchSignOut} from '../../features/Auth/services/signOutServices';
 import {fetchSignUp} from '../../features/Auth/services/signUpServices';
+import {fetchUpdateUserProfile} from '../../features/UserProfile/services/userProfileServices';
 
 const defaultUserData = {
   id: 2279,
@@ -51,6 +52,7 @@ const initialState = {
   status_signup: 'idle',
   status_signin: 'idle',
   status_signout: 'idle',
+  status_user_profile: 'idle',
   token: null,
   user_data: defaultUserData,
 };
@@ -104,6 +106,16 @@ export const authSlice = createSlice({
       })
       .addCase(fetchSignOut.rejected, state => {
         state.status_signout = 'failed';
+      });
+    builder
+      .addCase(fetchUpdateUserProfile.pending, state => {
+        state.status_user_profile = 'pending';
+      })
+      .addCase(fetchUpdateUserProfile.fulfilled, state => {
+        state.status_user_profile = 'success';
+      })
+      .addCase(fetchUpdateUserProfile.rejected, state => {
+        state.status_user_profile = 'failed';
       });
   },
 });

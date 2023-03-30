@@ -23,7 +23,7 @@ export default function UserProfile({navigation}) {
   const dispatch = useDispatch();
   const {isPortrait} = useOrientation();
   const {user_data, status_signout: status} = useSelector(state => state.auth);
-  const {nama_lengkap, handphone, panther_nopol} = user_data;
+  const {nama_lengkap, handphone, panther_nopol, user_id} = user_data;
 
   const ButtonOption = ({
     onPress,
@@ -120,7 +120,7 @@ export default function UserProfile({navigation}) {
         <View style={styles.viewProfile}>
           <View style={styles.imgPfp}>
             <Image
-              source={{uri: `${API_KEY_IMAGE}/profile/3150.jpg`}}
+              source={{uri: `${API_KEY_IMAGE}/profile/${user_id}.jpg`}}
               style={{width: '100%', height: '100%'}}
             />
             {/* <Icon name={'account-circle'} size={200} color={'grey'} /> */}

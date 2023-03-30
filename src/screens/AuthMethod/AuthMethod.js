@@ -4,10 +4,7 @@ import {ImgBGDefault, ImgPMCar} from '../../assets';
 import useOrientation from '../../utils/useOrientation';
 import {ButtonAuthMethod} from '../../features/Auth';
 import {Gap} from '../../components';
-import {useSelector} from 'react-redux';
-
 export default function AuthMethod({navigation}) {
-  const {auth} = useSelector(state => state);
   const {width, height} = useOrientation();
 
   return (

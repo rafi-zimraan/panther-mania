@@ -5,7 +5,7 @@ import axios from 'axios';
 
 export default function LibsTest() {
   axios
-    .post(API_SIGNIN, {
+    .post('https://panther-mania.id/api/v1/auth', {
       email: 'testing02@gmail.com',
       password: 'rahasia123',
     })

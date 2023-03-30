@@ -1,5 +1,11 @@
 import axios from 'axios';
-import {API_SIGNIN, API_SIGNUP, API_SIGNOUT, API_USER_DATA} from '@env';
+import {
+  API_SIGNIN,
+  API_SIGNUP,
+  API_SIGNOUT,
+  API_USER_DATA,
+  API_USER_DATA_UPDATE,
+} from '@env';
 
 const config = access => ({
   headers: {
@@ -17,10 +23,22 @@ const configMultipart = access => ({
   },
 });
 
-// Auth
+// User auth
 export const postSignUp = formData =>
-  axios.post(API_SIGNUP, formData, configMultipart());
+  axios.post(
+    'https://panther-mania.id/api/v1/register',
+    formData,
+    configMultipart(),
+  );
 export const postSignIn = formData =>
-  axios.post(API_SIGNIN, formData, config());
-export const getUserData = access => axios.get(API_USER_DATA, config(access));
-export const postSignOut = access => axios.post(API_SIGNOUT, config(access));
+  axios.post('https://panther-mania.id/api/v1/auth', formData);
+export const getUserData = access =>
+  axios.get('https://panther-mania.id/api/v1/me', config(access));
+export const postSignOut = access =>
+  axios.post('https://panther-mania.id/api/v1/logout', config(access));
+export const postUpdateUserProfile = (formData, access) =>
+  axios.put(
+    'https://panther-mania.id/api/v1/update',
+    formData,
+    configMultipart(access),
+  );

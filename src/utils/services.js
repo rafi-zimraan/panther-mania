@@ -42,3 +42,17 @@ export const postUpdateUserProfile = (formData, access) =>
     formData,
     configMultipart(access),
   );
+
+// Agenda
+export const getAgenda = () =>
+  axios.get('https://panther-mania.id/api/v1/agenda', config());
+export const postJoinAgenda = (formData, id, token) =>
+  axios.post(
+    `https://panther-mania.id/api/v1/agenda/${id}`,
+    formData,
+    config(token),
+  );
+
+// Panther Product
+export const getPantherProduct = () =>
+  axios.get('https://panther-mania.id/api/v1/products', config());

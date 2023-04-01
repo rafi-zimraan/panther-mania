@@ -15,14 +15,22 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchSignIn} from '../../features/Auth/services/signInServices';
 import {Gap} from '../../components';
 import useLocation from '../../hooks/useLocation';
+import {usePermission} from '../../hooks';
+import {AccessCoarseLocation, AccessFineLocation} from '../../utils/constant';
 
 export default function Splash({navigation}) {
   const dispatch = useDispatch();
   const {status_signin: status} = useSelector(state => state.auth);
   const {height, width} = useOrientation();
   const {location, getCurrentLocation} = useLocation();
+  const {requestPermission: reqCoarseLocation, granted: grantedCoarse} =
+    usePermission(AccessCoarseLocation);
+  const {requestPermission: reqFineLocation, granted: grantedFine} =
+    usePermission(AccessFineLocation);
 
   useEffect(() => {
+    reqFineLocation();
+    reqCoarseLocation();
     getCurrentLocation();
     async function refreshSession() {
       const credential = await EncryptedStorage.getItem('user_credential');
@@ -48,7 +56,7 @@ export default function Splash({navigation}) {
       }
     }
     location.altitude && refreshSession();
-  }, [location.latitude]);
+  }, [grantedFine, grantedCoarse, location.altitude]);
 
   return (
     <View style={styles.container}>

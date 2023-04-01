@@ -1,12 +1,75 @@
-import {StyleSheet, Text, View, ScrollView, Image} from 'react-native';
-import React from 'react';
-import {BackgroundImage, Header} from '../../components';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Image,
+  TextInput,
+  ToastAndroid,
+} from 'react-native';
+import React, {useState} from 'react';
+import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
 import {IconCalendar, IconFlagGreen, ImgCommunity} from '../../assets';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import useOrientation from '../../utils/useOrientation';
+import {API_KEY_IMAGE} from '@env';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchJoinAgenda} from '../../features/Agenda/services/agendaServices';
 
-export default function AgendaDetail({navigation}) {
-  const {isPortrait} = useOrientation();
+export default function AgendaDetail({navigation, route}) {
+  const {
+    created_at,
+    deadline,
+    deskripsi,
+    expired,
+    gambar,
+    id,
+    id_chapter,
+    id_kategori,
+    id_korwil,
+    jam,
+    judul,
+    judul_seo,
+    nama_chapter,
+    nama_korwil,
+    public: _public,
+    tanggal,
+    updated_at,
+    uuid,
+    chapter_uuid,
+    korwil_uuid,
+  } = route.params.agenda;
+  const dispatch = useDispatch();
+  const {status_join} = useSelector(state => state.agenda);
+  const {token, user_data} = useSelector(state => state.auth);
+  const [formVisible, setFormVisible] = useState(false);
+  const [dewasa, setDewasa] = useState('');
+  const [anak, setAnak] = useState('');
+  const [kendaraan, setKendaraan] = useState('');
+
+  const [chapterImgUri, setChapterImgUri] = useState(
+    `${API_KEY_IMAGE}/chapter/${chapter_uuid}.jpg`,
+  );
+  const [korwilImgUri, setKorwilImgUri] = useState(
+    `${API_KEY_IMAGE}/korwil/${korwil_uuid}.jpg`,
+  );
+
+  function handleJoinAgenda() {
+    const invalidForm = dewasa == '' || anak == '' || kendaraan == '';
+    if (!formVisible) setFormVisible(true);
+    else if (invalidForm)
+      ToastAndroid.show('Isi formulir dengan benar', ToastAndroid.SHORT);
+    else {
+      const formData = {
+        dewasa,
+        anak,
+        kendaraan,
+        agenda: id,
+        member: user_data.user_id,
+        token,
+      };
+      dispatch(fetchJoinAgenda(formData));
+    }
+  }
+
   return (
     <View style={{flex: 1}}>
       <BackgroundImage />
@@ -14,11 +77,24 @@ export default function AgendaDetail({navigation}) {
         <Header title="Rincian Agenda" onPress={() => navigation.goBack()} />
         <View style={styles.container}>
           <View style={styles.viewImgAgenda}>
-            <Image source={ImgCommunity} style={{width: '100%', height: 200}} />
+            <Image
+              source={{uri: chapterImgUri}}
+              onError={() =>
+                setChapterImgUri(`${API_KEY_IMAGE}/chapter/${chapter_uuid}.png`)
+              }
+              style={{width: 100, height: 100}}
+              resizeMethod={'resize'}
+            />
+            <Image
+              source={{uri: korwilImgUri}}
+              onError={() =>
+                setKorwilImgUri(`${API_KEY_IMAGE}/korwil/${korwil_uuid}.png`)
+              }
+              style={{width: 100, height: 100}}
+              resizeMethod={'resize'}
+            />
           </View>
-          <Text style={styles.textAgendaTitle}>
-            Perkumpulan Komunitas Panther Mania Aceh
-          </Text>
+          <Text style={styles.textAgendaTitle}>{judul}</Text>
           <View style={styles.viewDetail}>
             <View style={styles.viewDate}>
               <Image
@@ -26,31 +102,65 @@ export default function AgendaDetail({navigation}) {
                 style={styles.imgDetail}
                 resizeMethod={'resize'}
               />
-              <Text style={styles.textDetail}>17 Agustus, 08:00</Text>
+              <Text style={styles.textDetail}>{tanggal}</Text>
             </View>
-            <View style={styles.viewKorwil}>
+            {/* <View style={styles.viewKorwil}>
               <Image
                 source={IconFlagGreen}
                 style={{...styles.imgDetail, left: -5, top: -10}}
                 resizeMethod={'resize'}
               />
               <Text style={styles.textDetail}>Korwil Aceh</Text>
-            </View>
+            </View> */}
           </View>
           <View style={styles.viewAgendaDetail}>
-            <Text style={{color: 'black'}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-            </Text>
+            <Text style={{color: 'black'}}>{deskripsi}</Text>
           </View>
+          <Gap height={20} />
+          {formVisible && (
+            <View style={styles.containerForm}>
+              <TextInput
+                placeholderTextColor={'grey'}
+                placeholder="Jumlah peserta dewasa.."
+                keyboardType="number-pad"
+                onChangeText={setDewasa}
+                style={{color: 'black'}}
+              />
+              <TextInput
+                placeholderTextColor={'grey'}
+                placeholder="Jumlah anak dewasa.."
+                keyboardType="number-pad"
+                onChangeText={setAnak}
+                style={{color: 'black'}}
+              />
+              <TextInput
+                placeholderTextColor={'grey'}
+                placeholder="Tipe kendaraan yang dibawa.."
+                onChangeText={setKendaraan}
+                style={{color: 'black'}}
+              />
+            </View>
+          )}
         </View>
       </ScrollView>
+      <Gap height={20} />
+      <ButtonAction
+        title="Gabung Agenda"
+        loading={status_join == 'pending'}
+        onPress={handleJoinAgenda}
+      />
+      <Gap height={20} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  containerForm: {
+    backgroundColor: 'white',
+    padding: 20,
+    elevation: 5,
+    marginBottom: 5,
+  },
   viewAgendaDetail: {
     backgroundColor: 'white',
     padding: 30,
@@ -113,6 +223,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 3,
     marginBottom: 0,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    paddingVertical: 10,
   },
   container: {
     width: '100%',

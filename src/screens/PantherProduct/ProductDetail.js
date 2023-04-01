@@ -9,9 +9,10 @@ import {
   Platform,
   UIManager,
   LayoutAnimation,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
-import {BackgroundImage, Gap, Header} from '../../components';
+import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
 import {ImgShirt} from '../../assets';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -22,10 +23,22 @@ if (Platform.OS === 'android') {
 }
 
 export default function ProductDetail({route, navigation}) {
-  const [showDesc, setShowDesc] = useState(false);
+  const {
+    id,
+    uuid,
+    id_kategori,
+    nama_produk,
+    produk_seo,
+    deskripsi,
+    harga,
+    gambar,
+    public: _public,
+    whatsapp,
+    created_at,
+    updated_at,
+  } = route.params.product;
 
-  const productDesc =
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, seddo eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamcolaboris nisi ut aliquip ex ea commodo consequat. Duis auteirure dolor in reprehenderit in voluptate velit esse cillumdolore eu fugiat nulla pariatur. Excepteur sint occaecatcupidatat non proident, sunt in culpa qui officia deseruntmollit anim id est laborum.';
+  const [showDesc, setShowDesc] = useState(false);
 
   return (
     <View style={{flex: 1}}>
@@ -36,7 +49,7 @@ export default function ProductDetail({route, navigation}) {
           <View style={styles.viewImgProduct}>
             <Image source={ImgShirt} style={{width: '100%', height: '100%'}} />
           </View>
-          <Text style={styles.textProductTitle}>Baju Kemeja Member</Text>
+          <Text style={styles.textProductTitle}>{nama_produk}</Text>
           <TouchableNativeFeedback
             useForeground
             onPress={() => {
@@ -45,12 +58,12 @@ export default function ProductDetail({route, navigation}) {
             }}>
             <View style={{...styles.containerDesc}}>
               <Text style={{color: 'black'}}>
-                {productDesc.slice(0, 40)}
+                {deskripsi.slice(0, 40)}
                 {!showDesc ? '...' : ''}
               </Text>
               {showDesc && (
                 <Text style={{color: 'black'}}>
-                  {productDesc.slice(40, productDesc.length)}
+                  {deskripsi.slice(40, deskripsi.length)}
                 </Text>
               )}
               <View style={styles.viewMore}>
@@ -70,7 +83,9 @@ export default function ProductDetail({route, navigation}) {
             <Gap height={20} />
             <View style={styles.viewRecipt}>
               <Text style={{color: 'black'}}>Nama produk</Text>
-              <Text style={{color: 'black'}}>Baju Kemeja Member</Text>
+              <Text style={{color: 'black', maxWidth: 150}} numberOfLines={1}>
+                {nama_produk}
+              </Text>
             </View>
             <View style={styles.viewRecipt}>
               <Text style={{color: 'black'}}>Nama member</Text>
@@ -90,17 +105,21 @@ export default function ProductDetail({route, navigation}) {
             </View>
             <View style={styles.viewRecipt}>
               <Text style={{color: 'black'}}>Total order</Text>
-              <Text style={{color: 'black'}}>Rp 250.000,-</Text>
+              <Text style={{color: 'black'}}>Rp {harga},-</Text>
             </View>
           </View>
         </View>
       </ScrollView>
-      <TouchableNativeFeedback useForeground>
-        <View style={styles.btnPurchase}>
-          <Text style={styles.textBtnPurchase}>Beli Sekarang</Text>
-          {/* <ActivityIndicator style={styles.textBtnPurchase} color={'white'} /> */}
-        </View>
-      </TouchableNativeFeedback>
+      <ButtonAction
+        title="Beli Sekarang"
+        onPress={() =>
+          Alert.alert(
+            'Fitur dalam pengembangan',
+            'Nantikan update terbaru dari kami, ya!',
+          )
+        }
+      />
+      <Gap height={20} />
     </View>
   );
 }

@@ -9,10 +9,13 @@ import {
 import React from 'react';
 import {BackgroundImage, Header} from '../../components';
 import {ImgShirt} from '../../assets';
-import useOrientation from '../../utils/useOrientation';
+import {useOrientation} from '../../hooks';
+import {useSelector} from 'react-redux';
 
 export default function PantherProduct({navigation}) {
+  const {data} = useSelector(state => state.panther_product);
   const {width} = useOrientation();
+
   return (
     <View style={{flex: 1}}>
       <BackgroundImage />
@@ -20,19 +23,19 @@ export default function PantherProduct({navigation}) {
         <Header title="Produk Panther" onPress={() => navigation.goBack()} />
         <View style={styles.container}>
           <View style={styles.viewProduct}>
-            {[...new Array(10).keys()].map((v, i) => (
+            {data?.map((v, i) => (
               <TouchableNativeFeedback
                 key={i}
                 useForeground
                 onPress={() =>
-                  navigation.navigate('ProductDetail', {product_id: i})
+                  navigation.navigate('ProductDetail', {product: v})
                 }>
                 <View style={{...styles.btnProduct, width: width / 2.4}}>
                   <Image source={ImgShirt} style={styles.imgProduct} />
                   <Text style={styles.textProductTitle} numberOfLines={2}>
-                    Baju Kemeja Member
+                    {v.nama_produk}
                   </Text>
-                  <Text style={styles.textPrice}>Rp 250.000,-</Text>
+                  <Text style={styles.textPrice}>Rp {v.harga},-</Text>
                 </View>
               </TouchableNativeFeedback>
             ))}
@@ -62,6 +65,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: 'black',
     marginVertical: 5,
+    flex: 1,
   },
   btnProduct: {
     backgroundColor: 'white',

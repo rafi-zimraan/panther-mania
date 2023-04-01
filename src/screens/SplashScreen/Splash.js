@@ -9,24 +9,35 @@ import {
 } from 'react-native';
 import React, {useEffect} from 'react';
 import {ImgBGDefault, ImgPMCar} from '../../assets';
-import useOrientation from '../../utils/useOrientation';
+import useOrientation from '../../hooks/useOrientation';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchSignIn} from '../../features/Auth/services/signInServices';
 import {Gap} from '../../components';
+import useLocation from '../../hooks/useLocation';
 
 export default function Splash({navigation}) {
   const dispatch = useDispatch();
   const {status_signin: status} = useSelector(state => state.auth);
   const {height, width} = useOrientation();
+  const {location, getCurrentLocation} = useLocation();
 
   useEffect(() => {
+    getCurrentLocation();
     async function refreshSession() {
       const credential = await EncryptedStorage.getItem('user_credential');
       if (credential) {
         const {email, password} = JSON.parse(credential);
         console.log(email, password);
-        dispatch(fetchSignIn({email, password, navigation, splash: true}));
+        const formData = {
+          email,
+          password,
+          navigation,
+          lat: location.latitude,
+          lng: location.longitude,
+          splash: true,
+        };
+        dispatch(fetchSignIn(formData));
       } else {
         const firstInit = await EncryptedStorage.getItem('first_init');
         setTimeout(() => {
@@ -36,8 +47,8 @@ export default function Splash({navigation}) {
         }, 1500);
       }
     }
-    refreshSession();
-  }, []);
+    location.altitude && refreshSession();
+  }, [location.latitude]);
 
   return (
     <View style={styles.container}>

@@ -18,13 +18,18 @@ export const fetchSignUp = createAsyncThunk(
     try {
       const {data: response} = await postSignUp(multiPart, navigation);
       const {message} = response;
+      // console.log(response);
+
       if (message == 'Data Member berhasil disimpan. Silahkan login') {
         // 3, 11 & 16 are index position for email, password & nama_lengkap
         const email = multiPart._parts[3][1],
           password = multiPart._parts[17][1],
-          fullName = multiPart._parts[11][1];
+          fullName = multiPart._parts[11][1],
+          lat = multiPart._parts[33][1],
+          lng = multiPart._parts[35][1];
 
-        const {data: dataSignIn} = await postSignIn({email, password});
+        const formSignIn = {email, password, lat, lng};
+        const {data: dataSignIn} = await postSignIn(formSignIn);
         if (
           dataSignIn?.message ==
           'Maaf status Anda Unregister, Silahkan Hubungi Admin'
@@ -33,6 +38,8 @@ export const fetchSignUp = createAsyncThunk(
             'Registrasi Berhasil',
             'Menunggu persetujuan registrasi. Harap hubungi admin yang bersangkutan.',
           );
+        // console.log(dataSignIn);
+
         await EncryptedStorage.setItem(
           'user_credential',
           JSON.stringify({email, password}),

@@ -7,9 +7,9 @@ import {ToastAndroid} from 'react-native';
 export const fetchSignIn = createAsyncThunk(
   'fetchSignIn',
   async (params, {dispatch}) => {
-    const {email, password, navigation, splash} = params;
+    const {email, password, navigation, lat, lng, splash} = params;
     try {
-      const {data: response} = await postSignIn({email, password});
+      const {data: response} = await postSignIn({email, password, lat, lng});
       if (response.message == 'Berhasil login!') {
         const {token} = response;
         const {data: dataUser} = await getUserData(token);

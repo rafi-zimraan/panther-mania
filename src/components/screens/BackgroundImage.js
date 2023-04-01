@@ -1,7 +1,7 @@
 import {Image, StyleSheet} from 'react-native';
 import React from 'react';
 import {ImgBgPlain} from '../../assets';
-import useOrientation from '../../utils/useOrientation';
+import useOrientation from '../../hooks/useOrientation';
 
 export default function BackgroundImage({source = ImgBgPlain}) {
   const {width, height} = useOrientation();

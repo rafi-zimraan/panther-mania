@@ -1,16 +1,19 @@
 import {StyleSheet, View, Image} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ImgPMCar} from '../../assets';
 import {ButtonSubmit, FormInput} from '../../features/Auth';
 import {BackgroundImage, Gap, Header} from '../../components';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchSignIn} from '../../features/Auth/services/signInServices';
+import useLocation from '../../hooks/useLocation';
+import usePermission from '../../hooks/usePermission';
 
 export default function SignIn({navigation}) {
   const dispatch = useDispatch();
   const {status_signin: status} = useSelector(state => state.auth);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const {location, getCurrentLocation} = useLocation();
 
   const disableButton =
     email == '' ||
@@ -45,7 +48,16 @@ export default function SignIn({navigation}) {
           title="MASUK"
           disabled={disableButton}
           loading={status == 'pending'}
-          onPress={() => dispatch(fetchSignIn({email, password, navigation}))}
+          onPress={() => {
+            const formData = {
+              email,
+              password,
+              navigation,
+              lat: location.latitude,
+              lng: location.longitude,
+            };
+            dispatch(fetchSignIn(formData));
+          }}
         />
       </View>
     </View>

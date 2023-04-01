@@ -29,6 +29,7 @@ import {API_KEY_IMAGE} from '@env';
 import {fetchUpdateUserProfile} from '../../features/UserProfile/services/userProfileServices';
 
 export default function EditUserProfile({navigation}) {
+  // console.log(API_KEY_IMAGE);
   const dispatch = useDispatch();
   const {status_user_profile, user_data} = useSelector(state => state.auth);
 

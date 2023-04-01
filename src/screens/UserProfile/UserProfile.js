@@ -10,12 +10,12 @@ import {
   Alert,
   Image,
 } from 'react-native';
-import {BackgroundImage, Gap, Header} from '../../components';
+import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {ResetUserCredential} from '../../redux/slices/authSlice';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import useOrientation from '../../utils/useOrientation';
+import useOrientation from '../../hooks/useOrientation';
 import {fetchSignOut} from '../../features/Auth/services/signOutServices';
 import {API_KEY_IMAGE} from '@env';
 
@@ -24,30 +24,6 @@ export default function UserProfile({navigation}) {
   const {isPortrait} = useOrientation();
   const {user_data, status_signout: status} = useSelector(state => state.auth);
   const {nama_lengkap, handphone, panther_nopol, user_id} = user_data;
-
-  const ButtonOption = ({
-    onPress,
-    title,
-    backgroundColor = '#183240',
-    loading,
-  }) => {
-    return (
-      <TouchableNativeFeedback
-        useForeground
-        onPress={onPress}
-        disabled={status == 'pending'}>
-        <View style={{...styles.btnOption, backgroundColor}}>
-          {loading ? (
-            <ActivityIndicator color={'white'} style={styles.textOption} />
-          ) : (
-            <Text style={styles.textOption}>{title}</Text>
-          )}
-        </View>
-      </TouchableNativeFeedback>
-    );
-  };
-
-  // console.log(API_KEY_IMAGE);
 
   const a = {
     agama: 'Islam',
@@ -119,11 +95,16 @@ export default function UserProfile({navigation}) {
         <Header title="Profil Anda" onPress={() => navigation.goBack()} />
         <View style={styles.viewProfile}>
           <View style={styles.imgPfp}>
+            <Icon
+              name={'account-circle'}
+              size={180}
+              color={'grey'}
+              style={{position: 'absolute'}}
+            />
             <Image
               source={{uri: `${API_KEY_IMAGE}/profile/${user_id}.jpg`}}
               style={{width: '100%', height: '100%'}}
             />
-            {/* <Icon name={'account-circle'} size={200} color={'grey'} /> */}
           </View>
           <Text style={styles.textUsername}>{nama_lengkap}</Text>
         </View>
@@ -132,15 +113,16 @@ export default function UserProfile({navigation}) {
           <Text style={styles.textUserDetail}>{handphone}</Text>
           <Text style={styles.textUserDetail}>{panther_nopol}</Text>
           <Gap flex={isPortrait ? 1 : 0} height={isPortrait ? 0 : 100} />
-          <ButtonOption
-            title={'Perbarui Profil'}
+          <ButtonAction
+            title="Perbarui Profil"
             onPress={() => navigation.navigate('EditUserProfile')}
           />
           <Gap height={10} />
-          <ButtonOption
-            title={'Keluar'}
-            backgroundColor={'tomato'}
+          <ButtonAction
+            title="Keluar"
+            backgroundColor="tomato"
             loading={status == 'pending'}
+            disabled={status == 'pending'}
             onPress={handleSignOut}
           />
         </View>
@@ -173,6 +155,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 50,
     overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textUserDetail: {
     backgroundColor: 'white',

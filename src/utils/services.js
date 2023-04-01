@@ -7,6 +7,8 @@ import {
   API_USER_DATA_UPDATE,
 } from '@env';
 
+const host = 'https://panther-mania.id/api/v1';
+
 const config = access => ({
   headers: {
     'Content-Type': 'application/json',
@@ -25,34 +27,22 @@ const configMultipart = access => ({
 
 // User auth
 export const postSignUp = formData =>
-  axios.post(
-    'https://panther-mania.id/api/v1/register',
-    formData,
-    configMultipart(),
-  );
-export const postSignIn = formData =>
-  axios.post('https://panther-mania.id/api/v1/auth', formData);
-export const getUserData = access =>
-  axios.get('https://panther-mania.id/api/v1/me', config(access));
+  axios.post(`${host}/register`, formData, configMultipart());
+export const postSignIn = formData => axios.post(`${host}/auth`, formData);
+export const getUserData = access => axios.get(`${host}/me`, config(access));
 export const postSignOut = access =>
-  axios.post('https://panther-mania.id/api/v1/logout', config(access));
+  axios.post(`${host}/logout`, config(access));
 export const postUpdateUserProfile = (formData, access) =>
-  axios.put(
-    'https://panther-mania.id/api/v1/update',
-    formData,
-    configMultipart(access),
-  );
+  axios.put(`${host}/update`, formData, configMultipart(access));
 
 // Agenda
-export const getAgenda = () =>
-  axios.get('https://panther-mania.id/api/v1/agenda', config());
-export const postJoinAgenda = (formData, id, token) =>
-  axios.post(
-    `https://panther-mania.id/api/v1/agenda/${id}`,
-    formData,
-    config(token),
-  );
+export const getAgenda = () => axios.get(`${host}/agenda`, config());
+export const postJoinAgenda = (formData, id, access) =>
+  axios.post(`${host}/agenda/${id}`, formData, config(access));
 
 // Panther Product
-export const getPantherProduct = () =>
-  axios.get('https://panther-mania.id/api/v1/products', config());
+export const getPantherProduct = () => axios.get(`${host}/products`, config());
+
+// SOS
+export const getUsersLocation = access =>
+  axios.get(`${host}/sos`, config(access));

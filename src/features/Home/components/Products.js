@@ -18,6 +18,7 @@ import {colors} from '../../../utils/constant';
 import {API_KEY_IMAGE} from '@env';
 
 export default function Products() {
+  // console.log(API_KEY_IMAGE);
   const {navigate} = useNavigation();
   const dispatch = useDispatch();
   const {status, data} = useSelector(state => state.panther_product);

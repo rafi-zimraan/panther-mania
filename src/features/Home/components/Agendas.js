@@ -18,6 +18,7 @@ import {colors} from '../../../utils/constant';
 import {API_KEY_IMAGE} from '@env';
 
 export default function Agendas() {
+  // console.log(API_KEY_IMAGE);
   const dispatch = useDispatch();
   const {navigate} = useNavigation();
   const {status, data} = useSelector(state => state.agenda);

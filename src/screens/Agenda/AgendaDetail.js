@@ -15,6 +15,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchJoinAgenda} from '../../features/Agenda/services/agendaServices';
 
 export default function AgendaDetail({navigation, route}) {
+  // console.log(API_KEY_IMAGE);
+
   const {
     created_at,
     deadline,

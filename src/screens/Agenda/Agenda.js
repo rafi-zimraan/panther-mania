@@ -13,6 +13,7 @@ import {useSelector} from 'react-redux';
 import {API_KEY_IMAGE} from '@env';
 
 export default function Agenda({navigation}) {
+  // console.log(API_KEY_IMAGE);
   const {data} = useSelector(state => state.agenda);
 
   return (

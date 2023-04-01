@@ -9,7 +9,7 @@ import {
 import React from 'react';
 import {BackgroundImage, Header} from '../../components';
 import {ImgShirt} from '../../assets';
-import {useOrientation} from '../../hooks';
+import {useCurrencyFormat, useOrientation} from '../../hooks';
 import {useSelector} from 'react-redux';
 
 export default function PantherProduct({navigation}) {
@@ -35,7 +35,9 @@ export default function PantherProduct({navigation}) {
                   <Text style={styles.textProductTitle} numberOfLines={2}>
                     {v.nama_produk}
                   </Text>
-                  <Text style={styles.textPrice}>Rp {v.harga},-</Text>
+                  <Text style={styles.textPrice}>
+                    {useCurrencyFormat(v.harga)}
+                  </Text>
                 </View>
               </TouchableNativeFeedback>
             ))}

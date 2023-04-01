@@ -16,6 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import {fetchProduct} from '../../PantherProduct/services/pantherProductServices';
 import {colors} from '../../../utils/constant';
 import {API_KEY_IMAGE} from '@env';
+import {useCurrencyFormat} from '../../../hooks';
 
 export default function Products() {
   // console.log(API_KEY_IMAGE);
@@ -56,7 +57,7 @@ export default function Products() {
                 {v.nama_produk}
               </Text>
               {/* <Text style={{color: 'grey'}}>{v.gambar}</Text> */}
-              <Text style={styles.textPrice}>Rp {v.harga},-</Text>
+              <Text style={styles.textPrice}>{useCurrencyFormat(v.harga)}</Text>
             </View>
           </TouchableNativeFeedback>
         ))}

@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import {ImgBgOnBoarding, ImgPMCar} from '../../assets';
-import useOrientation from '../../utils/useOrientation';
+import useOrientation from '../../hooks/useOrientation';
 import {Gap} from '../../components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import EncryptedStorage from 'react-native-encrypted-storage';

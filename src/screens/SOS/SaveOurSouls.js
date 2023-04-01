@@ -5,37 +5,35 @@ import {
   Linking,
   PermissionsAndroid,
   Button,
+  Modal,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE, Callout} from 'react-native-maps';
 import useLocation from '../../hooks/useLocation';
-import usePermission from '../../hooks/usePermission';
 import {ModalLocation} from '../../features/SOS';
-import {AccessCoarseLocation, AccessFineLocation} from '../../utils/constant';
-import axios from 'axios';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchUsersLocation} from '../../features/SOS/services/sosServices';
+import ModalUserDetail from '../../features/SOS/components/ModalUserDetail';
+import {SetModal} from '../../redux/slices/sosSlice';
 
 export default function SaveOurSouls() {
   const {location, getCurrentLocation} = useLocation();
-  const {token} = useSelector(state => state.auth);
-  const [locationData, setLocationData] = useState([]);
+  const dispatch = useDispatch();
+  const {status, users_data} = useSelector(state => state.save_our_souls);
 
-  function getLocationData() {
-    axios
-      .get('https://panther-mania.id/api/v1/sos', {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-        },
-      })
-      .then(res => setLocationData(res.data.data))
-      .catch(err => console.log(err));
-  }
+  const [selectedMarker, setSelectedMarker] = useState({
+    alamat: '',
+    distance: 0,
+    email: '',
+    handphone: '',
+    nama_lengkap: '',
+    no_whatsapp: '',
+    user_id: 0,
+  });
 
   useEffect(() => {
-    getLocationData();
-  }, []);
+    if (status == 'idle') dispatch(fetchUsersLocation());
+  }, [dispatch]);
 
   return (
     <View style={{flex: 1}}>
@@ -51,30 +49,35 @@ export default function SaveOurSouls() {
             latitudeDelta: 0.015,
             longitudeDelta: 0.0121,
           }}>
-          {locationData.length != 0 &&
-            locationData.map((v, i) => (
-              <Marker
-                onSelect={() => console.log('on select')}
-                onCalloutPress={() => console.log('on callout press')}
-                onPress={async () =>
-                  await Linking.openURL(`https://wa.me/${v.no_whatsapp}`)
-                }
-                onDeselect={() => console.log('on deselect')}
-                key={i}
-                coordinate={{
-                  latitude: parseInt(v.lat),
-                  longitude: parseInt(v.lng),
-                }}></Marker>
-            ))}
+          {users_data?.length == 0 && (
+            <Text>Sepertinya tidak ada pengguna yang bisa dihubungi..</Text>
+          )}
+          <Marker
+            pinColor="orange"
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}>
+            <Callout>
+              <Text style={{color: 'black'}}>Anda berada disini</Text>
+            </Callout>
+          </Marker>
+          {users_data?.map((v, i) => (
+            <Marker
+              key={i}
+              onPress={() => {
+                setSelectedMarker(v);
+                dispatch(SetModal(true));
+              }}
+              coordinate={{
+                latitude: parseFloat(v.lat),
+                longitude: parseFloat(v.lng),
+              }}></Marker>
+          ))}
         </MapView>
       )}
-      {/* <Button title="start watching" onPress={() => startWatching()} /> */}
+      <ModalUserDetail data={selectedMarker} />
       <ModalLocation />
-      {/* <Text style={{marginVertical: 10}}>
-        {locationFine && locationCoarse
-          ? 'location granted'
-          : 'location isnt granted'}
-      </Text> */}
     </View>
   );
 }

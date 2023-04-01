@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import React from 'react';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function ButtonAction({
   title = 'Button',
@@ -13,6 +14,8 @@ export default function ButtonAction({
   disabled,
   backgroundColor = '#183240',
   loading = false,
+  iconLeft = 'account',
+  iconRight = 'account',
 }) {
   return (
     <TouchableNativeFeedback

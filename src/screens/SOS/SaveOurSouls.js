@@ -12,30 +12,30 @@ import useLocation from '../../hooks/useLocation';
 import usePermission from '../../hooks/usePermission';
 import {ModalLocation} from '../../features/SOS';
 import {AccessCoarseLocation, AccessFineLocation} from '../../utils/constant';
+import axios from 'axios';
+import {useSelector} from 'react-redux';
 
 export default function SaveOurSouls() {
   const {location, getCurrentLocation} = useLocation();
+  const {token} = useSelector(state => state.auth);
+  const [locationData, setLocationData] = useState([]);
 
-  const userLocations = [
-    {
-      latitude: -7.995307,
-      longitude: 110.296256,
-      whatsapp: 6285157439660,
-      user_name: 'Radiant',
-    },
-    {
-      latitude: -7.997018,
-      longitude: 110.297909,
-      whatsapp: 6285695078232,
-      user_name: 'Jujun',
-    },
-    {
-      latitude: -7.996729,
-      longitude: 110.294103,
-      whatsapp: 6285659033185,
-      user_name: 'David',
-    },
-  ];
+  function getLocationData() {
+    axios
+      .get('https://panther-mania.id/api/v1/sos', {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        },
+      })
+      .then(res => setLocationData(res.data.data))
+      .catch(err => console.log(err));
+  }
+
+  useEffect(() => {
+    getLocationData();
+  }, []);
 
   return (
     <View style={{flex: 1}}>
@@ -51,20 +51,21 @@ export default function SaveOurSouls() {
             latitudeDelta: 0.015,
             longitudeDelta: 0.0121,
           }}>
-          {userLocations.map((v, i) => (
-            <Marker
-              onSelect={() => console.log('on select')}
-              onCalloutPress={() => console.log('on callout press')}
-              onPress={async () =>
-                await Linking.openURL(`https://wa.me/${v.whatsapp}`)
-              }
-              onDeselect={() => console.log('on deselect')}
-              key={i}
-              coordinate={{
-                latitude: v.latitude,
-                longitude: v.longitude,
-              }}></Marker>
-          ))}
+          {locationData.length != 0 &&
+            locationData.map((v, i) => (
+              <Marker
+                onSelect={() => console.log('on select')}
+                onCalloutPress={() => console.log('on callout press')}
+                onPress={async () =>
+                  await Linking.openURL(`https://wa.me/${v.no_whatsapp}`)
+                }
+                onDeselect={() => console.log('on deselect')}
+                key={i}
+                coordinate={{
+                  latitude: parseInt(v.lat),
+                  longitude: parseInt(v.lng),
+                }}></Marker>
+            ))}
         </MapView>
       )}
       {/* <Button title="start watching" onPress={() => startWatching()} /> */}

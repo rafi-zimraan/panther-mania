@@ -5,40 +5,93 @@ import {
   Text,
   TouchableNativeFeedback,
   View,
+  ActivityIndicator,
 } from 'react-native';
-import React from 'react';
-import {useSelector} from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {ImgCommunity, ImgShirt} from '../../../assets';
 import {Gap} from '../../../components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
+import {fetchAgenda} from '../../Agenda/services/agendaServices';
+import {colors} from '../../../utils/constant';
+import {API_KEY_IMAGE} from '@env';
 
 export default function Agendas() {
+  const dispatch = useDispatch();
   const {navigate} = useNavigation();
-  // const {status} = useSelector(state => state)
+  const {status, data} = useSelector(state => state.agenda);
+
+  useEffect(() => {
+    if (status == 'idle') dispatch(fetchAgenda());
+  }, [dispatch]);
+
   return (
     <View>
-      <Text style={styles.textTitle}>Agenda Kegiatan</Text>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Text style={styles.textTitle}>Agenda Kegiatan</Text>
+        <ActivityIndicator
+          color={colors.primary}
+          size="small"
+          animating={status == 'pending'}
+        />
+      </View>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.viewAgenda}>
-        {[...new Array(4).keys()].map((v, i) => (
-          <TouchableNativeFeedback
-            key={i}
-            useForeground
-            onPress={() => navigate('AgendaDetail')}>
-            <View style={styles.btnAgenda}>
-              <Image source={ImgCommunity} style={styles.imgAgenda} />
-              <Text style={styles.textAgendaTitle} numberOfLines={2}>
-                Judul Kegiatan
-              </Text>
-              <Text style={styles.textDescription}>
-                Deskripsi kegiatan yang sangat panjang sekali
-              </Text>
-            </View>
-          </TouchableNativeFeedback>
-        ))}
+        {data?.map((v, i) => {
+          // const [chapterImgUri, setChapterImgUri] = useState(
+          //   `${API_KEY_IMAGE}/chapter/${v.chapter_uuid}.jpg`,
+          // );
+          // const [korwilImgUri, setKorwilImgUri] = useState(
+          //   `${API_KEY_IMAGE}/korwil/${v.korwil_uuid}.jpg`,
+          // );
+
+          let chapterImgUri = `${API_KEY_IMAGE}/chapter/${v.chapter_uuid}.jpg`;
+          let korwilImgUri = `${API_KEY_IMAGE}/korwil/${v.korwil_uuid}.jpg`;
+
+          return (
+            <TouchableNativeFeedback
+              key={i}
+              useForeground
+              onPress={() => navigate('AgendaDetail', {agenda: v})}>
+              <View style={styles.btnAgenda}>
+                <View style={styles.viewImgAgenda}>
+                  <Image
+                    source={{uri: chapterImgUri}}
+                    onError={() => {
+                      chapterImgUri = `${API_KEY_IMAGE}/chapter/${v.chapter_uuid}.png`;
+                      // setChapterImgUri(
+                      //   `${API_KEY_IMAGE}/chapter/${v.chapter_uuid}.png`,
+                      // );
+                    }}
+                    style={{width: 100, height: 100}}
+                    resizeMethod={'resize'}
+                  />
+                  <Image
+                    source={{uri: korwilImgUri}}
+                    onError={() => {
+                      korwilImgUri = `${API_KEY_IMAGE}/korwil/${v.korwil_uuid}.png`;
+                      // setKorwilImgUri(
+                      //   `${API_KEY_IMAGE}/korwil/${v.korwil_uuid}.png`,
+                      // );
+                    }}
+                    style={{width: 100, height: 100}}
+                    resizeMethod={'resize'}
+                  />
+                </View>
+                <Text style={styles.textAgendaTitle} numberOfLines={1}>
+                  {v.judul}
+                </Text>
+                <Gap flex={1} />
+                <Text style={styles.textDescription} numberOfLines={2}>
+                  {v.deskripsi}
+                </Text>
+              </View>
+            </TouchableNativeFeedback>
+          );
+        })}
         <TouchableNativeFeedback
           useForeground
           onPress={() => navigate('Agenda')}>
@@ -57,6 +110,16 @@ export default function Agendas() {
 }
 
 const styles = StyleSheet.create({
+  viewImgAgenda: {
+    // margin: 15,
+    overflow: 'hidden',
+    borderRadius: 20,
+    elevation: 3,
+    // marginBottom: 0,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
   textDescription: {
     color: 'black',
     fontSize: 12,
@@ -97,6 +160,7 @@ const styles = StyleSheet.create({
     margin: 10,
     overflow: 'hidden',
     padding: 10,
+    paddingBottom: 15,
   },
   viewAgenda: {
     paddingHorizontal: 10,
@@ -108,5 +172,6 @@ const styles = StyleSheet.create({
     color: '#183240',
     fontSize: 17,
     paddingHorizontal: 20,
+    paddingRight: 10,
   },
 });

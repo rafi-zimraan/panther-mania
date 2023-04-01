@@ -5,35 +5,57 @@ import {
   Text,
   TouchableNativeFeedback,
   View,
+  ActivityIndicator,
 } from 'react-native';
-import React from 'react';
-import {useSelector} from 'react-redux';
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {ImgShirt} from '../../../assets';
 import {Gap} from '../../../components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
+import {fetchProduct} from '../../PantherProduct/services/pantherProductServices';
+import {colors} from '../../../utils/constant';
+import {API_KEY_IMAGE} from '@env';
 
 export default function Products() {
   const {navigate} = useNavigation();
-  // const {status} = useSelector(state => state)
+  const dispatch = useDispatch();
+  const {status, data} = useSelector(state => state.panther_product);
+
+  useEffect(() => {
+    if (status == 'idle') dispatch(fetchProduct());
+  }, [dispatch]);
+
   return (
     <View>
-      <Text style={styles.textTitle}>Produk Panther Mania</Text>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Text style={styles.textTitle}>Produk Panther Mania</Text>
+        <ActivityIndicator
+          color={colors.primary}
+          size="small"
+          animating={status == 'pending'}
+        />
+      </View>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.viewProduct}>
-        {[...new Array(4).keys()].map((v, i) => (
+        {data?.slice(0, 4).map((v, i) => (
           <TouchableNativeFeedback
             key={i}
             useForeground
-            onPress={() => navigate('ProductDetail', {product_id: i})}>
+            onPress={() => navigate('ProductDetail', {product: v})}>
             <View style={styles.btnProduct}>
-              <Image source={ImgShirt} style={styles.imgProduct} />
+              <Image
+                source={{uri: `${API_KEY_IMAGE}/post/${v.gambar}`}}
+                style={styles.imgProduct}
+                // onError={() => console.log('error')}
+              />
               <Text style={styles.textProductTitle} numberOfLines={2}>
-                Baju Kemeja Member
+                {v.nama_produk}
               </Text>
-              <Text style={styles.textPrice}>Rp 250.000,-</Text>
+              {/* <Text style={{color: 'grey'}}>{v.gambar}</Text> */}
+              <Text style={styles.textPrice}>Rp {v.harga},-</Text>
             </View>
           </TouchableNativeFeedback>
         ))}
@@ -58,6 +80,7 @@ const styles = StyleSheet.create({
   textPrice: {
     fontWeight: 'bold',
     color: 'green',
+    margin: 2.5,
   },
   imgProduct: {
     width: '100%',
@@ -84,6 +107,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: 'black',
     marginVertical: 5,
+    flex: 1,
   },
   btnProduct: {
     backgroundColor: 'white',

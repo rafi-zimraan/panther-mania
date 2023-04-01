@@ -53,7 +53,7 @@ import Geolocation from 'react-native-geolocation-service';
 
 const useLocation = () => {
   const [location, setLocation] = useState({
-    // default to Jakarta
+    // default to Jakarta Pusat
     longitude: 106.82719,
     latitude: -6.175395,
     accuracy: null,

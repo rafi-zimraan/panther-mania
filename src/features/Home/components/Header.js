@@ -3,7 +3,7 @@ import React from 'react';
 import {useSelector} from 'react-redux';
 import {ImgAppLogo} from '../../../assets';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Gap} from '../../../components';
+import {Gap, SearchInput} from '../../../components';
 
 export default function HomeHeader() {
   const {nama_lengkap} = useSelector(state => state.auth.user_data);
@@ -15,11 +15,7 @@ export default function HomeHeader() {
         Selamat datang, {nama_lengkap.split(' ')[0]}
       </Text>
       <Gap height={20} />
-      <View style={styles.containerSearchBar}>
-        <Icon name="magnify" color={'black'} size={30} />
-        <Gap width={5} />
-        <TextInput placeholder="Cari sesuatu.." style={{flex: 1}} />
-      </View>
+      <SearchInput />
       <Gap height={20} />
     </View>
   );

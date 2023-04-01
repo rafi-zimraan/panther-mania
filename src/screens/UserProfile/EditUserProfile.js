@@ -470,6 +470,27 @@ export default function EditUserProfile({navigation}) {
         return 'profile';
     }
   }
+  function handleResetImage(index) {
+    const defaultField = {
+      uri: null,
+      name: null,
+      type: null,
+    };
+    switch (index) {
+      case 0:
+        return setFormPhotos({...formPhotos, profile: defaultField});
+      case 1:
+        return setFormPhotos({...formPhotos, ktp: defaultField});
+      case 2:
+        return setFormPhotos({...formPhotos, stnk: defaultField});
+      case 3:
+        return setFormPhotos({...formPhotos, sim: defaultField});
+      case 4:
+        return setFormPhotos({...formPhotos, bukti_tf: defaultField});
+      default:
+        return console.log('index not found for handleResetImage');
+    }
+  }
 
   return (
     <View style={{flex: 1}}>
@@ -497,6 +518,20 @@ export default function EditUserProfile({navigation}) {
                     }}
                     style={{width: '100%', height: 210}}
                   />
+                  {formPhotos[photoField(i)].uri && (
+                    <TouchableNativeFeedback
+                      useForeground
+                      onPress={() => handleResetImage(i)}>
+                      <View style={styles.btnResetImg}>
+                        <Icon
+                          name="restart"
+                          color={'black'}
+                          size={30}
+                          style={styles.icon}
+                        />
+                      </View>
+                    </TouchableNativeFeedback>
+                  )}
                 </View>
               </TouchableNativeFeedback>
             ))}
@@ -579,6 +614,24 @@ export default function EditUserProfile({navigation}) {
 }
 
 const styles = StyleSheet.create({
+  icon: {
+    position: 'absolute',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    width: '100%',
+    height: '100%',
+  },
+  btnResetImg: {
+    width: 40,
+    height: 40,
+    borderRadius: 5,
+    elevation: 3,
+    backgroundColor: 'white',
+    position: 'absolute',
+    overflow: 'hidden',
+    right: 15,
+    top: 15,
+  },
   textLoading: {
     position: 'absolute',
     width: '100%',

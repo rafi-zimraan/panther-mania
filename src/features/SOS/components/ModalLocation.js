@@ -13,7 +13,7 @@ import {
   AccessFineLocation,
 } from '../../../utils/constant';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import useLocation from '../../../hooks/useLocation';
+import {useLocation} from '../../../hooks';
 
 export default function ModalLocation() {
   const [modal, setModal] = useState(true);

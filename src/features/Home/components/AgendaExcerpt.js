@@ -6,83 +6,67 @@ import {
   View,
 } from 'react-native';
 import React, {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {API_KEY_IMAGE} from '@env';
+import {Gap} from '../../../components';
+// console.log(API_KEY_IMAGE);
 
 export default function AgendaExcerpt({data}) {
-  const {
-    chapter_uuid,
-    created_at,
-    deadline,
-    deskripsi,
-    expired,
-    gambar,
-    id,
-    id_chapter,
-    id_kategori,
-    id_korwil,
-    jam,
-    judul,
-    judul_seo,
-    korwil_uuid,
-    nama_chapter,
-    nama_korwil,
-    public: _public,
-    tanggal,
-    updated_at,
-    uuid,
-  } = data;
+  const {navigate} = useNavigation();
+  const {chapter_uuid, korwil_uuid} = data;
+
+  const [imgKorwil, setImgKorwil] = useState(
+    `${API_KEY_IMAGE}/korwil/${korwil_uuid}.jpg`,
+  );
+  const [imgChapter, setImgChapter] = useState(
+    `${API_KEY_IMAGE}/chapter/${chapter_uuid}.jpg`,
+  );
 
   return (
     <TouchableNativeFeedback
-      key={i}
       useForeground
-      onPress={() => navigate('AgendaDetail', {agenda: v})}>
+      onPress={() => navigate('AgendaDetail', {agenda: data})}>
       <View style={styles.btnAgenda}>
         <View style={styles.viewImgAgenda}>
-          <Image
-            source={{uri: chapterImgUri}}
-            onError={() => {
-              chapterImgUri = `${API_KEY_IMAGE}/chapter/${v.chapter_uuid}.png`;
-              // setChapterImgUri(
-              //   `${API_KEY_IMAGE}/chapter/${v.chapter_uuid}.png`,
-              // );
-            }}
-            style={{width: 100, height: 100}}
-            resizeMethod={'resize'}
-          />
-          <Image
-            source={{uri: korwilImgUri}}
-            onError={() => {
-              korwilImgUri = `${API_KEY_IMAGE}/korwil/${v.korwil_uuid}.png`;
-              // setKorwilImgUri(
-              //   `${API_KEY_IMAGE}/korwil/${v.korwil_uuid}.png`,
-              // );
-            }}
-            style={{width: 100, height: 100}}
-            resizeMethod={'resize'}
-          />
+          <View style={styles.viewImg}>
+            <Image
+              source={{uri: imgChapter}}
+              onError={() =>
+                setImgChapter(`${API_KEY_IMAGE}/chapter/${chapter_uuid}.png`)
+              }
+              style={{width: '100%', height: '100%'}}
+              resizeMethod={'resize'}
+            />
+          </View>
+          <Gap width={10} />
+          <View style={styles.viewImg}>
+            <Image
+              source={{uri: imgKorwil}}
+              onError={() =>
+                setImgKorwil(`${API_KEY_IMAGE}/korwil/${korwil_uuid}.png`)
+              }
+              style={{width: '100%', height: '100%'}}
+              resizeMethod={'resize'}
+            />
+          </View>
         </View>
-        <Text style={styles.textAgendaTitle} numberOfLines={1}>
-          {v.judul}
-        </Text>
-        <Gap flex={1} />
-        <Text style={styles.textDescription} numberOfLines={2}>
-          {v.deskripsi}
-        </Text>
       </View>
     </TouchableNativeFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  viewImgAgenda: {
-    // margin: 15,
-    overflow: 'hidden',
-    borderRadius: 20,
-    elevation: 3,
-    // marginBottom: 0,
+  viewImg: {
     backgroundColor: 'white',
+    width: 90,
+    height: 90,
+    borderRadius: 20,
+    elevation: 5,
+    overflow: 'hidden',
+  },
+  viewImgAgenda: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
   },
   textDescription: {
     color: 'black',
@@ -97,11 +81,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     elevation: 5,
     borderRadius: 15,
-    width: 250,
-    height: 200,
     margin: 10,
     overflow: 'hidden',
-    padding: 10,
+    padding: 20,
     paddingBottom: 15,
   },
 });

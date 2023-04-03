@@ -1,19 +1,10 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  TouchableNativeFeedback,
-  Image,
-} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import React from 'react';
 import {BackgroundImage, Gap, Header, SearchInput} from '../../components';
-import {ImgCommunity, ImgShirt} from '../../assets';
 import {useSelector} from 'react-redux';
-import {API_KEY_IMAGE} from '@env';
+import {AgendaExcerpt} from '../../features/Agenda';
 
 export default function Agenda({navigation}) {
-  // console.log(API_KEY_IMAGE);
   const {data} = useSelector(state => state.agenda);
 
   return (
@@ -22,55 +13,12 @@ export default function Agenda({navigation}) {
       <ScrollView stickyHeaderIndices={[0]} stickyHeaderHiddenOnScroll>
         <Header title="Agenda Kegiatan" onPress={() => navigation.goBack()} />
         <View style={styles.container}>
-          <SearchInput />
+          {/* <SearchInput /> */}
           <Gap height={20} />
           <View style={styles.viewProduct}>
-            {data?.map((v, i) => {
-              let chapterImgUri = `${API_KEY_IMAGE}/chapter/${v.chapter_uuid}.jpg`;
-              let korwilImgUri = `${API_KEY_IMAGE}/korwil/${v.korwil_uuid}.jpg`;
-              return (
-                <TouchableNativeFeedback
-                  key={i}
-                  useForeground
-                  onPress={() =>
-                    navigation.navigate('AgendaDetail', {agenda: v})
-                  }>
-                  <View style={styles.btnAgenda}>
-                    <View style={styles.viewImgAgenda}>
-                      <Image
-                        source={{uri: chapterImgUri}}
-                        onError={() => {
-                          chapterImgUri = `${API_KEY_IMAGE}/chapter/${v.chapter_uuid}.png`;
-                          // setChapterImgUri(
-                          //   `${API_KEY_IMAGE}/chapter/${v.chapter_uuid}.png`,
-                          // );
-                        }}
-                        style={{width: 100, height: 100}}
-                        resizeMethod={'resize'}
-                      />
-                      <Image
-                        source={{uri: korwilImgUri}}
-                        onError={() => {
-                          korwilImgUri = `${API_KEY_IMAGE}/korwil/${v.korwil_uuid}.png`;
-                          // setKorwilImgUri(
-                          //   `${API_KEY_IMAGE}/korwil/${v.korwil_uuid}.png`,
-                          // );
-                        }}
-                        style={{width: 100, height: 100}}
-                        resizeMethod={'resize'}
-                      />
-                    </View>
-                    <Text style={styles.textAgendaTitle} numberOfLines={1}>
-                      {v.judul}
-                    </Text>
-                    <Gap flex={1} />
-                    <Text style={styles.textDescription} numberOfLines={2}>
-                      {v.deskripsi}
-                    </Text>
-                  </View>
-                </TouchableNativeFeedback>
-              );
-            })}
+            {data?.map((agenda, i) => (
+              <AgendaExcerpt key={i} data={agenda} />
+            ))}
           </View>
         </View>
       </ScrollView>

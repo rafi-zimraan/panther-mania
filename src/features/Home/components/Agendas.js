@@ -16,6 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import {fetchAgenda} from '../../Agenda/services/agendaServices';
 import {colors} from '../../../utils/constant';
 import {API_KEY_IMAGE} from '@env';
+import AgendaExcerpt from './AgendaExcerpt';
 
 export default function Agendas() {
   // console.log(API_KEY_IMAGE);
@@ -41,7 +42,10 @@ export default function Agendas() {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.viewAgenda}>
-        {data?.map((v, i) => {
+        {/* {data?.map((agenda, i) => (
+          <AgendaExcerpt key={i} data={agenda} />
+        ))} */}
+        {/* {data?.map((v, i) => {
           // const [chapterImgUri, setChapterImgUri] = useState(
           //   `${API_KEY_IMAGE}/chapter/${v.chapter_uuid}.jpg`,
           // );
@@ -92,7 +96,7 @@ export default function Agendas() {
               </View>
             </TouchableNativeFeedback>
           );
-        })}
+        })} */}
         <TouchableNativeFeedback
           useForeground
           onPress={() => navigate('Agenda')}>
@@ -111,25 +115,6 @@ export default function Agendas() {
 }
 
 const styles = StyleSheet.create({
-  viewImgAgenda: {
-    // margin: 15,
-    overflow: 'hidden',
-    borderRadius: 20,
-    elevation: 3,
-    // marginBottom: 0,
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-  },
-  textDescription: {
-    color: 'black',
-    fontSize: 12,
-  },
-  imgAgenda: {
-    width: '100%',
-    height: '60%',
-    borderRadius: 20,
-  },
   icon: {
     position: 'absolute',
     width: '100%',
@@ -151,17 +136,6 @@ const styles = StyleSheet.create({
     color: 'black',
     marginTop: 5,
     textAlign: 'center',
-  },
-  btnAgenda: {
-    backgroundColor: 'white',
-    elevation: 5,
-    borderRadius: 15,
-    width: 250,
-    height: 200,
-    margin: 10,
-    overflow: 'hidden',
-    padding: 10,
-    paddingBottom: 15,
   },
   viewAgenda: {
     paddingHorizontal: 10,

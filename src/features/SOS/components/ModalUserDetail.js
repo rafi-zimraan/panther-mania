@@ -62,7 +62,7 @@ export default function ModalUserDetail({data}) {
             </View>
           </View>
           <Gap height={20} />
-          <Text>{no_whatsapp.slice(1, no_whatsapp.length)}</Text>
+          {/* <Text>{no_whatsapp.slice(1, no_whatsapp.length)}</Text> */}
           <ButtonAction title="Hubungi WhatsApp" onPress={handleWhatsApp} />
         </View>
       </View>

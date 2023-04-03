@@ -14,24 +14,13 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchSignIn} from '../../features/Auth/services/signInServices';
 import {Gap} from '../../components';
-import useLocation from '../../hooks/useLocation';
-import {usePermission} from '../../hooks';
-import {AccessCoarseLocation, AccessFineLocation} from '../../utils/constant';
 
 export default function Splash({navigation}) {
   const dispatch = useDispatch();
   const {status_signin: status} = useSelector(state => state.auth);
   const {height, width} = useOrientation();
-  const {location, getCurrentLocation} = useLocation();
-  const {requestPermission: reqCoarseLocation, granted: grantedCoarse} =
-    usePermission(AccessCoarseLocation);
-  const {requestPermission: reqFineLocation, granted: grantedFine} =
-    usePermission(AccessFineLocation);
 
   useEffect(() => {
-    reqFineLocation();
-    reqCoarseLocation();
-    getCurrentLocation();
     async function refreshSession() {
       const credential = await EncryptedStorage.getItem('user_credential');
       if (credential) {
@@ -41,8 +30,8 @@ export default function Splash({navigation}) {
           email,
           password,
           navigation,
-          lat: location.latitude,
-          lng: location.longitude,
+          lat: 106.82719,
+          lng: -6.175395,
           splash: true,
         };
         dispatch(fetchSignIn(formData));
@@ -55,16 +44,11 @@ export default function Splash({navigation}) {
         }, 1500);
       }
     }
-    location.altitude && refreshSession();
-  }, [grantedFine, grantedCoarse, location.altitude]);
+    refreshSession();
+  }, []);
 
   return (
     <View style={styles.container}>
-      {/* <StatusBar
-        barStyle={'light-content'}
-        backgroundColor={'transparent'}
-        animated
-      /> */}
       <Gap height={StatusBar.currentHeight} />
       <Image
         source={ImgBGDefault}

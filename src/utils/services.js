@@ -33,7 +33,7 @@ export const getUserData = access => axios.get(`${host}/me`, config(access));
 export const postSignOut = access =>
   axios.post(`${host}/logout`, config(access));
 export const postUpdateUserProfile = (formData, access) =>
-  axios.put(`${host}/update`, formData, configMultipart(access));
+  axios.put(`${host}/update`, formData, config(access));
 
 // Agenda
 export const getAgenda = () => axios.get(`${host}/agenda`, config());

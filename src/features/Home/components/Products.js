@@ -49,7 +49,7 @@ export default function Products() {
             onPress={() => navigate('ProductDetail', {product: v})}>
             <View style={styles.btnProduct}>
               <Image
-                source={{uri: `${API_KEY_IMAGE}/post/${v.gambar}`}}
+                source={{uri: `${API_KEY_IMAGE}/products/${v.gambar}`}}
                 style={styles.imgProduct}
                 // onError={() => console.log('error')}
               />

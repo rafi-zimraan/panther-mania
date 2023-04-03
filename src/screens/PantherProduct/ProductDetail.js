@@ -15,6 +15,8 @@ import React, {useState} from 'react';
 import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
 import {ImgShirt} from '../../assets';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {API_KEY_IMAGE} from '@env';
+// console.log(API_KEY_IMAGE);
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -47,7 +49,10 @@ export default function ProductDetail({route, navigation}) {
         <Header title="Produk" onPress={() => navigation.goBack()} />
         <View style={styles.container}>
           <View style={styles.viewImgProduct}>
-            <Image source={ImgShirt} style={{width: '100%', height: '100%'}} />
+            <Image
+              source={{uri: `${API_KEY_IMAGE}/products/${gambar}`}}
+              style={{width: '100%', height: '100%'}}
+            />
           </View>
           <Text style={styles.textProductTitle}>{nama_produk}</Text>
           <TouchableNativeFeedback
@@ -190,6 +195,9 @@ const styles = StyleSheet.create({
   },
   viewImgProduct: {
     height: 350,
+    borderRadius: 10,
+    overflow: 'hidden',
+    elevation: 5,
   },
   container: {
     width: '100%',

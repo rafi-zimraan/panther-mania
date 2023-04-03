@@ -462,9 +462,9 @@ export default function EditUserProfile({navigation}) {
       case 1:
         return 'ktp';
       case 2:
-        return 'profile';
+        return 'stnk';
       case 3:
-        return 'profile';
+        return 'sim';
       case 4:
         return 'ktp2';
       default:

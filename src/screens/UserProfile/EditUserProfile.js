@@ -95,7 +95,7 @@ export default function EditUserProfile({navigation}) {
     kecamatan: kecamatan,
     kelurahan: kelurahan,
     kodepos: kodepos,
-    ktp: ktp,
+    no_ktp: ktp,
     nama_lengkap: nama_lengkap,
     nama_perusahaan: nama_perusahaan,
     no_chasis: panther_no_chasis,
@@ -107,7 +107,7 @@ export default function EditUserProfile({navigation}) {
     pekerjaan: pekerjaan,
     provinsi: provinsi,
     sekolah: sekolah,
-    sim: sim,
+    no_sim: sim,
     status_nikah: status_nikah,
     tahun_kendaraan: panther_tahun,
     tanggal_lahir: tanggal_lahir,
@@ -176,8 +176,8 @@ export default function EditUserProfile({navigation}) {
     {field: 'pekerjaan', name: 'Pekerjaan'},
     {field: 'type_kendaraan', name: 'Tipe Kendaraan'},
     {field: 'tahun_kendaraan', name: 'Tahun Kendaraan'},
-    {field: 'ktp', name: 'Nomor KTP'},
-    {field: 'sim', name: 'Nomor SIM'},
+    {field: 'no_ktp', name: 'Nomor KTP'},
+    {field: 'no_sim', name: 'Nomor SIM'},
     {field: 'no_polisi', name: 'Nomor Polisi'},
     {field: 'warna_kendaraan', name: 'Warna Kendaraan'},
     {field: 'no_chasis', name: 'Nomor Chasis'},
@@ -263,8 +263,7 @@ export default function EditUserProfile({navigation}) {
     formPhotos.sim.uri && multiPart.append('sim', formPhotos.sim);
     formPhotos.stnk.uri && multiPart.append('stnk', formPhotos.stnk);
 
-    // dispatch(fetchUpdateUserProfile({multiPart, navigation}));
-    dispatch(fetchUpdateUserProfile(multiPart));
+    dispatch(fetchUpdateUserProfile(formData));
   }
 
   async function handleImagePicker(index, from) {

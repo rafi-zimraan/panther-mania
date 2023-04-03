@@ -13,6 +13,8 @@ import {IconCalendar, IconFlagGreen, ImgCommunity} from '../../assets';
 import {API_KEY_IMAGE} from '@env';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchJoinAgenda} from '../../features/Agenda/services/agendaServices';
+import HTML from 'react-native-render-html';
+import {useOrientation} from '../../hooks';
 
 export default function AgendaDetail({navigation, route}) {
   // console.log(API_KEY_IMAGE);
@@ -46,6 +48,7 @@ export default function AgendaDetail({navigation, route}) {
   const [dewasa, setDewasa] = useState('');
   const [anak, setAnak] = useState('');
   const [kendaraan, setKendaraan] = useState('');
+  const {width} = useOrientation();
 
   const [chapterImgUri, setChapterImgUri] = useState(
     `${API_KEY_IMAGE}/chapter/${chapter_uuid}.jpg`,
@@ -104,7 +107,9 @@ export default function AgendaDetail({navigation, route}) {
                 style={styles.imgDetail}
                 resizeMethod={'resize'}
               />
-              <Text style={styles.textDetail}>{tanggal}</Text>
+              <Text style={styles.textDetail}>
+                {tanggal} - {jam?.slice(0, 5)}
+              </Text>
             </View>
             {/* <View style={styles.viewKorwil}>
               <Image
@@ -116,7 +121,8 @@ export default function AgendaDetail({navigation, route}) {
             </View> */}
           </View>
           <View style={styles.viewAgendaDetail}>
-            <Text style={{color: 'black'}}>{deskripsi}</Text>
+            <HTML source={{html: deskripsi}} contentWidth={width} />
+            {/* <Text style={{color: 'black'}}>{deskripsi}</Text> */}
           </View>
           <Gap height={20} />
           {formVisible && (

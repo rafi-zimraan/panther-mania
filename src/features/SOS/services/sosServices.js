@@ -12,8 +12,10 @@ export const fetchUsersLocation = createAsyncThunk(
     const {token} = getState().auth;
     try {
       const {data} = await getUsersLocation(token);
-      if (Array.isArray(data.data)) dispatch(SetUsersData(data.data));
-      else showToast(data?.status);
+      if (Array.isArray(data.data) && data.data?.length != 0) {
+        const users_data = data.data?.filter(v => v.lat != '' && v.lng != '');
+        dispatch(SetUsersData(users_data));
+      } else showToast(data?.status);
       return data;
     } catch (error) {
       showToast(error.response.data?.message, 'LONG');

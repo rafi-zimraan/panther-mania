@@ -14,6 +14,7 @@ import {
 } from '../../../utils/constant';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useLocation} from '../../../hooks';
+import {useSelector} from 'react-redux';
 
 export default function ModalLocation() {
   const [modal, setModal] = useState(true);
@@ -22,7 +23,8 @@ export default function ModalLocation() {
       usePermission(AccessFineLocation),
     {requestPermission: requestLocationCoarse, granted: locationCoarse} =
       usePermission(AccessCoarseLocation);
-  const {location, getCurrentLocation} = useLocation();
+  const {getCurrentLocation, altitude} = useLocation();
+  const {status} = useSelector(state => state.save_our_souls);
 
   useEffect(() => {
     if (!locationFine) {
@@ -31,11 +33,15 @@ export default function ModalLocation() {
     } else if (!locationCoarse) {
       setTextLoading('Izin lokasi kasar diperlukan.');
       requestLocationCoarse();
-    } else if (location.loading) {
-      setTextLoading('Mencari lokasi Anda...');
+    } else if (locationCoarse && locationFine && altitude == null) {
       getCurrentLocation();
+      setTextLoading('Mencari lokasi Anda...');
+    } else if (status == 'pending') {
+      setTextLoading('Memuat semua orang...');
     } else setModal(false);
-  }, [locationFine, locationCoarse, location.loading]);
+  }, [locationFine, locationCoarse, altitude, status]);
+
+  const permissions_granted = locationFine && locationCoarse;
 
   return (
     <Modal
@@ -53,24 +59,23 @@ export default function ModalLocation() {
               <ActivityIndicator color={'black'} size={'large'} />
             )}
             <Text style={styles.textLoading}>{textLoading}</Text>
-            {!locationFine ||
-              (!locationCoarse && (
-                <TouchableNativeFeedback
-                  useForeground
-                  onPress={() => {
-                    requestLocationFine();
-                    requestLocationCoarse();
-                  }}>
-                  <View style={styles.btnRefresh}>
-                    <Icon
-                      name={'refresh'}
-                      color={'black'}
-                      size={30}
-                      style={styles.icon}
-                    />
-                  </View>
-                </TouchableNativeFeedback>
-              ))}
+            {!permissions_granted && (
+              <TouchableNativeFeedback
+                useForeground
+                onPress={() => {
+                  requestLocationFine();
+                  requestLocationCoarse();
+                }}>
+                <View style={styles.btnRefresh}>
+                  <Icon
+                    name={'refresh'}
+                    color={'black'}
+                    size={30}
+                    style={styles.icon}
+                  />
+                </View>
+              </TouchableNativeFeedback>
+            )}
           </View>
         </View>
       </View>

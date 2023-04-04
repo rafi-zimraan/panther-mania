@@ -18,7 +18,8 @@ import {IconPfpMapDefault, IconUser} from '../../../assets';
 
 export default function ModalUserDetail({data}) {
   const dispatch = useDispatch();
-  const {modal} = useSelector(state => state.save_our_souls);
+  const {modal, coords} = useSelector(state => state.save_our_souls);
+  const {latitude, longitude} = coords;
   const {
     alamat,
     distance,
@@ -31,7 +32,10 @@ export default function ModalUserDetail({data}) {
 
   async function handleWhatsApp() {
     const number = no_whatsapp.slice(1, no_whatsapp?.length);
-    await Linking.openURL(`https://wa.me/62${number}`);
+    const googleMapUrl = `https://www.google.com/maps/place/${latitude},${longitude}`;
+    await Linking.openURL(
+      `https://wa.me/62${number}?text=Tolong%2C%20saya%20perlu%20bantuan.%0ABerikut%20lokasi%20saya%20saat%20ini%3A%0A%0Ahttps%3A%2F%2Fwww.google.com%2Fmaps%2Fplace%2F${latitude}%2C${longitude}`,
+    );
   }
 
   const [imgProfile, setImgProfile] = useState({

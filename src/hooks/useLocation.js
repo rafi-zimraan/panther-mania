@@ -50,8 +50,11 @@
 
 import {useEffect, useState} from 'react';
 import Geolocation from 'react-native-geolocation-service';
+import {useDispatch, useSelector} from 'react-redux';
+import {SetCoordinates} from '../redux/slices/sosSlice';
 
 const useLocation = () => {
+  const dispatch = useDispatch();
   const [location, setLocation] = useState({
     // default to Jakarta Pusat
     longitude: 106.82719,
@@ -61,14 +64,14 @@ const useLocation = () => {
     altitudeAccuracy: null,
     heading: null,
     speed: 0,
-    loading: true,
   });
   const [error, setError] = useState(null);
 
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       pos => {
-        setLocation({...pos.coords, loading: false});
+        setLocation(pos.coords);
+        dispatch(SetCoordinates(pos.coords));
       },
       err => {
         setError(err);
@@ -85,7 +88,7 @@ const useLocation = () => {
     getCurrentLocation();
   }, []);
 
-  return {location, error, getCurrentLocation};
+  return {...location, error, getCurrentLocation};
 };
 
 export default useLocation;

@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Gap from './Gap';
 
 export default function ButtonAction({
   title = 'Button',
@@ -14,8 +15,8 @@ export default function ButtonAction({
   disabled,
   backgroundColor = '#183240',
   loading = false,
-  iconLeft = 'account',
-  iconRight = 'account',
+  iconLeft,
+  iconRight,
 }) {
   return (
     <TouchableNativeFeedback
@@ -24,13 +25,18 @@ export default function ButtonAction({
       disabled={disabled}>
       <View style={{...styles.container, backgroundColor}}>
         {loading ? (
-          <ActivityIndicator
-            color={'white'}
-            size={'small'}
-            style={styles.textTitle}
-          />
+          <ActivityIndicator color={'white'} size={'small'} />
         ) : (
-          <Text style={styles.textTitle}>{title}</Text>
+          <View style={styles.viewTitle}>
+            {iconLeft && <Icon name={iconLeft} size={22} color={'white'} />}
+            <Text
+              style={styles.textTitle}
+              adjustsFontSizeToFit
+              allowFontScaling>
+              {title}
+            </Text>
+            {iconRight && <Icon name={iconRight} size={22} color={'white'} />}
+          </View>
         )}
       </View>
     </TouchableNativeFeedback>
@@ -38,15 +44,18 @@ export default function ButtonAction({
 }
 
 const styles = StyleSheet.create({
+  viewTitle: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
   textTitle: {
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
-    textAlign: 'center',
     textAlignVertical: 'center',
     color: 'white',
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '500',
+    marginHorizontal: 5,
   },
   container: {
     width: '90%',
@@ -55,5 +64,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     elevation: 3,
     alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

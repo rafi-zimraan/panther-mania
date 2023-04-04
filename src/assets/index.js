@@ -12,8 +12,10 @@ import IconProduct from './icons/box.png';
 import IconSOS from './icons/sos.png';
 import IconUser from './icons/user.png';
 import IconFlagGreen from './icons/flag.png';
+import IconPfpMapDefault from './icons/user-map-default.png';
 
 export {
+  IconPfpMapDefault,
   ImgCommunity,
   ImgShirt,
   ImgBGDefault,

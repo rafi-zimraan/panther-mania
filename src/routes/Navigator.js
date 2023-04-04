@@ -34,7 +34,7 @@ export default function Navigator() {
           ...statusBarConfig(),
           headerShown: false,
         }}>
-        {/* <Stack.Screen component={LibsTest} name={'LibsTest'} /> */}
+        <Stack.Screen component={LibsTest} name={'LibsTest'} />
         <Stack.Screen
           component={Splash}
           name={'Splash'}

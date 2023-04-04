@@ -1,20 +1,6 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Linking,
-  PermissionsAndroid,
-  Button,
-  Modal,
-} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import MapView, {
-  Marker,
-  PROVIDER_GOOGLE,
-  Callout,
-  Circle,
-} from 'react-native-maps';
-import {useLocation} from '../../hooks';
+import MapView, {Marker, PROVIDER_GOOGLE, Callout} from 'react-native-maps';
 import {ModalLocation} from '../../features/SOS';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchUsersLocation} from '../../features/SOS/services/sosServices';
@@ -22,9 +8,11 @@ import ModalUserDetail from '../../features/SOS/components/ModalUserDetail';
 import {SetModal} from '../../redux/slices/sosSlice';
 
 export default function SaveOurSouls() {
-  const {latitude, longitude, loading} = useLocation().location;
   const dispatch = useDispatch();
-  const {status, users_data} = useSelector(state => state.save_our_souls);
+  const {status, users_data, coords} = useSelector(
+    state => state.save_our_souls,
+  );
+  const {latitude, longitude} = coords;
 
   const [selectedMarker, setSelectedMarker] = useState({
     alamat: '',
@@ -49,32 +37,30 @@ export default function SaveOurSouls() {
 
   return (
     <View style={{flex: 1}}>
-      {!loading && (
-        <MapView
-          showsCompass
-          showsMyLocationButton
-          style={{flex: 1}}
-          provider={PROVIDER_GOOGLE}
-          region={mapRegion}>
-          <Marker pinColor="dodgerblue" coordinate={{latitude, longitude}}>
-            <Callout>
-              <Text style={{color: 'black'}}>Anda berada disini</Text>
-            </Callout>
-          </Marker>
-          {users_data?.map((v, i) => (
-            <Marker
-              key={i}
-              onPress={() => {
-                setSelectedMarker(v);
-                dispatch(SetModal(true));
-              }}
-              coordinate={{
-                latitude: parseFloat(v.lat),
-                longitude: parseFloat(v.lng),
-              }}></Marker>
-          ))}
-        </MapView>
-      )}
+      <MapView
+        showsCompass
+        showsMyLocationButton
+        style={{flex: 1}}
+        provider={PROVIDER_GOOGLE}
+        region={mapRegion}>
+        <Marker pinColor="dodgerblue" coordinate={{latitude, longitude}}>
+          <Callout>
+            <Text style={{color: 'black'}}>Anda berada disini</Text>
+          </Callout>
+        </Marker>
+        {users_data?.map((v, i) => (
+          <Marker
+            key={i}
+            onPress={() => {
+              setSelectedMarker(v);
+              dispatch(SetModal(true));
+            }}
+            coordinate={{
+              latitude: parseFloat(v.lat),
+              longitude: parseFloat(v.lng),
+            }}></Marker>
+        ))}
+      </MapView>
       <ModalUserDetail data={selectedMarker} />
       <ModalLocation />
     </View>

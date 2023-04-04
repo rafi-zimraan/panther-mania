@@ -5,6 +5,12 @@ const initialState = {
   status: 'idle',
   users_data: null,
   modal: false,
+  status_permissions: 'denied',
+  trigger_map: true,
+  coords: {
+    longitude: 106.82719,
+    latitude: -6.175395,
+  },
 };
 
 export const sosSlice = createSlice({
@@ -16,6 +22,15 @@ export const sosSlice = createSlice({
     },
     SetModal(state, {payload}) {
       state.modal = payload;
+    },
+    SetStatusPermission(state, {payload}) {
+      state.status_permissions = payload;
+    },
+    SetTriggerMap(state, {payload}) {
+      state.trigger_map = payload;
+    },
+    SetCoordinates(state, {payload}) {
+      state.coords = payload;
     },
   },
   extraReducers(builder) {
@@ -32,6 +47,12 @@ export const sosSlice = createSlice({
   },
 });
 
-export const {SetUsersData, SetModal} = sosSlice.actions;
+export const {
+  SetUsersData,
+  SetModal,
+  SetStatusPermission,
+  SetTriggerMap,
+  SetCoordinates,
+} = sosSlice.actions;
 
 export default sosSlice.reducer;

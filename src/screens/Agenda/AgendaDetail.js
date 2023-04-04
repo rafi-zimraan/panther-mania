@@ -121,7 +121,11 @@ export default function AgendaDetail({navigation, route}) {
             </View> */}
           </View>
           <View style={styles.viewAgendaDetail}>
-            <HTML source={{html: deskripsi}} contentWidth={width} />
+            <HTML
+              source={{html: deskripsi}}
+              contentWidth={width}
+              baseStyle={{color: 'black'}}
+            />
             {/* <Text style={{color: 'black'}}>{deskripsi}</Text> */}
           </View>
           <Gap height={20} />

@@ -51,28 +51,28 @@ export default function Products() {
               <Image
                 source={{uri: `${API_KEY_IMAGE}/products/${v.gambar}`}}
                 style={styles.imgProduct}
-                // onError={() => console.log('error')}
               />
               <Text style={styles.textProductTitle} numberOfLines={2}>
                 {v.nama_produk}
               </Text>
-              {/* <Text style={{color: 'grey'}}>{v.gambar}</Text> */}
               <Text style={styles.textPrice}>{useCurrencyFormat(v.harga)}</Text>
             </View>
           </TouchableNativeFeedback>
         ))}
-        <TouchableNativeFeedback
-          useForeground
-          onPress={() => navigate('PantherProduct')}>
-          <View style={styles.btnViewMore}>
-            <Icon
-              name={'chevron-right'}
-              color={'black'}
-              size={50}
-              style={styles.icon}
-            />
-          </View>
-        </TouchableNativeFeedback>
+        {data && (
+          <TouchableNativeFeedback
+            useForeground
+            onPress={() => navigate('PantherProduct')}>
+            <View style={styles.btnViewMore}>
+              <Icon
+                name={'chevron-right'}
+                color={'black'}
+                size={50}
+                style={styles.icon}
+              />
+            </View>
+          </TouchableNativeFeedback>
+        )}
       </ScrollView>
     </View>
   );
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     alignItems: 'center',
+    height: 290,
   },
   textTitle: {
     fontWeight: 'bold',

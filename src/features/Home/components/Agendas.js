@@ -41,18 +41,20 @@ export default function Agendas() {
         {data?.map((agenda, i) => (
           <AgendaExcerpt key={i} data={agenda} />
         ))}
-        <TouchableNativeFeedback
-          useForeground
-          onPress={() => navigate('Agenda')}>
-          <View style={styles.btnViewMore}>
-            <Icon
-              name={'chevron-right'}
-              color={'black'}
-              size={50}
-              style={styles.icon}
-            />
-          </View>
-        </TouchableNativeFeedback>
+        {data && (
+          <TouchableNativeFeedback
+            useForeground
+            onPress={() => navigate('Agenda')}>
+            <View style={styles.btnViewMore}>
+              <Icon
+                name={'chevron-right'}
+                color={'black'}
+                size={50}
+                style={styles.icon}
+              />
+            </View>
+          </TouchableNativeFeedback>
+        )}
       </ScrollView>
     </View>
   );
@@ -83,8 +85,8 @@ const styles = StyleSheet.create({
   },
   viewAgenda: {
     paddingHorizontal: 10,
-    paddingVertical: 10,
     alignItems: 'center',
+    height: 170,
   },
   textTitle: {
     fontWeight: 'bold',

@@ -13,7 +13,7 @@ export default function SignIn({navigation}) {
   const {status_signin: status} = useSelector(state => state.auth);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {location, getCurrentLocation} = useLocation();
+  const {getCurrentLocation, longitude, latitude} = useLocation();
 
   const disableButton =
     email == '' ||
@@ -53,8 +53,8 @@ export default function SignIn({navigation}) {
               email,
               password,
               navigation,
-              lat: location.latitude,
-              lng: location.longitude,
+              lat: latitude,
+              lng: longitude,
             };
             dispatch(fetchSignIn(formData));
           }}

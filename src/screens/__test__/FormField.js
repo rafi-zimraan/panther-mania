@@ -1,33 +1,29 @@
 import React from 'react';
 import {View, TextInput, Button, Text} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
+import FormInput from './FormInput';
 
 const FormField = ({onSubmit}) => {
   const {
     control,
     handleSubmit,
     formState: {errors},
-  } = useForm();
-
-  function FormInput({onChangeText, value, placeholder}) {
-    return (
-      <TextInput
-        onChangeText={onChangeText}
-        value={value}
-        placeholder={placeholder}
-      />
-    );
-  }
+  } = useForm({
+    defaultValues: {
+      agama: '',
+    },
+    mode: 'onChange',
+    criteriaMode: 'all',
+  });
 
   return (
     <View>
       <Controller
         control={control}
         name="email"
-        defaultValue=""
         rules={{required: true}}
         render={({field}) => (
-          <TextInput
+          <FormInput
             onChangeText={field.onChange}
             value={field.value}
             placeholder="Email"
@@ -39,10 +35,9 @@ const FormField = ({onSubmit}) => {
       <Controller
         control={control}
         name="lastName"
-        defaultValue=""
         rules={{required: true}}
         render={({field}) => (
-          <TextInput
+          <FormInput
             onChangeText={field.onChange}
             value={field.value}
             placeholder="Last Name"
@@ -50,6 +45,27 @@ const FormField = ({onSubmit}) => {
         )}
       />
       {errors?.lastName && <Text>This field is required</Text>}
+      <Controller
+        control={control}
+        name="agama"
+        rules={{
+          validate: value => (value == 'Pilih Agama' ? 'invalid option' : true),
+        }}
+        render={({field: {onChange, value}}) => (
+          <FormInput
+            type="picker"
+            onPickerChange={onChange}
+            selectedPickerValue={value}
+            placeholderPicker="Pilih Agama"
+            pickerItem={[
+              {value: 'Islam', label: 'Islam'},
+              {value: 'Buddha', label: 'Buddha'},
+              {value: 'Atheis', label: 'Atheis'},
+            ]}
+          />
+        )}
+      />
+      {errors?.agama && <Text>This field is required</Text>}
 
       <Button title="Submit" onPress={handleSubmit(onSubmit)} />
     </View>

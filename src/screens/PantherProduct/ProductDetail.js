@@ -15,7 +15,9 @@ import React, {useState} from 'react';
 import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
 import {ImgShirt} from '../../assets';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import HTML from 'react-native-render-html';
 import {API_KEY_IMAGE} from '@env';
+import {useOrientation} from '../../hooks';
 // console.log(API_KEY_IMAGE);
 
 if (Platform.OS === 'android') {
@@ -25,6 +27,7 @@ if (Platform.OS === 'android') {
 }
 
 export default function ProductDetail({route, navigation}) {
+  const {width} = useOrientation();
   const {
     id,
     uuid,
@@ -62,7 +65,12 @@ export default function ProductDetail({route, navigation}) {
               setShowDesc(!showDesc);
             }}>
             <View style={{...styles.containerDesc}}>
-              <Text style={{color: 'black'}}>
+              <HTML
+                source={{html: deskripsi}}
+                contentWidth={width}
+                baseStyle={{color: 'black'}}
+              />
+              {/* <Text style={{color: 'black'}}>
                 {deskripsi.slice(0, 40)}
                 {!showDesc ? '...' : ''}
               </Text>
@@ -80,7 +88,7 @@ export default function ProductDetail({route, navigation}) {
                   color="black"
                   size={20}
                 />
-              </View>
+              </View> */}
             </View>
           </TouchableNativeFeedback>
           <View style={{padding: 20}}>

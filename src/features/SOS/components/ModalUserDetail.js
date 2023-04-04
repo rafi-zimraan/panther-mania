@@ -6,12 +6,14 @@ import {
   Pressable,
   Image,
   Linking,
+  Animated,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {SetModal} from '../../../redux/slices/sosSlice';
 import {API_KEY_IMAGE} from '@env';
 import {ButtonAction, Gap} from '../../../components';
+import {IconPfpMapDefault, IconUser} from '../../../assets';
 // console.log(API_KEY_IMAGE)
 
 export default function ModalUserDetail({data}) {
@@ -32,6 +34,16 @@ export default function ModalUserDetail({data}) {
     await Linking.openURL(`https://wa.me/62${number}`);
   }
 
+  const [imgProfile, setImgProfile] = useState({
+    uri: `${API_KEY_IMAGE}/profile/${user_id}.jpg`,
+  });
+
+  useEffect(() => {
+    setImgProfile({
+      uri: `${API_KEY_IMAGE}/profile/${user_id}.jpg`,
+    });
+  }, [user_id]);
+
   return (
     <Modal
       visible={modal}
@@ -47,7 +59,9 @@ export default function ModalUserDetail({data}) {
           <View style={{flexDirection: 'row'}}>
             <View style={styles.viewImgProfile}>
               <Image
-                source={{uri: `${API_KEY_IMAGE}/profile/${user_id}.jpg`}}
+                source={imgProfile}
+                // set user image to default if uri is invalid
+                onError={() => setImgProfile(IconPfpMapDefault)}
                 style={{width: '100%', height: '100%'}}
               />
             </View>
@@ -63,7 +77,11 @@ export default function ModalUserDetail({data}) {
           </View>
           <Gap height={20} />
           {/* <Text>{no_whatsapp.slice(1, no_whatsapp.length)}</Text> */}
-          <ButtonAction title="Hubungi WhatsApp" onPress={handleWhatsApp} />
+          <ButtonAction
+            title="Hubungi WhatsApp"
+            onPress={handleWhatsApp}
+            iconLeft={'whatsapp'}
+          />
         </View>
       </View>
     </Modal>
@@ -77,6 +95,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 3,
     overflow: 'hidden',
+    backgroundColor: 'white',
   },
   textProfileName: {
     fontWeight: 'bold',

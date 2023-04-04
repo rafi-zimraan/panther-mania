@@ -263,6 +263,8 @@ export default function EditUserProfile({navigation}) {
     formPhotos.sim.uri && multiPart.append('sim', formPhotos.sim);
     formPhotos.stnk.uri && multiPart.append('stnk', formPhotos.stnk);
 
+    // console.log(formData);
+
     dispatch(fetchUpdateUserProfile(formData));
   }
 
@@ -600,7 +602,7 @@ export default function EditUserProfile({navigation}) {
             </Text> */}
             <Gap height={30} />
             <ButtonSubmit
-              title="Perbarui"
+              title="Perbarui Profil"
               onPress={submitUpdateProfile}
               loading={status_user_profile == 'pending'}
             />

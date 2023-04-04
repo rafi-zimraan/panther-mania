@@ -23,7 +23,11 @@ export default function UserProfile({navigation}) {
   // console.log(API_KEY_IMAGE);
   const dispatch = useDispatch();
   const {isPortrait} = useOrientation();
-  const {user_data, status_signout: status} = useSelector(state => state.auth);
+  const {
+    user_data,
+    status_signout: status,
+    token,
+  } = useSelector(state => state.auth);
   const {nama_lengkap, handphone, panther_nopol, user_id} = user_data;
 
   const a = {

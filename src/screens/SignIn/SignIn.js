@@ -5,22 +5,22 @@ import {ButtonSubmit, FormInput} from '../../features/Auth';
 import {BackgroundImage, Gap, Header} from '../../components';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchSignIn} from '../../features/Auth/services/signInServices';
-import useLocation from '../../hooks/useLocation';
-import usePermission from '../../hooks/usePermission';
+import {useLocation} from '../../hooks';
+import {useForm} from 'react-hook-form';
 
 export default function SignIn({navigation}) {
   const dispatch = useDispatch();
   const {status_signin: status} = useSelector(state => state.auth);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const {getCurrentLocation, longitude, latitude} = useLocation();
+  const {
+    control,
+    formState: {errors},
+    handleSubmit,
+  } = useForm();
+  const {longitude: lng, latitude: lat} = useLocation();
 
-  const disableButton =
-    email == '' ||
-    !email.includes('@') ||
-    !email.includes('.') ||
-    password == '' ||
-    status == 'pending';
+  function handleSignIn(formData) {
+    dispatch(fetchSignIn({...formData, navigation, lat, lng}));
+  }
 
   return (
     <View style={{flex: 1}}>
@@ -32,32 +32,28 @@ export default function SignIn({navigation}) {
           style={{position: 'absolute', opacity: 0.25}}
         />
         <FormInput
-          placeholder="contoh@email.com"
+          name={'email'}
+          placeholder={'contoh@gmail.com'}
+          iconName={'gmail'}
           keyboardType={'email-address'}
           autoCapitalize={'none'}
-          onChangeText={setEmail}
+          errors={errors}
+          control={control}
         />
         <FormInput
-          placeholder="Kata Sandi"
-          password
-          iconOverride={'lock'}
-          onChangeText={setPassword}
+          name={'password'}
+          placeholder={'Kata sandi..'}
+          iconName={'lock'}
+          secureTextEntry
+          errors={errors}
+          control={control}
         />
         <Gap height={20} />
         <ButtonSubmit
           title="MASUK"
-          disabled={disableButton}
+          disabled={status == 'pending'}
           loading={status == 'pending'}
-          onPress={() => {
-            const formData = {
-              email,
-              password,
-              navigation,
-              lat: latitude,
-              lng: longitude,
-            };
-            dispatch(fetchSignIn(formData));
-          }}
+          onPress={handleSubmit(handleSignIn)}
         />
       </View>
     </View>

@@ -50,6 +50,7 @@ const FormField = ({onSubmit}) => {
         name="agama"
         rules={{
           validate: value => (value == 'Pilih Agama' ? 'invalid option' : true),
+          required: true,
         }}
         render={({field: {onChange, value}}) => (
           <FormInput
@@ -66,6 +67,20 @@ const FormField = ({onSubmit}) => {
         )}
       />
       {errors?.agama && <Text>This field is required</Text>}
+
+      <Controller
+        control={control}
+        name="date"
+        rules={{
+          required: true,
+        }}
+        render={({field: {onChange, value}}) => (
+          <FormInput
+            type="date"
+            // value={}
+          />
+        )}
+      />
 
       <Button title="Submit" onPress={handleSubmit(onSubmit)} />
     </View>

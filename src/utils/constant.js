@@ -11,3 +11,8 @@ export const colors = {
   primary: '#183240',
   destroy: 'tomato',
 };
+
+// Storage key
+export const storage_keys = {
+  user_credential: 'user_credential',
+};

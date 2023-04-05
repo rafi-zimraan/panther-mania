@@ -25,8 +25,10 @@ export default function SaveOurSouls() {
   });
 
   useEffect(() => {
-    if (status == 'idle') dispatch(fetchUsersLocation());
-  }, [dispatch]);
+    setTimeout(() => {
+      dispatch(fetchUsersLocation());
+    }, 1000);
+  }, []);
 
   const mapRegion = {
     latitude,

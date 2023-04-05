@@ -1,5 +1,5 @@
 import {
-  Pressable,
+  Button,
   StyleSheet,
   Text,
   TextInput,
@@ -7,169 +7,146 @@ import {
   View,
 } from 'react-native';
 import React, {useState} from 'react';
+import {useForm, Controller} from 'react-hook-form';
+import {Picker} from '@react-native-picker/picker';
+import DatePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function FormInput({
-  placeholder = 'The placeholder..',
-  onChangeText,
-  value,
-  password,
-  picker,
-  pickerChildren,
-  date,
-  dateValue = 'Pilih Tanggal',
-  onPressDate,
-  multiline,
+  type = 'text',
+  placeholder = 'Placeholder input',
+  pickerItem,
+  iconName = 'account',
+  defaultValue,
+  keyboardType,
+  secureTextEntry,
+  name,
+  control,
+  required = true,
+  validate,
+  errors,
   autoCapitalize,
-  iconOverride,
-  index,
-  showIndex,
+  errorMessage = 'Field tidak boleh kosong',
 }) {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(secureTextEntry);
 
-  function iconName(i) {
-    return i == 0
-      ? 'account'
-      : i == 1
-      ? 'gmail'
-      : i == 2
-      ? 'shield-key'
-      : i == 3
-      ? 'shield-key'
-      : i == 4
-      ? 'gender-male-female'
-      : i == 5
-      ? 'tshirt-crew'
-      : i == 6
-      ? 'calendar'
-      : i == 7
-      ? 'calendar'
-      : i == 8
-      ? 'hands-pray'
-      : i == 9
-      ? 'account-heart'
-      : i == 10
-      ? 'map-marker-radius'
-      : i == 11
-      ? 'map-legend'
-      : i == 12
-      ? 'map-legend'
-      : i == 13
-      ? 'map-legend'
-      : i == 14
-      ? 'map-legend'
-      : i == 15
-      ? 'email-fast'
-      : i == 16
-      ? 'office-building'
-      : i == 17
-      ? 'office-building-marker'
-      : i == 18
-      ? 'phone'
-      : i == 19
-      ? 'whatsapp'
-      : i == 20
-      ? 'card-account-phone'
-      : i == 21
-      ? 'phone-classic'
-      : i == 22
-      ? 'school'
-      : i == 23
-      ? 'badge-account'
-      : i == 24
-      ? 'car-info'
-      : i == 25
-      ? 'car-clock'
-      : i == 26
-      ? 'card-account-details'
-      : i == 27
-      ? 'card-account-details'
-      : i == 28
-      ? 'card-bulleted'
-      : i == 29
-      ? 'car-info'
-      : i == 30
-      ? 'car-info'
-      : i == 31
-      ? 'car-info'
-      : i == 32
-      ? 'car-clock'
-      : i == 33
-      ? 'phone-alert'
-      : 'account';
+  // Date handler
+  const [showDate, setShowDate] = useState(false);
+  const [dateValue, setDateValue] = useState(new Date());
+  function handleChangeDate(event, selectedDate, onChange) {
+    if (event.type == 'set') {
+      setShowDate(false);
+      setDateValue(selectedDate);
+      const [y, m, d] = selectedDate.toISOString().slice(0, 10).split('-');
+      onChange(`${y}-${m}-${d}`);
+    } else setShowDate(false);
   }
 
-  const keyboardType =
-    index == 1
-      ? 'email-address'
-      : index == 15 ||
-        index == 18 ||
-        index == 19 ||
-        index == 20 ||
-        index == 21 ||
-        index == 25 ||
-        index == 26 ||
-        index == 27
-      ? 'phone-pad'
-      : null;
-
   return (
-    <View style={{margin: 10}}>
-      <View style={styles.container}>
-        <Icon
-          name={iconOverride ? iconOverride : iconName(index)}
-          color={'white'}
-          style={styles.icon}
-          size={20}
-        />
-        {picker ? (
-          pickerChildren
-        ) : date ? (
-          <Pressable style={styles.btnDate} onPress={onPressDate}>
-            <Text style={{color: 'black'}}>{dateValue}</Text>
-          </Pressable>
-        ) : (
-          <TextInput
-            onChangeText={onChangeText}
-            style={styles.input}
-            placeholder={placeholder}
-            placeholderTextColor={'grey'}
-            value={value}
-            secureTextEntry={password && !showPassword}
-            multiline={multiline}
-            autoCapitalize={autoCapitalize}
-            keyboardType={keyboardType}
-          />
-        )}
-        {password && (
-          <TouchableNativeFeedback
-            useForeground
-            onPress={() => setShowPassword(!showPassword)}>
-            <View style={styles.btnIconEye}>
-              <Icon
-                name={showPassword ? 'eye' : 'eye-off'}
-                color={'white'}
-                size={20}
-              />
-            </View>
-          </TouchableNativeFeedback>
-        )}
-        {showIndex && <Text>{index}</Text>}
-      </View>
-    </View>
+    <Controller
+      name={name}
+      control={control}
+      rules={{required, validate}}
+      defaultValue={defaultValue}
+      render={({field: {value, onChange}}) => (
+        <View style={{height: 85}}>
+          <View style={styles.container}>
+            <Icon
+              name={iconName}
+              color={'white'}
+              style={styles.icon}
+              size={20}
+            />
+            {type == 'text' && (
+              <>
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder={placeholder}
+                  secureTextEntry={showPassword}
+                  keyboardType={keyboardType}
+                  autoCapitalize={autoCapitalize}
+                />
+                {secureTextEntry && (
+                  <TouchableNativeFeedback
+                    useForeground
+                    onPress={() => setShowPassword(!showPassword)}>
+                    <View style={styles.btnIconEye}>
+                      <Icon
+                        name={showPassword ? 'eye' : 'eye-off'}
+                        color={'white'}
+                        size={20}
+                      />
+                    </View>
+                  </TouchableNativeFeedback>
+                )}
+              </>
+            )}
+            {type == 'picker' && (
+              <Picker
+                style={{flex: 1}}
+                onValueChange={onChange}
+                selectedValue={value}
+                mode="dropdown">
+                {pickerItem?.map((item, i) => (
+                  <Picker.Item key={i} value={item.value} label={item.name} />
+                ))}
+              </Picker>
+            )}
+            {type == 'date' && (
+              <TouchableNativeFeedback
+                onPress={() => setShowDate(true)}
+                useForeground>
+                <View style={styles.btnDate}>
+                  <Text style={styles.textDate}>
+                    {value ? value : placeholder}
+                  </Text>
+                  {showDate && (
+                    <DatePicker
+                      value={dateValue}
+                      onChange={(event, date) =>
+                        handleChangeDate(event, date, onChange)
+                      }
+                      mode="date"
+                    />
+                  )}
+                </View>
+              </TouchableNativeFeedback>
+            )}
+          </View>
+          {errors?.[name] && <Text style={styles.textError}>Perlu diisi</Text>}
+        </View>
+      )}
+    />
   );
 }
 
 const styles = StyleSheet.create({
   textError: {
+    textAlign: 'right',
+    marginHorizontal: 25,
     color: 'tomato',
-    marginHorizontal: 10,
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
+  textDate: {
+    color: 'black',
+    textAlignVertical: 'center',
+    height: '100%',
   },
   btnDate: {
-    height: 45,
     flex: 1,
-    justifyContent: 'center',
-    marginHorizontal: 10,
+    height: '100%',
+    borderRadius: 50,
+    overflow: 'hidden',
+    paddingLeft: 10,
+  },
+  textInput: {
+    color: 'black',
+    flex: 1,
+    marginHorizontal: 5,
+    // backgroundColor: 'aqua',
   },
   btnIconEye: {
     width: 35,
@@ -178,12 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 35 / 2,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  input: {
-    color: 'black',
-    flex: 1,
-    marginHorizontal: 5,
-    // backgroundColor: 'aqua',
+    overflow: 'hidden',
   },
   icon: {
     width: 35,

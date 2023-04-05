@@ -1,143 +1,44 @@
 import {
   Alert,
-  Button,
   Image,
   Linking,
   PermissionsAndroid,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   ToastAndroid,
   TouchableNativeFeedback,
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {ImgBgPlain} from '../../assets';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Picker} from '@react-native-picker/picker';
-import DatePicker from '@react-native-community/datetimepicker';
-import {ButtonSubmit, FormInput} from '../../features/Auth';
+import {ButtonAuthMethod, ButtonSubmit, FormInput} from '../../features/Auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchSignUp} from '../../features/Auth/services/signUpServices';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import {BackgroundImage, Gap, Header} from '../../components';
-import formExample from './formExample';
 import Geolocation from 'react-native-geolocation-service';
+import {useForm} from 'react-hook-form';
+import formExample from './formExample';
 
 export default function SignUp({navigation}) {
   const dispatch = useDispatch();
-  const {status_signup, token} = useSelector(state => state.auth);
+  const {status_signup} = useSelector(state => state.auth);
+  const {
+    control,
+    formState: {errors},
+    handleSubmit,
+  } = useForm({
+    // defaultValues: formExample,
+  });
 
   const [ready, setReady] = useState(false);
   setTimeout(() => setReady(true), 1000); // "lazy render"
-
-  const [formData, setFormData] = useState({
-    agama: 'Pilih Agama',
-    alamat_lengkap: '',
-    alamat_perusahaan: '',
-    email: '',
-    handphone: '',
-    jenis_kelamin: 'Laki-laki',
-    kabupaten_kota: '',
-    kecamatan: '',
-    kelurahan: '',
-    kodepos: '',
-    no_ktp: '',
-    nama_lengkap: '',
-    nama_perusahaan: '',
-    no_chasis: '',
-    no_engine: '',
-    no_polisi: '',
-    no_whatsapp: '',
-    password: '',
-    password_confirmation: '',
-    pekerjaan: '',
-    provinsi: '',
-    sekolah: '',
-    no_sim: '',
-    status_nikah: 'Pilih Status Menikah',
-    tahun_kendaraan: '',
-    tanggal_lahir: 'Pilih Tanggal Lahir',
-    tanggal_pajak: 'Pilih Tanggal Pajak Kendaraan',
-    telp_kantor: '',
-    telp_rumah: '',
-    tempat_lahir: '',
-    type_kendaraan: '',
-    ukuran_baju: 'Pilih Ukuran Baju',
-    warna_kendaraan: '',
-    lat: '',
-    lng: '',
-  });
-  const [formPhotos, setFormPhotos] = useState({
-    profile: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-    ktp: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-    sim: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-    stnk: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-    bukti_tf: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-  });
-
-  const formArray = [
-    {field: 'nama_lengkap', name: 'Nama Lengkap'},
-    {field: 'email', name: 'Email'},
-    {field: 'password', name: 'Kata Sandi'},
-    {field: 'password_confirmation', name: 'Konfirmasi Kata Sandi'},
-    {field: 'jenis_kelamin', name: 'Gender'},
-    {field: 'ukuran_baju', name: 'Ukuran Baju'},
-    {field: 'tempat_lahir', name: 'Tempat Lahir'},
-    {field: 'tanggal_lahir', name: 'Tanggal Lahir'},
-    {field: 'agama', name: 'Agama'},
-    {field: 'status_nikah', name: 'Status Menikah'},
-    {field: 'alamat_lengkap', name: 'Alamat Lengkap'},
-    {field: 'kelurahan', name: 'Kelurahan'},
-    {field: 'kecamatan', name: 'Kecamatan'},
-    {field: 'provinsi', name: 'Provinsi'},
-    {field: 'kabupaten_kota', name: 'Kabupaten Kota'},
-    {field: 'kodepos', name: 'Kode pos'},
-    {field: 'nama_perusahaan', name: 'Nama Perusahaan'},
-    {field: 'alamat_perusahaan', name: 'Alamat Perusahaan'},
-    {field: 'handphone', name: 'Nomor Telepon'},
-    {field: 'no_whatsapp', name: 'Nomor WhatsApp'},
-    {field: 'telp_kantor', name: 'Nomor telp Kantor'},
-    {field: 'telp_rumah', name: 'No telp Rumah'},
-    {field: 'sekolah', name: 'Sekolah'},
-    {field: 'pekerjaan', name: 'Pekerjaan'},
-    {field: 'type_kendaraan', name: 'Tipe Kendaraan'},
-    {field: 'tahun_kendaraan', name: 'Tahun Kendaraan'},
-    {field: 'no_ktp', name: 'Nomor KTP'},
-    {field: 'no_sim', name: 'Nomor SIM'},
-    {field: 'no_polisi', name: 'Nomor Polisi'},
-    {field: 'warna_kendaraan', name: 'Warna Kendaraan'},
-    {field: 'no_chasis', name: 'Nomor Chasis'},
-    {field: 'no_engine', name: 'Nomor Engine'},
-    {field: 'tanggal_pajak', name: 'Tanggal Pajak'},
-  ];
 
   useEffect(() => {
     getLocationPermission();
   }, []);
 
+  const [coords, setCoords] = useState({lat: null, lng: null});
   async function getLocationPermission() {
     const Permit = PermissionsAndroid;
 
@@ -167,7 +68,7 @@ export default function SignUp({navigation}) {
         Geolocation.getCurrentPosition(
           ({coords}) => {
             const {latitude: lat, longitude: lng} = coords;
-            setFormData({...formData, lat, lng});
+            setCoords({lat, lng});
           },
           ({code, message}) => {
             ToastAndroid.show(
@@ -196,22 +97,33 @@ export default function SignUp({navigation}) {
     }
   }
 
-  async function submitRegister() {
-    let multiPart = new FormData();
-    let json = formData;
-
-    for (let p in json) multiPart.append(p, json[p]);
-
-    multiPart.append('profile', formPhotos.profile);
-    multiPart.append('ktp', formPhotos.ktp);
-    multiPart.append('bukti_tf', formPhotos.bukti_tf);
-    multiPart.append('sim', formPhotos.sim);
-    multiPart.append('stnk', formPhotos.stnk);
-
-    // console.log(multiPart);
-
-    dispatch(fetchSignUp({multiPart, navigation}));
-  }
+  const [formPhotos, setFormPhotos] = useState({
+    profile: {
+      uri: null,
+      name: null,
+      type: null,
+    },
+    ktp: {
+      uri: null,
+      name: null,
+      type: null,
+    },
+    sim: {
+      uri: null,
+      name: null,
+      type: null,
+    },
+    stnk: {
+      uri: null,
+      name: null,
+      type: null,
+    },
+    bukti_tf: {
+      uri: null,
+      name: null,
+      type: null,
+    },
+  });
 
   async function handleImagePicker(index, from) {
     try {
@@ -254,7 +166,6 @@ export default function SignUp({navigation}) {
       if (granted === PermissionsAndroid.RESULTS.GRANTED)
         handleImagePicker(i, 'camera');
     };
-
     Alert.alert(
       '',
       'Ambil gambar dari..',
@@ -304,101 +215,21 @@ export default function SignUp({navigation}) {
     }
   }
 
-  function PickerGender() {
-    return (
-      <Picker
-        style={{flex: 1, color: 'black'}}
-        dropdownIconColor={'grey'}
-        selectedValue={formData.jenis_kelamin}
-        onValueChange={value =>
-          setFormData({...formData, jenis_kelamin: value})
-        }
-        mode={'dropdown'}>
-        <Picker.Item label="Laki-laki" value={'Laki-laki'} />
-        <Picker.Item label="Perempuan" value={'Perempuan'} />
-      </Picker>
-    );
-  }
-  function PickerClothSize() {
-    return (
-      <Picker
-        style={{flex: 1, color: 'black'}}
-        dropdownIconColor={'grey'}
-        selectedValue={formData.ukuran_baju}
-        onValueChange={value => setFormData({...formData, ukuran_baju: value})}
-        mode={'dropdown'}>
-        <Picker.Item
-          label="Pilih Ukuran Baju"
-          value={'Pilih Ukuran Baju'}
-          style={{color: 'grey'}}
-        />
-        {['S', 'M', 'L', 'XL', 'XXL', 'XXXL'].map(v => (
-          <Picker.Item key={v} label={v} value={v} />
-        ))}
-      </Picker>
-    );
-  }
-  function PickerReligion() {
-    return (
-      <Picker
-        style={{flex: 1, color: 'black'}}
-        dropdownIconColor={'grey'}
-        selectedValue={formData.agama}
-        onValueChange={value => setFormData({...formData, agama: value})}
-        mode={'dropdown'}>
-        <Picker.Item
-          label="Pilih Agama"
-          value={'Pilih Agama'}
-          style={{color: 'grey'}}
-        />
-        {['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha'].map(v => (
-          <Picker.Item key={v} label={v} value={v} />
-        ))}
-      </Picker>
-    );
-  }
-  function PickerMarriedStatus() {
-    return (
-      <Picker
-        style={{flex: 1, color: 'black'}}
-        dropdownIconColor={'grey'}
-        selectedValue={formData.status_nikah}
-        onValueChange={value => setFormData({...formData, status_nikah: value})}
-        mode={'dropdown'}>
-        <Picker.Item
-          label="Pilih Status Menikah"
-          value={'Pilih Status Menikah'}
-          style={{color: 'grey'}}
-        />
-        {['Lajang', 'Duda', 'Janda', 'Menikah'].map(v => (
-          <Picker.Item key={v} label={v} value={v} />
-        ))}
-      </Picker>
-    );
-  }
+  async function submitRegister(formData) {
+    let multiPart = new FormData();
+    let json = {...formData, lat: coords.lat, lng: coords.lng};
 
-  const [dateBirth, setDateBirth] = useState({
-    value: new Date(),
-    visible: false,
-  });
-  function handleDateBirth(event, selectedDate) {
-    if (event.type == 'set') {
-      setDateBirth({visible: false, value: selectedDate});
-      const [y, m, d] = selectedDate.toISOString().slice(0, 10).split('-');
-      setFormData({...formData, tanggal_lahir: `${y}-${m}-${d}`});
-    } else setDateBirth({...dateBirth, visible: false});
-  }
+    for (let p in json) multiPart.append(p, json[p]);
 
-  const [dateTax, setDateTax] = useState({
-    value: new Date(),
-    visible: false,
-  });
-  function handleDateTax(event, selectedDate) {
-    if (event.type == 'set') {
-      setDateTax({visible: false, value: selectedDate});
-      const [y, m, d] = selectedDate.toISOString().slice(0, 10).split('-');
-      setFormData({...formData, tanggal_pajak: `${y}-${m}-${d}`});
-    } else setDateTax({...dateTax, visible: false});
+    multiPart.append('profile', formPhotos.profile);
+    multiPart.append('ktp', formPhotos.ktp);
+    multiPart.append('bukti_tf', formPhotos.bukti_tf);
+    multiPart.append('sim', formPhotos.sim);
+    multiPart.append('stnk', formPhotos.stnk);
+
+    // console.log(multiPart);
+
+    dispatch(fetchSignUp({multiPart, navigation}));
   }
 
   return (
@@ -429,63 +260,322 @@ export default function SignUp({navigation}) {
               </TouchableNativeFeedback>
             ))}
 
-            {/* Input, Date & Picker field  distinguished by array index */}
-            {formArray.map(({field, name}, i) => {
-              // array index for picker field: 4 5 7 8 9
-              const picker = i == 4 || i == 5 || i == 8 || i == 9;
-              const renderPicker =
-                i == 4
-                  ? PickerGender()
-                  : i == 5
-                  ? PickerClothSize()
-                  : i == 8
-                  ? PickerReligion()
-                  : PickerMarriedStatus();
+            {/* Input field */}
 
-              // array index for date field: 7 29
-              const date = i == 7 || i == 32;
-              const renderDate = () =>
-                i == 7
-                  ? setDateBirth({...dateBirth, visible: true})
-                  : setDateTax({...dateTax, visible: true});
-              const dateValue =
-                i == 7 ? formData.tanggal_lahir : formData.tanggal_pajak;
+            {/* profile region */}
+            <FormInput
+              name={'nama_lengkap'}
+              placeholder={'Nama lengkap..'}
+              autoCapitalize={'words'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'email'}
+              placeholder={'Masukan email..'}
+              iconName={'gmail'}
+              keyboardType={'email-address'}
+              autoCapitalize={'none'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'password'}
+              placeholder={'Masukan kata sandi..'}
+              iconName={'lock'}
+              secureTextEntry
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'password_confirmation'}
+              placeholder={'Masukan ulang kata sandi..'}
+              iconName={'lock'}
+              secureTextEntry
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'jenis_kelamin'}
+              type={'picker'}
+              iconName={'gender-male-female'}
+              validate={value => (value == 'Pilih gender' ? false : true)}
+              pickerItem={[
+                {name: 'Pilih gender', value: 'Pilih gender'},
+                {name: 'Laki-laki', value: 'Laki-laki'},
+                {name: 'Wanita', value: 'Wanita'},
+              ]}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'ukuran_baju'}
+              type={'picker'}
+              placeholder={'Pilih ukuran baju..'}
+              iconName={'tshirt-crew'}
+              validate={value => (value == 'Pilih ukuran baju' ? false : true)}
+              pickerItem={[
+                {name: 'Pilih ukuran baju', value: 'Pilih ukuran baju'},
+                {name: 'S', value: 'S'},
+                {name: 'M', value: 'M'},
+                {name: 'L', value: 'L'},
+                {name: 'XL', value: 'XL'},
+                {name: 'XXL', value: 'XXL'},
+                {name: 'XXXL', value: 'XXXL'},
+              ]}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'tempat_lahir'}
+              placeholder={'Tempat lahir..'}
+              iconName={'calendar'}
+              autoCapitalize={'words'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'tanggal_lahir'}
+              type={'date'}
+              placeholder={'Tanggal Lahir'}
+              iconName={'calendar'}
+              autoCapitalize={'words'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'agama'}
+              type={'picker'}
+              iconName={'hands-pray'}
+              validate={value => (value == 'Pilih agama' ? false : true)}
+              pickerItem={[
+                {name: 'Pilih agama', value: 'Pilih agama'},
+                {name: 'Islam', value: 'Islam'},
+                {name: 'Kristen', value: 'Kristen'},
+                {name: 'Hindu', value: 'Hindu'},
+                {name: 'Buddha', value: 'Buddha'},
+              ]}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'status_nikah'}
+              type={'picker'}
+              iconName={'account-heart'}
+              validate={value =>
+                value == 'Pilih status menikah' ? false : true
+              }
+              pickerItem={[
+                {name: 'Pilih status menikah', value: 'Pilih status menikah'},
+                {name: 'Lajang', value: 'Lajang'},
+                {name: 'Duda', value: 'Duda'},
+                {name: 'Janda', value: 'Janda'},
+                {name: 'Menikah', value: 'Menikah'},
+              ]}
+              control={control}
+              errors={errors}
+            />
+            {/* endregion */}
 
-              return (
-                <FormInput
-                  key={i}
-                  onChangeText={value =>
-                    setFormData({...formData, [field]: value})
-                  }
-                  // showIndex
-                  index={i}
-                  value={formData[field]}
-                  placeholder={name}
-                  password={i == 2 || i == 3}
-                  picker={picker}
-                  pickerChildren={renderPicker}
-                  date={date}
-                  onPressDate={renderDate}
-                  dateValue={dateValue}
-                  multiline={i == 10}
-                  autoCapitalize={i == 0 ? 'words' : i == 1 ? 'none' : null}
-                />
-              );
-            })}
-            {dateBirth.visible && (
-              <DatePicker
-                value={dateBirth.value}
-                onChange={handleDateBirth}
-                maximumDate={new Date()}
-              />
-            )}
-            {dateTax.visible && (
-              <DatePicker value={dateTax.value} onChange={handleDateTax} />
-            )}
             <Gap height={20} />
+
+            {/* address region */}
+            <FormInput
+              name={'alamat_lengkap'}
+              placeholder={'Alamat lengkap..'}
+              iconName={'map-marker-radius'}
+              autoCapitalize={'words'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'kelurahan'}
+              placeholder={'Kelurahan..'}
+              iconName={'map-legend'}
+              autoCapitalize={'words'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'kecamatan'}
+              placeholder={'Kecamatan..'}
+              iconName={'map-legend'}
+              autoCapitalize={'words'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'provinsi'}
+              placeholder={'Provinsi..'}
+              iconName={'map-legend'}
+              autoCapitalize={'words'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'kabupaten_kota'}
+              placeholder={'Kabupaten/kota..'}
+              iconName={'map-legend'}
+              autoCapitalize={'words'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'kodepos'}
+              placeholder={'Kodepos..'}
+              iconName={'email-fast'}
+              keyboardType={'number-pad'}
+              control={control}
+              errors={errors}
+            />
+            {/* endregion */}
+
+            <Gap height={20} />
+
+            {/* work region */}
+            <FormInput
+              name={'pekerjaan'}
+              placeholder={'Pekerjaan..'}
+              iconName={'badge-account'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'nama_perusahaan'}
+              placeholder={'Nama perusahaan..'}
+              iconName={'office-building'}
+              autoCapitalize={'words'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'alamat_perusahaan'}
+              placeholder={'Alamat perusahaan..'}
+              iconName={'office-building-marker'}
+              autoCapitalize={'words'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'handphone'}
+              placeholder={'No telepon..'}
+              iconName={'phone'}
+              keyboardType={'number-pad'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'no_whatsapp'}
+              placeholder={'No WhatsApp (cth. 08987654321)'}
+              iconName={'whatsapp'}
+              keyboardType={'number-pad'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'telp_kantor'}
+              placeholder={'No telepon kantor..'}
+              iconName={'card-account-phone'}
+              keyboardType={'number-pad'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'telp_rumah'}
+              placeholder={'No telepon rumah..'}
+              iconName={'phone-classic'}
+              keyboardType={'number-pad'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'sekolah'}
+              placeholder={'Sekolah..'}
+              iconName={'school'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'no_ktp'}
+              placeholder={'Nomor KTP..'}
+              iconName={'card-account-details'}
+              keyboardType={'number-pad'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'no_sim'}
+              placeholder={'No SIM..'}
+              iconName={'card-account-details'}
+              keyboardType={'number-pad'}
+              control={control}
+              errors={errors}
+            />
+            {/* endregion */}
+
+            <Gap height={20} />
+
+            {/* car region */}
+            <FormInput
+              name={'type_kendaraan'}
+              placeholder={'Tipe kendaraan..'}
+              iconName={'car-info'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'no_polisi'}
+              placeholder={'No Polisi..'}
+              iconName={'card-bulleted'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'warna_kendaraan'}
+              placeholder={'Warna kendaraan..'}
+              iconName={'car-info'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'tahun_kendaraan'}
+              placeholder={'Tahun kendaraan..'}
+              iconName={'car-info'}
+              keyboardType={'number-pad'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'no_chasis'}
+              placeholder={'No Chasis..'}
+              iconName={'car-info'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'no_engine'}
+              placeholder={'No Mesin..'}
+              iconName={'car-info'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'tanggal_pajak'}
+              placeholder={'Tanggal Pajak'}
+              iconName={'car-clock'}
+              type={'date'}
+              control={control}
+              errors={errors}
+            />
+            {/* endregion */}
+
+            <Gap height={10} />
+
             <ButtonSubmit
-              onPress={submitRegister}
+              onPress={handleSubmit(submitRegister)}
+              title="Daftar"
               loading={status_signup == 'pending'}
+              disabled={status_signup == 'pending'}
             />
             <Gap height={20} />
           </View>

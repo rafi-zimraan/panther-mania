@@ -25,9 +25,15 @@ export default function SaveOurSouls() {
   });
 
   useEffect(() => {
-    setTimeout(() => {
-      dispatch(fetchUsersLocation());
-    }, 1000);
+    console.log(
+      users_data
+        .map(v => v)
+        .filter(v => v.lat != '' && v.lng != '')
+        .filter(v => v.lat != 'null' && v.lng != 'null'),
+    );
+    // setTimeout(() => {
+    //   dispatch(fetchUsersLocation());
+    // }, 1000);
   }, []);
 
   const mapRegion = {
@@ -50,7 +56,7 @@ export default function SaveOurSouls() {
             <Text style={{color: 'black'}}>Anda berada disini</Text>
           </Callout>
         </Marker>
-        {users_data?.map((v, i) => (
+        {/* {users_data?.map((v, i) => (
           <Marker
             key={i}
             onPress={() => {
@@ -61,7 +67,7 @@ export default function SaveOurSouls() {
               latitude: parseFloat(v.lat),
               longitude: parseFloat(v.lng),
             }}></Marker>
-        ))}
+        ))} */}
       </MapView>
       <ModalUserDetail data={selectedMarker} />
       <ModalLocation />

@@ -1,19 +1,8 @@
-// import {StyleSheet, Text, View} from 'react-native';
-// import React from 'react';
-// import {useForm} from 'react-hook-form';
-// import FormField from './FormField';
-
-// export default function LibsTest() {
-//   const {control, register} = useForm();
-//   return <FormField onSubmit={data => console.log(data)} />;
-// }
-
-// const styles = StyleSheet.create({});
-
 import {Button, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {useForm} from 'react-hook-form';
-import FormInput from './FormInput';
+import {FormInput} from '../../features/Auth';
+import {Gap} from '../../components';
 
 export default function LibsTest() {
   const {
@@ -24,69 +13,26 @@ export default function LibsTest() {
 
   return (
     <View>
+      <Text>LibsTest</Text>
+      <Gap height={20} />
       <FormInput
         control={control}
         errors={errors}
-        name={'email'}
-        iconName={'gmail'}
-        placeholder={'Masukan email'}
-        defaultValue={'contoh@rmail'}
+        name="profile"
+        type="image"
+        title={'Foto Profil'}
       />
+      <Gap height={20} />
       <FormInput
         control={control}
         errors={errors}
-        name={'password'}
-        placeholder={'Masukan password'}
-        secureTextEntry
+        name="ktp"
+        type="image"
+        title={'Foto KTP'}
       />
-      <FormInput
-        control={control}
-        errors={errors}
-        name={'brith_date'}
-        type={'date'}
-        placeholder={'Pilih Tanggal Lahir'}
-      />
-      <FormInput
-        control={control}
-        errors={errors}
-        name={'tax_date'}
-        type={'date'}
-        placeholder={'Pilih Tanggal Pajak'}
-      />
-      <FormInput
-        control={control}
-        errors={errors}
-        name={'no_sim'}
-        keyboardType={'number-pad'}
-        placeholder={'Masukan Nomor sim'}
-      />
-      <FormInput
-        control={control}
-        errors={errors}
-        name={'agama'}
-        type="picker"
-        validate={value => (value == 'Pilih Agama' ? false : true)}
-        pickerItem={[
-          {
-            name: 'Pilih Agama',
-            value: 'Pilih Agama',
-          },
-          {
-            name: 'Islam',
-            value: 'Islam',
-          },
-          {
-            name: 'Buddha',
-            value: 'Buddha',
-          },
-          {
-            name: 'Atheis',
-            value: 'Atheis',
-          },
-        ]}
-      />
+      <Gap height={20} />
       <Button
-        title="submit"
+        title="Submit"
         onPress={handleSubmit(data => console.log(data))}
       />
     </View>

@@ -28,7 +28,7 @@ export default function SignUp({navigation}) {
     formState: {errors},
     handleSubmit,
   } = useForm({
-    // defaultValues: formExample,
+    defaultValues: formExample,
   });
 
   const [ready, setReady] = useState(false);
@@ -221,11 +221,11 @@ export default function SignUp({navigation}) {
 
     for (let p in json) multiPart.append(p, json[p]);
 
-    multiPart.append('profile', formPhotos.profile);
-    multiPart.append('ktp', formPhotos.ktp);
-    multiPart.append('bukti_tf', formPhotos.bukti_tf);
-    multiPart.append('sim', formPhotos.sim);
-    multiPart.append('stnk', formPhotos.stnk);
+    // multiPart.append('profile', formPhotos.profile);
+    // multiPart.append('ktp', formPhotos.ktp);
+    // multiPart.append('bukti_tf', formPhotos.bukti_tf);
+    // multiPart.append('sim', formPhotos.sim);
+    // multiPart.append('stnk', formPhotos.stnk);
 
     // console.log(multiPart);
 
@@ -239,8 +239,7 @@ export default function SignUp({navigation}) {
         <Header title="Register" onPress={() => navigation.goBack()} />
         {ready && (
           <View style={styles.container}>
-            {/* Image field */}
-            {[...new Array(5).keys()].map((v, i) => (
+            {/* {[...new Array(5).keys()].map((v, i) => (
               <TouchableNativeFeedback
                 key={i}
                 useForeground
@@ -258,9 +257,47 @@ export default function SignUp({navigation}) {
                   ) : null}
                 </View>
               </TouchableNativeFeedback>
-            ))}
+            ))} */}
 
-            {/* Input field */}
+            {/* image region */}
+            <FormInput
+              name={'profile'}
+              title={'Foto Profil'}
+              type={'image'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'ktp'}
+              title={'Foto KTP'}
+              type={'image'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'sim'}
+              title={'Foto SIM'}
+              type={'image'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'stnk'}
+              title={'Foto STNK'}
+              type={'image'}
+              control={control}
+              errors={errors}
+            />
+            <FormInput
+              name={'bukti_tf'}
+              title={'Foto Bukti Transfer'}
+              type={'image'}
+              control={control}
+              errors={errors}
+            />
+            {/* endregion */}
+
+            <Gap height={20} />
 
             {/* profile region */}
             <FormInput
@@ -385,6 +422,7 @@ export default function SignUp({navigation}) {
               placeholder={'Alamat lengkap..'}
               iconName={'map-marker-radius'}
               autoCapitalize={'words'}
+              multiline
               control={control}
               errors={errors}
             />
@@ -466,7 +504,7 @@ export default function SignUp({navigation}) {
             />
             <FormInput
               name={'no_whatsapp'}
-              placeholder={'No WhatsApp (cth. 08987654321)'}
+              placeholder={'WhatsApp (cth. 08987654321)'}
               iconName={'whatsapp'}
               keyboardType={'number-pad'}
               control={control}
@@ -474,7 +512,7 @@ export default function SignUp({navigation}) {
             />
             <FormInput
               name={'telp_kantor'}
-              placeholder={'No telepon kantor..'}
+              placeholder={'No telp kantor..'}
               iconName={'card-account-phone'}
               keyboardType={'number-pad'}
               control={control}
@@ -482,7 +520,7 @@ export default function SignUp({navigation}) {
             />
             <FormInput
               name={'telp_rumah'}
-              placeholder={'No telepon rumah..'}
+              placeholder={'No telp rumah..'}
               iconName={'phone-classic'}
               keyboardType={'number-pad'}
               control={control}
@@ -497,7 +535,7 @@ export default function SignUp({navigation}) {
             />
             <FormInput
               name={'no_ktp'}
-              placeholder={'Nomor KTP..'}
+              placeholder={'No KTP..'}
               iconName={'card-account-details'}
               keyboardType={'number-pad'}
               control={control}

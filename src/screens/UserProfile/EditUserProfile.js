@@ -28,11 +28,10 @@ export default function EditUserProfile({navigation}) {
   // console.log(API_KEY_IMAGE);
   const dispatch = useDispatch();
   const {status_user_profile, user_data} = useSelector(state => state.auth);
+  const {user_id} = user_data;
 
   const [ready, setReady] = useState(false);
   setTimeout(() => setReady(true), 1000); // "lazy render"
-
-  const {user_id} = user_data;
 
   const {
     control,
@@ -51,8 +50,8 @@ export default function EditUserProfile({navigation}) {
       kecamatan: user_data.kecamatan,
       kelurahan: user_data.kelurahan,
       kodepos: user_data.kodepos,
-      lat: user_data.lat,
-      lng: user_data.lng,
+      lat: parseFloat(user_data.lat), // avoid string val
+      lng: parseFloat(user_data.lng), // avoid string val
       nama_lengkap: user_data.nama_lengkap,
       nama_perusahaan: user_data.nama_perusahaan,
       no_chasis: user_data.panther_no_chasis,

@@ -65,6 +65,7 @@ export default function FormInput({
                   placeholder={placeholder}
                   secureTextEntry={showPassword}
                   keyboardType={keyboardType}
+                  placeholderTextColor={'grey'}
                 />
                 {secureTextEntry && (
                   <TouchableNativeFeedback

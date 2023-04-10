@@ -10,11 +10,15 @@ const showToast = (message, duration = 'SHORT') =>
 export const fetchUsersLocation = createAsyncThunk(
   'fetchUsersLocation',
   async (arg, {dispatch, getState}) => {
-    const {token} = getState().auth;
+    const {token, user_data} = getState().auth;
     try {
       const {data} = await getUsersLocation(token);
       if (Array.isArray(data.data) && data.data?.length != 0) {
-        const users_data = data.data?.filter(v => v.lat != '' && v.lng != '');
+        const users_data = data.data
+          ?.filter(v => v.lat != '' && v.lng != '')
+          .filter(v => v.lat != 'null' && v.lng != 'null');
+        // .filter(v => v.nama_lengkap != user_data.nama_lengkap);
+
         dispatch(SetUsersData(users_data));
       } else if (data.status == 'Token is Expired') {
         await dispatch(refreshSession());

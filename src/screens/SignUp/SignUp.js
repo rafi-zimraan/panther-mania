@@ -28,7 +28,7 @@ export default function SignUp({navigation}) {
     formState: {errors},
     handleSubmit,
   } = useForm({
-    defaultValues: formExample,
+    // defaultValues: formExample, // use for testing
   });
 
   const [ready, setReady] = useState(false);
@@ -97,135 +97,11 @@ export default function SignUp({navigation}) {
     }
   }
 
-  const [formPhotos, setFormPhotos] = useState({
-    profile: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-    ktp: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-    sim: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-    stnk: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-    bukti_tf: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-  });
-
-  async function handleImagePicker(index, from) {
-    try {
-      const method =
-        from == 'gallery'
-          ? launchImageLibrary({mediaType: 'photo', quality: 0.2})
-          : launchCamera({mediaType: 'photo', quality: 0.2});
-      const {assets} = await method;
-      const {uri, fileName: name, type} = assets[0];
-      switch (index) {
-        case 0:
-          return setFormPhotos({
-            ...formPhotos,
-            profile: {uri, name, type},
-          });
-        case 1:
-          return setFormPhotos({...formPhotos, ktp: {uri, name, type}});
-        case 2:
-          return setFormPhotos({...formPhotos, stnk: {uri, name, type}});
-        case 3:
-          return setFormPhotos({...formPhotos, sim: {uri, name, type}});
-        case 4:
-          return setFormPhotos({
-            ...formPhotos,
-            bukti_tf: {uri, name, type},
-          });
-        default:
-          return console.log(`field dengan index ${index} tidak ditemukan`);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  function handleImageMethod(i) {
-    const PermissionCamera = async () => {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED)
-        handleImagePicker(i, 'camera');
-    };
-    Alert.alert(
-      '',
-      'Ambil gambar dari..',
-      [
-        {
-          text: 'Kamera',
-          onPress: () => PermissionCamera(),
-        },
-        {
-          text: 'Galeri',
-          onPress: () => handleImagePicker(i, 'gallery'),
-        },
-      ],
-      {cancelable: true},
-    );
-  }
-  function photoField(index) {
-    switch (index) {
-      case 0:
-        return 'profile';
-      case 1:
-        return 'ktp';
-      case 2:
-        return 'stnk';
-      case 3:
-        return 'sim';
-      case 4:
-        return 'bukti_tf';
-      default:
-        return 'profile';
-    }
-  }
-  function photoFieldTitle(index) {
-    switch (index) {
-      case 0:
-        return 'Profil';
-      case 1:
-        return 'KTP';
-      case 2:
-        return 'STNK';
-      case 3:
-        return 'SIM';
-      case 4:
-        return 'Bukti Transfer';
-      default:
-        return 'Tidak diketahui';
-    }
-  }
-
   async function submitRegister(formData) {
     let multiPart = new FormData();
     let json = {...formData, lat: coords.lat, lng: coords.lng};
 
     for (let p in json) multiPart.append(p, json[p]);
-
-    // multiPart.append('profile', formPhotos.profile);
-    // multiPart.append('ktp', formPhotos.ktp);
-    // multiPart.append('bukti_tf', formPhotos.bukti_tf);
-    // multiPart.append('sim', formPhotos.sim);
-    // multiPart.append('stnk', formPhotos.stnk);
 
     // console.log(multiPart);
 
@@ -239,26 +115,6 @@ export default function SignUp({navigation}) {
         <Header title="Register" onPress={() => navigation.goBack()} />
         {ready && (
           <View style={styles.container}>
-            {/* {[...new Array(5).keys()].map((v, i) => (
-              <TouchableNativeFeedback
-                key={i}
-                useForeground
-                onPress={() => handleImageMethod(i)}>
-                <View style={styles.imgContainer}>
-                  <Text
-                    style={
-                      styles.textPhotoFieldTitle
-                    }>{`Pilih Foto ${photoFieldTitle(i)}`}</Text>
-                  {formPhotos[photoField(i)].uri ? (
-                    <Image
-                      source={{uri: formPhotos[photoField(i)].uri}}
-                      style={{width: '100%', height: 210}}
-                    />
-                  ) : null}
-                </View>
-              </TouchableNativeFeedback>
-            ))} */}
-
             {/* image region */}
             <FormInput
               name={'profile'}
@@ -389,8 +245,10 @@ export default function SignUp({navigation}) {
                 {name: 'Pilih agama', value: 'Pilih agama'},
                 {name: 'Islam', value: 'Islam'},
                 {name: 'Kristen', value: 'Kristen'},
+                {name: 'Protestan', value: 'Protestan'},
                 {name: 'Hindu', value: 'Hindu'},
                 {name: 'Buddha', value: 'Buddha'},
+                {name: 'Konghucu', value: 'Konghucu'},
               ]}
               control={control}
               errors={errors}

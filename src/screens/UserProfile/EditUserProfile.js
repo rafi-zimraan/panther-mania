@@ -76,34 +76,6 @@ export default function EditUserProfile({navigation}) {
     },
   });
 
-  const [formPhotos, setFormPhotos] = useState({
-    profile: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-    ktp: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-    sim: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-    stnk: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-    bukti_tf: {
-      uri: null,
-      name: null,
-      type: null,
-    },
-  });
-
   const [loadingLocation, setLoadingLocation] = useState(false);
   async function updateLocation() {
     const Permit = PermissionsAndroid;
@@ -183,143 +155,7 @@ export default function EditUserProfile({navigation}) {
 
     for (let p in json) multiPart.append(p, json[p]);
 
-    formPhotos.profile.uri && multiPart.append('profile', formPhotos.profile);
-    formPhotos.ktp.uri && multiPart.append('ktp', formPhotos.ktp);
-    formPhotos.bukti_tf.uri &&
-      multiPart.append('bukti_tf', formPhotos.bukti_tf);
-    formPhotos.sim.uri && multiPart.append('sim', formPhotos.sim);
-    formPhotos.stnk.uri && multiPart.append('stnk', formPhotos.stnk);
-
     dispatch(fetchUpdateUserProfile(formData));
-  }
-
-  async function handleImagePicker(index, from) {
-    try {
-      const method =
-        from == 'gallery'
-          ? launchImageLibrary({mediaType: 'photo', quality: 0.2})
-          : launchCamera({mediaType: 'photo', quality: 0.2});
-      const {assets} = await method;
-      const {uri, fileName: name, type} = assets[0];
-      switch (index) {
-        case 0:
-          return setFormPhotos({
-            ...formPhotos,
-            profile: {uri, name, type},
-          });
-        case 1:
-          return setFormPhotos({...formPhotos, ktp: {uri, name, type}});
-        case 2:
-          return setFormPhotos({...formPhotos, stnk: {uri, name, type}});
-        case 3:
-          return setFormPhotos({...formPhotos, sim: {uri, name, type}});
-        case 4:
-          return setFormPhotos({
-            ...formPhotos,
-            bukti_tf: {uri, name, type},
-          });
-        default:
-          return console.log(`field dengan index ${index} tidak ditemukan`);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  function handleImageMethod(i) {
-    const PermissionCamera = async () => {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED)
-        handleImagePicker(i, 'camera');
-    };
-
-    Alert.alert(
-      '',
-      'Ambil gambar dari..',
-      [
-        {
-          text: 'Kamera',
-          onPress: () => PermissionCamera(),
-        },
-        {
-          text: 'Galeri',
-          onPress: () => handleImagePicker(i, 'gallery'),
-        },
-      ],
-      {cancelable: true},
-    );
-  }
-  function photoField(index) {
-    switch (index) {
-      case 0:
-        return 'profile';
-      case 1:
-        return 'ktp';
-      case 2:
-        return 'stnk';
-      case 3:
-        return 'sim';
-      case 4:
-        return 'bukti_tf';
-      default:
-        return 'profile';
-    }
-  }
-  function photoFieldTitle(index) {
-    switch (index) {
-      case 0:
-        return 'Profil';
-      case 1:
-        return 'KTP';
-      case 2:
-        return 'STNK';
-      case 3:
-        return 'SIM';
-      case 4:
-        return 'Bukti Transfer';
-      default:
-        return 'Tidak diketahui';
-    }
-  }
-
-  function imageFielPath(index) {
-    switch (index) {
-      case 0:
-        return 'profile';
-      case 1:
-        return 'ktp';
-      case 2:
-        return 'stnk';
-      case 3:
-        return 'sim';
-      case 4:
-        return 'ktp2';
-      default:
-        return 'profile';
-    }
-  }
-  function handleResetImage(index) {
-    const defaultField = {
-      uri: null,
-      name: null,
-      type: null,
-    };
-    switch (index) {
-      case 0:
-        return setFormPhotos({...formPhotos, profile: defaultField});
-      case 1:
-        return setFormPhotos({...formPhotos, ktp: defaultField});
-      case 2:
-        return setFormPhotos({...formPhotos, stnk: defaultField});
-      case 3:
-        return setFormPhotos({...formPhotos, sim: defaultField});
-      case 4:
-        return setFormPhotos({...formPhotos, bukti_tf: defaultField});
-      default:
-        return console.log('index not found for handleResetImage');
-    }
   }
 
   return (
@@ -329,45 +165,6 @@ export default function EditUserProfile({navigation}) {
         <Header title="Perbarui Profil" onPress={() => navigation.goBack()} />
         {ready && (
           <View style={styles.container}>
-            {/* Image field */}
-            {[...new Array(5).keys()].map((v, i) => (
-              <TouchableNativeFeedback
-                key={i}
-                useForeground
-                onPress={() => handleImageMethod(i)}>
-                <View style={styles.imgContainer}>
-                  <Text
-                    style={
-                      styles.textPhotoFieldTitle
-                    }>{`Pilih Foto ${photoFieldTitle(i)}`}</Text>
-                  <Image
-                    source={{
-                      uri: formPhotos[photoField(i)].uri
-                        ? formPhotos[photoField(i)].uri
-                        : `${API_KEY_IMAGE}/${imageFielPath(i)}/${user_id}.jpg`,
-                    }}
-                    style={{width: '100%', height: 210}}
-                  />
-                  {formPhotos[photoField(i)].uri && (
-                    <TouchableNativeFeedback
-                      useForeground
-                      onPress={() => handleResetImage(i)}>
-                      <View style={styles.btnResetImg}>
-                        <Icon
-                          name="restart"
-                          color={'black'}
-                          size={30}
-                          style={styles.icon}
-                        />
-                      </View>
-                    </TouchableNativeFeedback>
-                  )}
-                </View>
-              </TouchableNativeFeedback>
-            ))}
-
-            {/* Input field */}
-
             {/* profile region */}
             <FormInput
               name={'nama_lengkap'}
@@ -443,8 +240,10 @@ export default function EditUserProfile({navigation}) {
                 {name: 'Pilih agama', value: 'Pilih agama'},
                 {name: 'Islam', value: 'Islam'},
                 {name: 'Kristen', value: 'Kristen'},
+                {name: 'Protestan', value: 'Protestan'},
                 {name: 'Hindu', value: 'Hindu'},
                 {name: 'Buddha', value: 'Buddha'},
+                {name: 'Konghucu', value: 'Konghucu'},
               ]}
               control={control}
               errors={errors}
@@ -476,6 +275,7 @@ export default function EditUserProfile({navigation}) {
               placeholder={'Alamat lengkap..'}
               iconName={'map-marker-radius'}
               autoCapitalize={'words'}
+              multiline
               control={control}
               errors={errors}
             />

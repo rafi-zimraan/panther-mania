@@ -208,8 +208,6 @@ export default function SignUp({navigation}) {
     multiPart.append('sim', formPhotos.sim);
     multiPart.append('stnk', formPhotos.stnk);
 
-    // console.log(multiPart);
-
     dispatch(fetchSignUp({multiPart, navigation}));
   }
 

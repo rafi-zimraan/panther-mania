@@ -63,7 +63,7 @@ export const fetchSignUp = createAsyncThunk(
     try {
       const {data: response} = await postSignUp(multiPart, navigation);
       const {message} = response;
-      // console.log('register:', response);
+      console.log('register:', response);
 
       if (message == 'Data Member berhasil disimpan. Silahkan login') {
         // 3, 20 & 12 are index position for email, password & nama_lengkap
@@ -83,7 +83,7 @@ export const fetchSignUp = createAsyncThunk(
             'Registrasi Berhasil',
             'Menunggu persetujuan registrasi. Harap hubungi admin yang bersangkutan.',
           );
-        // console.log('sign in:', dataSignIn);
+        console.log('sign in:', dataSignIn);
 
         await EncryptedStorage.setItem(
           'user_credential',

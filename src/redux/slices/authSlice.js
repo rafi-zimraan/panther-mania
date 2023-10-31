@@ -55,6 +55,7 @@ const initialState = {
   status_user_profile: 'idle',
   token: null,
   user_data: defaultUserData,
+  qr_loading: false,
 };
 
 export const authSlice = createSlice({
@@ -74,6 +75,9 @@ export const authSlice = createSlice({
     ResetUserCredential(state, action) {
       state.token = null;
       state.user_data = defaultUserData;
+    },
+    SetQrLoading(state, action) {
+      state.qr_loading = action.payload;
     },
   },
   extraReducers(builder) {
@@ -125,6 +129,7 @@ export const {
   SetUserData,
   SetUserCredential,
   ResetUserCredential,
+  SetQrLoading,
 } = authSlice.actions;
 
 export default authSlice.reducer;

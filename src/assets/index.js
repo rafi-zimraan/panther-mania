@@ -13,6 +13,8 @@ import IconSOS from './icons/sos.png';
 import IconUser from './icons/user.png';
 import IconFlagGreen from './icons/flag.png';
 import IconPfpMapDefault from './icons/user-map-default.png';
+import IconSilangModal from './icons/silang.png';
+import IconSqaanQR from './icons/qr-scan.png';
 
 export {
   IconPfpMapDefault,
@@ -29,4 +31,6 @@ export {
   IconProduct,
   IconSOS,
   IconUser,
+  IconSilangModal,
+  IconSqaanQR,
 };

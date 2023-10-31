@@ -39,12 +39,12 @@ export default function ModalUserDetail({data}) {
   }
 
   const [imgProfile, setImgProfile] = useState({
-    uri: `${API_KEY_IMAGE}/profile/${user_id}.jpg`,
+    uri: `${'https://panther-mania.id'}/images/profile/${user_id}.jpg`,
   });
 
   useEffect(() => {
     setImgProfile({
-      uri: `${API_KEY_IMAGE}/profile/${user_id}.jpg`,
+      uri: `${'https://panther-mania.id'}/images/profile/${user_id}.jpg`,
     });
   }, [user_id]);
 

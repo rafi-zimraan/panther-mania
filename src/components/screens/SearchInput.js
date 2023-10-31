@@ -23,7 +23,8 @@ const styles = StyleSheet.create({
     elevation: 3,
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 25,
+    borderRadius: 18,
     paddingHorizontal: 15,
+    width: 280,
   },
 });

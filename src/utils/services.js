@@ -1,11 +1,4 @@
 import axios from 'axios';
-import {
-  API_SIGNIN,
-  API_SIGNUP,
-  API_SIGNOUT,
-  API_USER_DATA,
-  API_USER_DATA_UPDATE,
-} from '@env';
 
 const host = 'https://panther-mania.id/api/v1';
 
@@ -46,3 +39,7 @@ export const getPantherProduct = () => axios.get(`${host}/products`, config());
 // SOS
 export const getUsersLocation = access =>
   axios.get(`${host}/sos`, config(access));
+
+// QRCODE
+export const postLoginQRCode = rfid =>
+  axios.post(`${host}/login_rfid`, {rfid}, config());

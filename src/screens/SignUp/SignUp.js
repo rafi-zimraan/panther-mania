@@ -35,15 +35,7 @@ export default function SignUp({navigation}) {
   setTimeout(() => setReady(true), 1000); // "lazy render"
 
   useEffect(() => {
-    // getLocationPermission();
-    Geolocation.getCurrentPosition(
-      ({coords}) => {
-        console.log(coords);
-      },
-      error => {
-        console.log(error);
-      },
-    );
+    getLocationPermission();
   }, []);
 
   const [coords, setCoords] = useState({lat: null, lng: null});
@@ -111,10 +103,55 @@ export default function SignUp({navigation}) {
 
     for (let p in json) multiPart.append(p, json[p]);
 
-    // console.log(multiPart);
+    console.log(multiPart);
 
     dispatch(fetchSignUp({multiPart, navigation}));
   }
+
+  const exsemple = {
+    _parts: [
+      ['profile', [Object]],
+      ['ktp', [Object]],
+      ['sim', [Object]],
+      ['stnk', [Object]],
+      ['bukti_tf', [Object]],
+      ['nama_lengkap', 'testing'],
+      ['email', 'testing@gmail.com'],
+      ['password', '1234567890'],
+      ['password_confirmation', '1234567890'],
+      ['jenis_kelamin', 'Laki-laki'],
+      ['ukuran_baju', 'XL'],
+      ['tempat_lahir', 'fdfdfds'],
+      ['tanggal_lahir', '2023-10-17'],
+      ['agama', 'Kristen'],
+      ['status_nikah', 'Lajang'],
+      ['alamat_lengkap', 'dfdfdfds'],
+      ['kelurahan', 'fsdfdsfds'],
+      ['kecamatan', 'dfdfdfdsfd'],
+      ['provinsi', 'dfdfsdfsd'],
+      ['kabupaten_kota', 'dfdfsdf'],
+      ['kodepos', '6565655'],
+      ['pekerjaan', 'dfdfdsfdsfd'],
+      ['nama_perusahaan', 'fdfdsfdfsdds'],
+      ['alamat_perusahaan', 'fdfdfdsfsdf'],
+      ['handphone', '43242343243'],
+      ['no_whatsapp', '099778566'],
+      ['telp_kantor', '4544443'],
+      ['telp_rumah', '445454543'],
+      ['sekolah', 'cxvcvcv'],
+      ['no_ktp', '4322352352'],
+      ['no_sim', '3243243'],
+      ['type_kendaraan', 'vdvdcxv'],
+      ['no_polisi', '34334'],
+      ['warna_kendaraan', 'fvcxvvc'],
+      ['tahun_kendaraan', '453223'],
+      ['no_chasis', 'dfdsfds'],
+      ['no_engine', '32343'],
+      ['tanggal_pajak', '2023-10-17'],
+      ['lat', -7.7123683],
+      ['lng', 110.3779852],
+    ],
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -471,10 +508,7 @@ export default function SignUp({navigation}) {
               control={control}
               errors={errors}
             />
-            {/* endregion */}
-
             <Gap height={10} />
-
             <ButtonSubmit
               onPress={handleSubmit(submitRegister)}
               title="Daftar"

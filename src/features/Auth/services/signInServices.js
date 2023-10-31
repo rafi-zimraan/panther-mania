@@ -26,6 +26,7 @@ export const fetchSignIn = createAsyncThunk(
         ToastAndroid.show(response?.message, ToastAndroid.SHORT);
         splash && navigation.replace('AuthMethod');
       }
+      console.log(response);
       return response;
     } catch (error) {
       console.log('error masbro:', error);

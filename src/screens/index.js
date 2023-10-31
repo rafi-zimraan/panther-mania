@@ -12,6 +12,9 @@ import PantherProduct from './PantherProduct/PantherProduct';
 import Agenda from './Agenda/Agenda';
 import SaveOurSouls from './SOS/SaveOurSouls';
 import EditUserProfile from './UserProfile/EditUserProfile';
+import ScanQR from './ScanQR/ScanQR';
+import SqanQrUser from './QrScanUser/SqaanQrUser';
+import SqaanQrUserDetails from './QrScanUser/SqaanQrUserDetails';
 
 export {
   EditUserProfile,
@@ -28,4 +31,7 @@ export {
   AgendaDetail,
   PantherProduct,
   Agenda,
+  ScanQR,
+  SqanQrUser,
+  SqaanQrUserDetails,
 };

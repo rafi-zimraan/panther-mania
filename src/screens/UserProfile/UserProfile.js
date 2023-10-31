@@ -20,7 +20,6 @@ import {fetchSignOut} from '../../features/Auth/services/signOutServices';
 import {API_KEY_IMAGE} from '@env';
 
 export default function UserProfile({navigation}) {
-  // console.log(API_KEY_IMAGE);
   const dispatch = useDispatch();
   const {isPortrait} = useOrientation();
   const {
@@ -107,7 +106,9 @@ export default function UserProfile({navigation}) {
               style={{position: 'absolute'}}
             />
             <Image
-              source={{uri: `${API_KEY_IMAGE}/profile/${user_id}.jpg`}}
+              source={{
+                uri: `${'https://panther-mania.id'}/images/profile/${user_id}.jpg`,
+              }}
               style={{width: '100%', height: '100%'}}
             />
           </View>

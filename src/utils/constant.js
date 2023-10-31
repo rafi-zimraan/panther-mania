@@ -10,6 +10,9 @@ export const PermissionCamera = Permit.CAMERA;
 export const colors = {
   primary: '#183240',
   destroy: 'tomato',
+  black: '#000000',
+  white: '#FFFFFF',
+  red: '#FE0000',
 };
 
 // Storage key

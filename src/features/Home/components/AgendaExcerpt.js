@@ -16,10 +16,10 @@ export default function AgendaExcerpt({data}) {
   const {chapter_uuid, korwil_uuid} = data;
 
   const [imgKorwil, setImgKorwil] = useState(
-    `${API_KEY_IMAGE}/korwil/${korwil_uuid}.jpg`,
+    `${'https://panther-mania.id'}/images/posts/korwil/${korwil_uuid}.jpg`,
   );
   const [imgChapter, setImgChapter] = useState(
-    `${API_KEY_IMAGE}/chapter/${chapter_uuid}.jpg`,
+    `${'https://panther-mania.id'}/images/chapter/${chapter_uuid}.jpg`,
   );
 
   return (
@@ -32,7 +32,9 @@ export default function AgendaExcerpt({data}) {
             <Image
               source={{uri: imgChapter}}
               onError={() =>
-                setImgChapter(`${API_KEY_IMAGE}/chapter/${chapter_uuid}.png`)
+                setImgChapter(
+                  `${'https://panther-mania.id'}/images/posts/${chapter_uuid}.png`,
+                )
               }
               style={{width: '100%', height: '100%'}}
               resizeMethod={'resize'}
@@ -43,7 +45,9 @@ export default function AgendaExcerpt({data}) {
             <Image
               source={{uri: imgKorwil}}
               onError={() =>
-                setImgKorwil(`${API_KEY_IMAGE}/korwil/${korwil_uuid}.png`)
+                setImgKorwil(
+                  `${'https://panther-mania.id'}/images/posts/${korwil_uuid}.png`,
+                )
               }
               style={{width: '100%', height: '100%'}}
               resizeMethod={'resize'}

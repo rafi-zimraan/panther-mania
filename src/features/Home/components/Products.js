@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {ImgShirt} from '../../../assets';
+import {IconUser, ImgShirt} from '../../../assets';
 import {Gap} from '../../../components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
@@ -19,7 +19,6 @@ import {API_KEY_IMAGE} from '@env';
 import {useCurrencyFormat} from '../../../hooks';
 
 export default function Products() {
-  // console.log(API_KEY_IMAGE);
   const {navigate} = useNavigation();
   const dispatch = useDispatch();
   const {status, data} = useSelector(state => state.panther_product);
@@ -49,9 +48,14 @@ export default function Products() {
             onPress={() => navigate('ProductDetail', {product: v})}>
             <View style={styles.btnProduct}>
               <Image
-                source={{uri: `${API_KEY_IMAGE}/products/${v.gambar}`}}
+                source={{
+                  uri: `${'https://panther-mania.id'}/images/products/${
+                    v.gambar
+                  }`,
+                }}
                 style={styles.imgProduct}
               />
+
               <Text style={styles.textProductTitle} numberOfLines={2}>
                 {v.nama_produk}
               </Text>

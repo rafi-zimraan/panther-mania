@@ -85,7 +85,9 @@ export default function AgendaDetail({navigation, route}) {
             <Image
               source={{uri: chapterImgUri}}
               onError={() =>
-                setChapterImgUri(`${API_KEY_IMAGE}/chapter/${chapter_uuid}.png`)
+                setChapterImgUri(
+                  `${API_KEY_IMAGE}/images/posts/${chapter_uuid}.png`,
+                )
               }
               style={{width: 100, height: 100}}
               resizeMethod={'resize'}

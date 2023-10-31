@@ -10,15 +10,18 @@ import {
   UIManager,
   LayoutAnimation,
   Alert,
+  TextInput,
+  ToastAndroid,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {Children, useState} from 'react';
 import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
 import {ImgShirt} from '../../assets';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import HTML from 'react-native-render-html';
-import {API_KEY_IMAGE} from '@env';
 import {useOrientation} from '../../hooks';
-// console.log(API_KEY_IMAGE);
+import {Linking} from 'react-native';
+import {colors} from '../../utils/constant';
+import {useDispatch} from 'react-redux';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -43,8 +46,49 @@ export default function ProductDetail({route, navigation}) {
     updated_at,
   } = route.params.product;
 
+  const [isKeterangan, setKeterangan] = useState('');
+  const [jumlah, setJumlah] = useState(0); // State untuk menyimpan nilai jumlah barang
+
+  const handleCheckOut = () => {
+    const id_product = route.params.product.id;
+    const jumlahToSend = jumlah; // Menggunakan nilai jumlah dari state
+    const keteranganToSend = isKeterangan; // Menggunakan nilai keterangan dari state
+
+    var formdata = new FormData();
+    formdata.append('keterangan', keteranganToSend); // Menggunakan nilai keterangan dari state
+    formdata.append('jumlah', jumlahToSend.toString()); // Menggunakan nilai jumlah dari state
+
+    var requestOptions = {
+      method: 'POST',
+      body: formdata,
+      redirect: 'follow',
+    };
+
+    fetch(
+      `https://panther-mania.id/api/v1/checkout/${id_product}`,
+      requestOptions,
+    )
+      .then(response => response.json())
+      .then(result => {
+        ToastAndroid.show('Suksess', ToastAndroid.SHORT);
+        console.log(result);
+        handleWhatsApp();
+      })
+      .catch(error => {
+        console.log('error mass bro..', error);
+      });
+  };
+
   const [showDesc, setShowDesc] = useState(false);
 
+  async function handleWhatsApp() {
+    // const number = whatsapp.slice(1, whatsapp?.lenght);
+    const message = `Permisi, Saya ingin membeli produk panther-mania. Berikut produk yang saya beli ${nama_produk} dengan harga senilai ${harga}`;
+    const encodedMessage = encodeURIComponent(message);
+    const url = `https://wa.me/62821-7895-9678?text=${encodedMessage}`;
+    await Linking.openURL(url);
+  }
+  console.log('tes', deskripsi);
   return (
     <View style={{flex: 1}}>
       <BackgroundImage />
@@ -53,7 +97,9 @@ export default function ProductDetail({route, navigation}) {
         <View style={styles.container}>
           <View style={styles.viewImgProduct}>
             <Image
-              source={{uri: `${API_KEY_IMAGE}/products/${gambar}`}}
+              source={{
+                uri: `${'https://panther-mania.id'}/images/products/${gambar}`,
+              }}
               style={{width: '100%', height: '100%'}}
             />
           </View>
@@ -65,11 +111,22 @@ export default function ProductDetail({route, navigation}) {
               setShowDesc(!showDesc);
             }}>
             <View style={{...styles.containerDesc}}>
+              {/* <Text style={styles.paragraphStyle}>{deskripsi}</Text> */}
+
               <HTML
                 source={{html: deskripsi}}
                 contentWidth={width}
                 baseStyle={{color: 'black'}}
+                customHTMLElementModels={'font'}
+                // renderers={{
+                //   p: (htmlAttribs, children, passProps) => (
+                //     <Text key={passProps} style={styles.paragraphStyle}>
+                //       {children}
+                //     </Text>
+                //   ),
+                // }}
               />
+
               {/* <Text style={{color: 'black'}}>
                 {deskripsi.slice(0, 40)}
                 {!showDesc ? '...' : ''}
@@ -114,24 +171,42 @@ export default function ProductDetail({route, navigation}) {
             </View>
             <View style={styles.viewRecipt}>
               <Text style={{color: 'black'}}>Jumlah</Text>
-              <Text style={{color: 'black'}}>1</Text>
+              <TextInput
+                placeholder="Masukkan jumlah"
+                style={styles.textInput}
+                value={jumlah === 0 ? '' : jumlah.toString()} // Mengizinkan input kosong jika jumlah adalah 0
+                onChangeText={text => {
+                  if (/^\d*$/.test(text)) {
+                    // Menggunakan regex untuk memastikan hanya angka yang valid diizinkan
+                    if (text === '') {
+                      setJumlah(0); // Setel ke 0 jika input kosong
+                    } else {
+                      setJumlah(Math.max(1, parseInt(text))); // Gunakan Math.max untuk memastikan angka minimum adalah 1
+                    }
+                  }
+                }}
+              />
             </View>
             <View style={styles.viewRecipt}>
               <Text style={{color: 'black'}}>Total order</Text>
               <Text style={{color: 'black'}}>Rp {harga},-</Text>
             </View>
+            <View style={styles.viewReciptKet}>
+              <Text style={{color: 'black'}}>keterangan</Text>
+              <TextInput
+                placeholder="tuliskan keterangan"
+                multiline={true}
+                style={styles.textInput}
+                onChangeText={text => {
+                  setKeterangan(text);
+                }}
+                value={isKeterangan}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
-      <ButtonAction
-        title="Beli Sekarang"
-        onPress={() =>
-          Alert.alert(
-            'Fitur dalam pengembangan',
-            'Nantikan update terbaru dari kami, ya!',
-          )
-        }
-      />
+      <ButtonAction title="Beli Sekarang" onPress={handleCheckOut} />
       <Gap height={20} />
     </View>
   );
@@ -151,6 +226,12 @@ const styles = StyleSheet.create({
     elevation: 3,
     borderRadius: 20,
     padding: 20,
+  },
+  paragraphStyle: {
+    fontSize: 16,
+    lineHeight: 24,
+    marginVertical: 10,
+    color: 'black',
   },
   textBtnPurchase: {
     position: 'absolute',
@@ -182,6 +263,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginHorizontal: 10,
     marginBottom: 10,
+  },
+  viewReciptKet: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    height: 60,
+    elevation: 3,
+    borderRadius: 40 / 2,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    marginHorizontal: 10,
+    marginBottom: 10,
+  },
+  textInput: {
+    marginLeft: 90,
+    flex: 1,
+    color: 'black',
   },
   textOrderTitle: {
     backgroundColor: 'white',

@@ -8,13 +8,10 @@ import {
 } from 'react-native';
 import React from 'react';
 import {BackgroundImage, Header} from '../../components';
-import {ImgShirt} from '../../assets';
 import {useCurrencyFormat, useOrientation} from '../../hooks';
 import {useSelector} from 'react-redux';
-import {API_KEY_IMAGE} from '@env';
 
 export default function PantherProduct({navigation}) {
-  // console.log(API_KEY_IMAGE);
   const {data} = useSelector(state => state.panther_product);
   const {width} = useOrientation();
 
@@ -34,7 +31,11 @@ export default function PantherProduct({navigation}) {
                 }>
                 <View style={{...styles.btnProduct, width: width / 2.4}}>
                   <Image
-                    source={{uri: `${API_KEY_IMAGE}/products/${v.gambar}`}}
+                    source={{
+                      uri: `${'https://panther-mania.id'}/images/products/${
+                        v.gambar
+                      }`,
+                    }}
                     style={styles.imgProduct}
                   />
                   <Text style={styles.textProductTitle} numberOfLines={2}>

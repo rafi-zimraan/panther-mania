@@ -1,5 +1,5 @@
 import {StyleSheet, View, Image} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {ImgPMCar} from '../../assets';
 import {ButtonSubmit, FormInput} from '../../features/Auth';
 import {BackgroundImage, Gap, Header} from '../../components';
@@ -21,7 +21,6 @@ export default function SignIn({navigation}) {
   function handleSignIn(formData) {
     dispatch(fetchSignIn({...formData, navigation, lat, lng}));
   }
-
   return (
     <View style={{flex: 1}}>
       <BackgroundImage />

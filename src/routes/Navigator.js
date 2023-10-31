@@ -12,9 +12,11 @@ import {
   PantherProduct,
   ProductDetail,
   SaveOurSouls,
+  ScanQR,
   SignIn,
   SignUp,
   Splash,
+  SqaanQrUserDetails,
   UserProfile,
 } from '../screens';
 import RNBootSplash from 'react-native-bootsplash';
@@ -30,6 +32,7 @@ export default function Navigator() {
   return (
     <NavigationContainer onReady={() => RNBootSplash.hide({fade: true})}>
       <Stack.Navigator
+        initialRouteName="Splash"
         screenOptions={{
           ...statusBarConfig(),
           headerShown: false,
@@ -56,6 +59,11 @@ export default function Navigator() {
         <Stack.Screen component={PantherProduct} name={'PantherProduct'} />
         <Stack.Screen component={SaveOurSouls} name={'SaveOurSouls'} />
         <Stack.Screen component={EditUserProfile} name={'EditUserProfile'} />
+        <Stack.Screen component={ScanQR} name={'ScanQR'} />
+        <Stack.Screen
+          component={SqaanQrUserDetails}
+          name={'SqanQrUserDetails'}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -16,12 +16,7 @@ export default function AuthMethod({navigation}) {
       <Image source={ImgPMCar} />
       <ButtonAuthMethod
         title="SCAN ID"
-        onPress={() =>
-          Alert.alert(
-            'Fitur sedang dalam pengembangan',
-            'Nantikan fitur terbaru dari kami, ya!',
-          )
-        }
+        onPress={() => navigation.navigate('ScanQR')}
       />
       <Gap height={20} />
       <ButtonAuthMethod

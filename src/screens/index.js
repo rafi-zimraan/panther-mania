@@ -15,8 +15,10 @@ import EditUserProfile from './UserProfile/EditUserProfile';
 import ScanQR from './ScanQR/ScanQR';
 import SqanQrUser from './QrScanUser/SqaanQrUser';
 import SqaanQrUserDetails from './QrScanUser/SqaanQrUserDetails';
+import QRSignIn from './QRSignIn/QRSignIn';
 
 export {
+  QRSignIn,
   EditUserProfile,
   SaveOurSouls,
   Splash,

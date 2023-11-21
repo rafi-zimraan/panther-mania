@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-community/datetimepicker": "^7.6.1",
+    "@react-native-community/geolocation": "^3.1.0",
     "@react-native-picker/picker": "^2.5.1",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.16",
@@ -22,7 +23,6 @@
     "react-native-bootsplash": "^5.0.4",
     "react-native-dotenv": "^3.4.9",
     "react-native-encrypted-storage": "^4.0.3",
-    "react-native-geolocation-service": "^5.3.1",
     "react-native-image-picker": "^7.0.2",
     "react-native-maps": "^1.8.0",
     "react-native-modal": "^13.0.1",

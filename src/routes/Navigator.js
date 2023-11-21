@@ -11,6 +11,7 @@ import {
   OnBoarding,
   PantherProduct,
   ProductDetail,
+  QRSignIn,
   SaveOurSouls,
   ScanQR,
   SignIn,
@@ -60,6 +61,7 @@ export default function Navigator() {
         <Stack.Screen component={SaveOurSouls} name={'SaveOurSouls'} />
         <Stack.Screen component={EditUserProfile} name={'EditUserProfile'} />
         <Stack.Screen component={ScanQR} name={'ScanQR'} />
+        <Stack.Screen component={QRSignIn} name={'QRSignIn'} />
         <Stack.Screen
           component={SqaanQrUserDetails}
           name={'SqanQrUserDetails'}

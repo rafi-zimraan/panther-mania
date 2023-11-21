@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import Geolocation from 'react-native-geolocation-service';
+import Geolocation from '@react-native-community/geolocation';
 import {useDispatch, useSelector} from 'react-redux';
 import {SetCoordinates} from '../redux/slices/sosSlice';
 

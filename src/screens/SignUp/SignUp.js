@@ -1,22 +1,10 @@
-import {
-  Alert,
-  Image,
-  Linking,
-  PermissionsAndroid,
-  ScrollView,
-  StyleSheet,
-  Text,
-  ToastAndroid,
-  TouchableNativeFeedback,
-  View,
-} from 'react-native';
+import {Alert, Linking, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {ButtonAuthMethod, ButtonSubmit, FormInput} from '../../features/Auth';
+import {ButtonSubmit, FormInput} from '../../features/Auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchSignUp} from '../../features/Auth/services/signUpServices';
 import {BackgroundImage, Gap, Header} from '../../components';
-import Geolocation from 'react-native-geolocation-service';
+import Geolocation from '@react-native-community/geolocation';
 import {useForm} from 'react-hook-form';
 import formExample from './formExample';
 
@@ -40,64 +28,37 @@ export default function SignUp({navigation}) {
 
   const [coords, setCoords] = useState({lat: null, lng: null});
   async function getLocationPermission() {
-    const Permit = PermissionsAndroid;
-
-    try {
-      const grantedFine = await Permit.request(
-        Permit.PERMISSIONS.ACCESS_FINE_LOCATION,
-      );
-      const grantedCoarse = await Permit.request(
-        Permit.PERMISSIONS.ACCESS_COARSE_LOCATION,
-      );
-      if (
-        grantedFine === 'never_ask_again' ||
-        grantedCoarse === 'never_ask_again'
-      ) {
-        ToastAndroid.show('Izin lokasi diperlukan', ToastAndroid.LONG);
-        Alert.alert(
-          'Izin Lokasi',
-          'Izin lokasi diperlukan untuk fitur seperti SOS',
-          [
-            {text: 'Batal', onPress: () => navigation.goBack()},
-            {text: 'Beri Izin', onPress: () => Linking.openSettings()},
-          ],
-          {cancelable: false},
-        );
-        return;
-      } else if (grantedFine === 'granted' && grantedCoarse === 'granted') {
+    Geolocation.requestAuthorization(
+      () => {
         Geolocation.getCurrentPosition(
           ({coords}) => {
-            const {latitude: lat, longitude: lng} = coords;
-            setCoords({lat, lng});
+            const {longitude, latitude} = coords;
+            setCoords({lat: latitude, lng: longitude});
           },
-          ({code, message}) => {
-            ToastAndroid.show(
-              `Terjadi kesalahan: ${message}`,
-              ToastAndroid.SHORT,
-            );
+          error => {
+            console.log('ERROR:', error);
           },
           {enableHighAccuracy: true},
         );
-        return;
-      } else
-        return Alert.alert(
-          'Izin Lokasi',
-          'Izin lokasi diperlukan untuk fitur seperti SOS',
-          [
-            {text: 'Batal', onPress: () => navigation.goBack()},
-            {text: 'Beri Izin', onPress: () => getLocationPermission()},
-          ],
-          {cancelable: false},
-        );
-    } catch (error) {
-      ToastAndroid.show(
-        `Terjadi kesalahan: ${error.message}`,
-        ToastAndroid.SHORT,
-      );
-    }
+      },
+      error => {
+        if (error.message == 'Location permission was not granted.') {
+          Alert.alert(
+            'Izin Lokasi',
+            'Izin lokasi diperlukan untuk fitur seperti SOS.',
+            [
+              {text: 'Batal', onPress: () => navigation.goBack()},
+              {text: 'Beri Izin', onPress: () => Linking.openSettings()},
+            ],
+            {cancelable: false},
+          );
+        }
+      },
+    );
   }
 
   async function submitRegister(formData) {
+    if (!coords.lat) return getLocationPermission();
     let multiPart = new FormData();
     let json = {...formData, lat: coords.lat, lng: coords.lng};
 

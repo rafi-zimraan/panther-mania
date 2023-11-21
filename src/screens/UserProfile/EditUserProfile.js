@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
 // import formExample from './formExample';
-import Geolocation from 'react-native-geolocation-service';
+import Geolocation from '@react-native-community/geolocation';
 import {API_KEY_IMAGE} from '@env';
 import {fetchUpdateUserProfile} from '../../features/UserProfile/services/userProfileServices';
 import {useForm} from 'react-hook-form';

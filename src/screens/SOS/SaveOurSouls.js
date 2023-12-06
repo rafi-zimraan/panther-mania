@@ -6,13 +6,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchUsersLocation} from '../../features/SOS/services/sosServices';
 import ModalUserDetail from '../../features/SOS/components/ModalUserDetail';
 import {SetModal} from '../../redux/slices/sosSlice';
+import Geolocation from '@react-native-community/geolocation';
 
-export default function SaveOurSouls() {
+export default function () {
   const dispatch = useDispatch();
-  const {status, users_data, coords} = useSelector(
-    state => state.save_our_souls,
-  );
+  const {users_data, coords} = useSelector(state => state.save_our_souls);
   const {latitude, longitude} = coords;
+  const [userLocation, setUserLocation] = useState(null);
 
   const [selectedMarker, setSelectedMarker] = useState({
     alamat: '',
@@ -24,10 +24,36 @@ export default function SaveOurSouls() {
     user_id: 0,
   });
 
+  // useEffect(() => {
+  //   const fetchUserLocation = () => {
+  //     Geolocation.getCurrentPosition(
+  //       info => {
+  //         console.log('ini koordinat user', info);
+  //         const coordinates = {
+  //           latitude: info.coords.latitude,
+  //           longitude: info.coords.longitude,
+  //         };
+  //         setUserLocation([coordinates]);
+  //       },
+  //       error => {
+  //         console.log(error);
+  //       },
+  //     );
+  //   };
+
+  //   fetchUserLocation();
+
+  //   const interval = setInterval(() => {
+  //     dispatch(fetchUsersLocation());
+  //   }, 1000);
+
+  //   return () => clearInterval(interval);
+  // }, []);
+
   useEffect(() => {
     setTimeout(() => {
       dispatch(fetchUsersLocation());
-    }, 1000);
+    }, 100);
   }, []);
 
   const mapRegion = {
@@ -45,7 +71,12 @@ export default function SaveOurSouls() {
         style={{flex: 1}}
         provider={PROVIDER_GOOGLE}
         region={mapRegion}>
-        <Marker pinColor="dodgerblue" coordinate={{latitude, longitude}}>
+        <Marker
+          pinColor="dodgerblue"
+          coordinate={{
+            latitude,
+            longitude,
+          }}>
           <Callout>
             <Text style={{color: 'black'}}>Anda berada disini</Text>
           </Callout>

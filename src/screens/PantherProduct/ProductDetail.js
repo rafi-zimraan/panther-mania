@@ -85,7 +85,7 @@ export default function ProductDetail({route, navigation}) {
     // const number = whatsapp.slice(1, whatsapp?.lenght);
     const message = `Permisi, Saya ingin membeli produk panther-mania. Berikut produk yang saya beli ${nama_produk} dengan harga senilai ${harga}`;
     const encodedMessage = encodeURIComponent(message);
-    const url = `https://wa.me/62821-7895-9678?text=${encodedMessage}`;
+    const url = `https://wa.me/6282161196119?text=${encodedMessage}`;
     await Linking.openURL(url);
   }
   console.log('tes', deskripsi);

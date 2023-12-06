@@ -51,10 +51,10 @@ export default function AgendaDetail({navigation, route}) {
   const {width} = useOrientation();
 
   const [chapterImgUri, setChapterImgUri] = useState(
-    `${API_KEY_IMAGE}/chapter/${chapter_uuid}.jpg`,
+    `${'https://panther-mania.id'}/chapter/${chapter_uuid}.jpg`,
   );
   const [korwilImgUri, setKorwilImgUri] = useState(
-    `${API_KEY_IMAGE}/korwil/${korwil_uuid}.jpg`,
+    `${'https://panther-mania.id'}/korwil/${korwil_uuid}.jpg`,
   );
 
   function handleJoinAgenda() {
@@ -86,7 +86,7 @@ export default function AgendaDetail({navigation, route}) {
               source={{uri: chapterImgUri}}
               onError={() =>
                 setChapterImgUri(
-                  `${API_KEY_IMAGE}/images/posts/${chapter_uuid}.png`,
+                  `${'https://panther-mania.id'}/images/posts/${chapter_uuid}.png`,
                 )
               }
               style={{width: 100, height: 100}}
@@ -95,7 +95,9 @@ export default function AgendaDetail({navigation, route}) {
             <Image
               source={{uri: korwilImgUri}}
               onError={() =>
-                setKorwilImgUri(`${API_KEY_IMAGE}/korwil/${korwil_uuid}.png`)
+                setKorwilImgUri(
+                  `${'https://panther-mania.id'}/korwil/${korwil_uuid}.png`,
+                )
               }
               style={{width: 100, height: 100}}
               resizeMethod={'resize'}

@@ -118,13 +118,6 @@ export default function ProductDetail({route, navigation}) {
                 contentWidth={width}
                 baseStyle={{color: 'black'}}
                 customHTMLElementModels={'font'}
-                // renderers={{
-                //   p: (htmlAttribs, children, passProps) => (
-                //     <Text key={passProps} style={styles.paragraphStyle}>
-                //       {children}
-                //     </Text>
-                //   ),
-                // }}
               />
 
               {/* <Text style={{color: 'black'}}>

@@ -13,16 +13,18 @@ import {Gap} from '../../../components';
 
 export default function AgendaExcerpt({data}) {
   const {navigate} = useNavigation();
-  const {chapter_uuid, korwil_uuid} = data;
+  const {chapter_uuid, korwil_uuid, uuid} = data;
 
   const [imgKorwil, setImgKorwil] = useState(
-    `${'https://panther-mania.id'}/images/posts/korwil/${korwil_uuid}.jpg`,
+    `${'https://panther-mania.id'}/images/posts/${uuid}.jpg`,
   );
   const [imgChapter, setImgChapter] = useState(
-    `${'https://panther-mania.id'}/images/posts/chapter/${chapter_uuid}.jpg`,
+    `${'https://panther-mania.id'}/images/posts/${uuid}.jpg`,
   );
 
-  return (
+  //   panther-mania.id/images/posts/882320231203132225.jpg
+
+  https: return (
     <TouchableNativeFeedback
       useForeground
       onPress={() => navigate('AgendaDetail', {agenda: data})}>
@@ -33,7 +35,7 @@ export default function AgendaExcerpt({data}) {
               source={{uri: imgChapter}}
               onError={() =>
                 setImgChapter(
-                  `${'https://panther-mania.id'}/images/posts/chapter/${chapter_uuid}.png`,
+                  `${'https://panther-mania.id'}/images/posts/chapter/${uuid}.png`,
                 )
               }
               style={{width: '100%', height: '100%'}}
@@ -46,7 +48,7 @@ export default function AgendaExcerpt({data}) {
               source={{uri: imgKorwil}}
               onError={() =>
                 setImgKorwil(
-                  `${'https://panther-mania.id'}/images/posts/korwil/${korwil_uuid}.png`,
+                  `${'https://panther-mania.id'}/images/posts/korwil/${uuid}.png`,
                 )
               }
               style={{width: '100%', height: '100%'}}

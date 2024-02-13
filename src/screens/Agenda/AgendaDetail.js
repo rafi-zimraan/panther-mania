@@ -15,6 +15,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchJoinAgenda} from '../../features/Agenda/services/agendaServices';
 import HTML from 'react-native-render-html';
 import {useOrientation} from '../../hooks';
+import {colors} from '../../utils/constant';
 
 export default function AgendaDetail({navigation, route}) {
   // console.log(API_KEY_IMAGE);
@@ -51,10 +52,10 @@ export default function AgendaDetail({navigation, route}) {
   const {width} = useOrientation();
 
   const [chapterImgUri, setChapterImgUri] = useState(
-    `${'https://panther-mania.id'}/chapter/${chapter_uuid}.jpg`,
+    `${'https://panther-mania.id'}/chapter/${uuid}.jpg`,
   );
   const [korwilImgUri, setKorwilImgUri] = useState(
-    `${'https://panther-mania.id'}/korwil/${korwil_uuid}.jpg`,
+    `${'https://panther-mania.id'}/korwil/${uuid}.jpg`,
   );
 
   function handleJoinAgenda() {
@@ -87,7 +88,7 @@ export default function AgendaDetail({navigation, route}) {
               source={{uri: chapterImgUri}}
               onError={() =>
                 setChapterImgUri(
-                  `${'https://panther-mania.id'}/images/posts/${chapter_uuid}.png`,
+                  `${'https://panther-mania.id'}/images/posts/${uuid}.png`,
                 )
               }
               style={{width: 100, height: 100}}
@@ -97,7 +98,7 @@ export default function AgendaDetail({navigation, route}) {
               source={{uri: korwilImgUri}}
               onError={() =>
                 setKorwilImgUri(
-                  `${'https://panther-mania.id'}/korwil/${korwil_uuid}.png`,
+                  `${'https://panther-mania.id'}/korwil/${uuid}.png`,
                 )
               }
               style={{width: 100, height: 100}}
@@ -219,7 +220,7 @@ const styles = StyleSheet.create({
   viewDetail: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    marginVertical: 25,
+    marginVertical: 20,
   },
   textAgendaTitle: {
     textAlign: 'center',
@@ -240,7 +241,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 3,
     marginBottom: 0,
-    backgroundColor: 'white',
+    backgroundColor: 'grey',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     paddingVertical: 10,

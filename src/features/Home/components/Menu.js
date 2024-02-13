@@ -25,7 +25,7 @@ export default function Menu() {
     try {
       switch (index) {
         case 0:
-          return await Linking.openURL(`https://wa.me/6282161196119`);
+          return await Linking.openURL('https://wa.me/6282161196119');
         case 1:
           return navigate('Agenda');
         case 2:

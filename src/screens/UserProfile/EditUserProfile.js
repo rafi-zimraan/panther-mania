@@ -146,14 +146,17 @@ export default function EditUserProfile({navigation}) {
     const credential = await EncryptedStorage.getItem(
       storage_keys.user_credential,
     );
-    if (JSON.parse(credential).password != formData.password)
+    if (JSON.parse(credential).password != formData.password) {
       return Alert.alert('', 'Kata sandi tidak benar.');
+    }
 
     // password verified
     let multiPart = new FormData();
     let json = formData;
 
-    for (let p in json) multiPart.append(p, json[p]);
+    for (let p in json) {
+      multiPart.append(p, json[p]);
+    }
 
     dispatch(fetchUpdateUserProfile(formData));
   }

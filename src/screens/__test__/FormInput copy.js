@@ -28,7 +28,9 @@ export default function FormInput({
     if (event.type == 'set') {
       setDateTime(currentDate);
       setshowDate(false);
-    } else setshowDate(false);
+    } else {
+      setshowDate(false);
+    }
   };
 
   return (

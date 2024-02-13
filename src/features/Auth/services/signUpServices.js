@@ -78,11 +78,12 @@ export const fetchSignUp = createAsyncThunk(
         if (
           dataSignIn?.message ==
           'Maaf status Anda Unregister, Silahkan Hubungi Admin'
-        )
+        ) {
           return Alert.alert(
             'Registrasi Berhasil',
             'Menunggu persetujuan registrasi. Harap hubungi admin yang bersangkutan.',
           );
+        }
         console.log('sign in:', dataSignIn);
 
         await EncryptedStorage.setItem(

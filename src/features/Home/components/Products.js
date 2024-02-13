@@ -24,7 +24,9 @@ export default function Products() {
   const {status, data} = useSelector(state => state.panther_product);
 
   useEffect(() => {
-    if (status == 'idle') dispatch(fetchProduct());
+    if (status == 'idle') {
+      dispatch(fetchProduct());
+    }
   }, [dispatch]);
 
   return (

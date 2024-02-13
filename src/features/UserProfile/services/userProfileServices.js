@@ -16,7 +16,9 @@ export const fetchUpdateUserProfile = createAsyncThunk(
         const {data: dataUser} = await getUserData(token);
         dispatch(SetUserCredential({token, user_data: dataUser.auth}));
         showToast('Profil berhasil diperbarui');
-      } else showToast(`Terjadi kesalahan: ${data?.message}`);
+      } else {
+        showToast(`Terjadi kesalahan: ${data?.message}`);
+      }
       return data;
     } catch (error) {
       console.log(error.response.data);

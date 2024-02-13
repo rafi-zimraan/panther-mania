@@ -178,7 +178,7 @@ export default function SignUp({navigation}) {
           {enableHighAccuracy: true},
         );
         return;
-      } else
+      } else {
         return Alert.alert(
           'Izin Lokasi',
           'Izin lokasi diperlukan untuk fitur seperti SOS',
@@ -188,6 +188,7 @@ export default function SignUp({navigation}) {
           ],
           {cancelable: false},
         );
+      }
     } catch (error) {
       ToastAndroid.show(
         `Terjadi kesalahan: ${error.message}`,
@@ -200,7 +201,9 @@ export default function SignUp({navigation}) {
     let multiPart = new FormData();
     let json = formData;
 
-    for (let p in json) multiPart.append(p, json[p]);
+    for (let p in json) {
+      multiPart.append(p, json[p]);
+    }
 
     multiPart.append('profile', formPhotos.profile);
     multiPart.append('ktp', formPhotos.ktp);
@@ -249,8 +252,9 @@ export default function SignUp({navigation}) {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.CAMERA,
       );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED)
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         handleImagePicker(i, 'camera');
+      }
     };
 
     Alert.alert(
@@ -384,7 +388,9 @@ export default function SignUp({navigation}) {
       setDateBirth({visible: false, value: selectedDate});
       const [y, m, d] = selectedDate.toISOString().slice(0, 10).split('-');
       setFormData({...formData, tanggal_lahir: `${y}-${m}-${d}`});
-    } else setDateBirth({...dateBirth, visible: false});
+    } else {
+      setDateBirth({...dateBirth, visible: false});
+    }
   }
 
   const [dateTax, setDateTax] = useState({
@@ -396,7 +402,9 @@ export default function SignUp({navigation}) {
       setDateTax({visible: false, value: selectedDate});
       const [y, m, d] = selectedDate.toISOString().slice(0, 10).split('-');
       setFormData({...formData, tanggal_pajak: `${y}-${m}-${d}`});
-    } else setDateTax({...dateTax, visible: false});
+    } else {
+      setDateTax({...dateTax, visible: false});
+    }
   }
 
   return (

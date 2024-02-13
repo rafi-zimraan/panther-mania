@@ -38,7 +38,9 @@ export default function FormInput({
       setDateValue(selectedDate);
       const [y, m, d] = selectedDate.toISOString().slice(0, 10).split('-');
       onChange(`${y}-${m}-${d}`);
-    } else setShowDate(false);
+    } else {
+      setShowDate(false);
+    }
   }
 
   return (

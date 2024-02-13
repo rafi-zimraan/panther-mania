@@ -59,10 +59,11 @@ export default function AgendaDetail({navigation, route}) {
 
   function handleJoinAgenda() {
     const invalidForm = dewasa == '' || anak == '' || kendaraan == '';
-    if (!formVisible) setFormVisible(true);
-    else if (invalidForm)
+    if (!formVisible) {
+      setFormVisible(true);
+    } else if (invalidForm) {
       ToastAndroid.show('Isi formulir dengan benar', ToastAndroid.SHORT);
-    else {
+    } else {
       const formData = {
         dewasa,
         anak,

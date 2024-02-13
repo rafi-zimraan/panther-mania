@@ -58,11 +58,15 @@ export default function SignUp({navigation}) {
   }
 
   async function submitRegister(formData) {
-    if (!coords.lat) return getLocationPermission();
+    if (!coords.lat) {
+      return getLocationPermission();
+    }
     let multiPart = new FormData();
     let json = {...formData, lat: coords.lat, lng: coords.lng};
 
-    for (let p in json) multiPart.append(p, json[p]);
+    for (let p in json) {
+      multiPart.append(p, json[p]);
+    }
 
     console.log(multiPart);
 

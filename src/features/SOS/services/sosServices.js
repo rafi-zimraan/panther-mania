@@ -23,7 +23,9 @@ export const fetchUsersLocation = createAsyncThunk(
       } else if (data.status == 'Token is Expired') {
         await dispatch(refreshSession());
         dispatch(fetchUsersLocation());
-      } else showToast(data?.status);
+      } else {
+        showToast(data?.status);
+      }
       return data;
     } catch (error) {
       showToast(error.response.data?.message, 'LONG');

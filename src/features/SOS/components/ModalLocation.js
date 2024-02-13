@@ -38,7 +38,9 @@ export default function ModalLocation() {
       setTextLoading('Mencari lokasi Anda...');
     } else if (status == 'pending') {
       setTextLoading('Memuat semua orang...');
-    } else setModal(false);
+    } else {
+      setModal(false);
+    }
   }, [locationFine, locationCoarse, altitude, status]);
 
   const permissions_granted = locationFine && locationCoarse;

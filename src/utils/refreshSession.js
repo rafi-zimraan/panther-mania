@@ -14,7 +14,9 @@ export const refreshSession = createAsyncThunk(
         const {data} = await postSignIn(formData);
         dispatch(SetUserToken(data.token));
         return data.token;
-      } else return null;
+      } else {
+        return null;
+      }
     } catch (error) {
       return error.message;
     }

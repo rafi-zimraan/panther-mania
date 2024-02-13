@@ -20,7 +20,9 @@ export default function Agendas() {
   const {status, data} = useSelector(state => state.agenda);
 
   useEffect(() => {
-    if (status == 'idle') dispatch(fetchAgenda());
+    if (status == 'idle') {
+      dispatch(fetchAgenda());
+    }
   }, [dispatch]);
 
   return (

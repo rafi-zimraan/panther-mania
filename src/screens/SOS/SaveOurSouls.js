@@ -91,7 +91,8 @@ export default function () {
             coordinate={{
               latitude: parseFloat(v.lat),
               longitude: parseFloat(v.lng),
-            }}></Marker>
+            }}
+          />
         ))}
       </MapView>
       <ModalUserDetail data={selectedMarker} />

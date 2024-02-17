@@ -5,23 +5,22 @@ import {
   ScrollView,
   Image,
   TouchableNativeFeedback,
-  ActivityIndicator,
   Platform,
   UIManager,
   LayoutAnimation,
-  Alert,
   TextInput,
   ToastAndroid,
 } from 'react-native';
-import React, {Children, useState} from 'react';
+import React, {useState} from 'react';
 import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
-import {ImgShirt} from '../../assets';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import HTML from 'react-native-render-html';
 import {useOrientation} from '../../hooks';
 import {Linking} from 'react-native';
-import {colors} from '../../utils/constant';
-import {useDispatch} from 'react-redux';
+import {KeyboardAvoidingView} from 'react-native';
+
+const renderers = {
+  font: (_, children) => <Text>{children}</Text>,
+};
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -46,6 +45,7 @@ export default function ProductDetail({route, navigation}) {
     updated_at,
   } = route.params.product;
 
+  const [showDesc, setShowDesc] = useState(false);
   const [isKeterangan, setKeterangan] = useState('');
   const [jumlah, setJumlah] = useState(0); // State untuk menyimpan nilai jumlah barang
 
@@ -79,129 +79,138 @@ export default function ProductDetail({route, navigation}) {
       });
   };
 
-  const [showDesc, setShowDesc] = useState(false);
-
   async function handleWhatsApp() {
     // const number = whatsapp.slice(1, whatsapp?.lenght);
     const message = `Permisi, Saya ingin membeli produk panther-mania. Berikut produk yang saya beli ${nama_produk} dengan harga senilai ${harga}`;
     const encodedMessage = encodeURIComponent(message);
-    const url = `https://wa.me/6282161196119?text=${encodedMessage}`;
+    const url = `https://wa.me/${whatsapp}?text=${encodedMessage}`;
     await Linking.openURL(url);
   }
-  console.log('tes', deskripsi);
+  console.log('deskripsi', deskripsi);
   return (
-    <View style={{flex: 1}}>
-      <BackgroundImage />
-      <ScrollView stickyHeaderIndices={[0]} stickyHeaderHiddenOnScroll>
-        <Header title="Produk" onPress={() => navigation.goBack()} />
-        <View style={styles.container}>
-          <View style={styles.viewImgProduct}>
-            <Image
-              source={{
-                uri: `${'https://panther-mania.id'}/images/products/${gambar}`,
-              }}
-              style={{width: '100%', height: '100%'}}
-            />
-          </View>
-          <Text style={styles.textProductTitle}>{nama_produk}</Text>
-          <TouchableNativeFeedback
-            useForeground
-            onPress={() => {
-              LayoutAnimation.easeInEaseOut();
-              setShowDesc(!showDesc);
-            }}>
-            <View style={{...styles.containerDesc}}>
-              {/* <Text style={styles.paragraphStyle}>{deskripsi}</Text> */}
-
-              <HTML
-                source={{html: deskripsi}}
-                contentWidth={width}
-                baseStyle={{color: 'black'}}
-                customHTMLElementModels={'font'}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
+      <View style={{flex: 1}}>
+        <BackgroundImage />
+        <ScrollView stickyHeaderIndices={[0]} stickyHeaderHiddenOnScroll>
+          <Header title="Produk" onPress={() => navigation.goBack()} />
+          <View style={styles.container}>
+            <View style={styles.viewImgProduct}>
+              <Image
+                source={{
+                  uri: `${'https://panther-mania.id'}/images/products/${gambar}`,
+                }}
+                style={{width: '100%', height: '100%'}}
               />
-
-              {/* <Text style={{color: 'black'}}>
-                {deskripsi.slice(0, 40)}
-                {!showDesc ? '...' : ''}
-              </Text>
-              {showDesc && (
-                <Text style={{color: 'black'}}>
-                  {deskripsi.slice(40, deskripsi.length)}
-                </Text>
-              )}
-              <View style={styles.viewMore}>
-                <Text style={{color: 'black'}}>
-                  {showDesc ? 'Sembunyikan' : 'Lihat'} Deskripsi{' '}
-                </Text>
-                <Icon
-                  name={showDesc ? 'chevron-up' : 'chevron-down'}
-                  color="black"
-                  size={20}
+            </View>
+            <Text style={styles.textProductTitle}>{nama_produk}</Text>
+            <TouchableNativeFeedback
+              useForeground
+              onPress={() => {
+                LayoutAnimation.easeInEaseOut();
+                setShowDesc(!showDesc);
+              }}>
+              <View style={{...styles.containerDesc}}>
+                <HTML
+                  source={{html: deskripsi}}
+                  contentWidth={width}
+                  baseStyle={{color: 'black'}}
+                  //   customHTMLElementModels={{}}
+                  ignoredDomTags={['font']}
+                  tagsStyles={{
+                    p: {fontSize: 14, textAlign: 'center'},
+                    li: {fontSize: 16},
+                  }}
                 />
-              </View> */}
-            </View>
-          </TouchableNativeFeedback>
-          <View style={{padding: 20}}>
-            <Text style={styles.textOrderTitle}>Order Barang</Text>
-            <Gap height={20} />
-            <View style={styles.viewRecipt}>
-              <Text style={{color: 'black'}}>Nama produk</Text>
-              <Text style={{color: 'black', maxWidth: 150}} numberOfLines={1}>
-                {nama_produk}
-              </Text>
-            </View>
-            <View style={styles.viewRecipt}>
-              <Text style={{color: 'black'}}>Nama member</Text>
-              <Text style={{color: 'black'}}>Member Masbro</Text>
-            </View>
-            <View style={styles.viewRecipt}>
-              <Text style={{color: 'black'}}>No Rek Pembayaran</Text>
-              <Text style={{color: 'black'}}>09123091238</Text>
-            </View>
-            <View style={styles.viewRecipt}>
-              <Text style={{color: 'black'}}>Tanggal pembayaran</Text>
-              <Text style={{color: 'black'}}>{new Date().toDateString()}</Text>
-            </View>
-            <View style={styles.viewRecipt}>
-              <Text style={{color: 'black'}}>Jumlah</Text>
-              <TextInput
-                placeholder="Masukkan jumlah"
-                style={styles.textInput}
-                value={jumlah === 0 ? '' : jumlah.toString()} // Mengizinkan input kosong jika jumlah adalah 0
-                onChangeText={text => {
-                  if (/^\d*$/.test(text)) {
-                    // Menggunakan regex untuk memastikan hanya angka yang valid diizinkan
-                    if (text === '') {
-                      setJumlah(0); // Setel ke 0 jika input kosong
-                    } else {
-                      setJumlah(Math.max(1, parseInt(text))); // Gunakan Math.max untuk memastikan angka minimum adalah 1
+
+                {/* <Text style={{color: 'black'}}>        
+                  {deskripsi.slice(0, 40)}
+                  {!showDesc ? '...' : ''}
+                </Text>
+                {showDesc && (
+                  <Text style={{color: 'black'}}>
+                    {deskripsi.slice(40, deskripsi.length)}
+                  </Text>
+                )}
+                <View style={styles.viewMore}>
+                  <Text style={{color: 'black'}}>
+                    {showDesc ? 'Sembunyikan' : 'Lihat'} Deskripsi{' '}
+                  </Text>
+                  <Icon
+                    name={showDesc ? 'chevron-up' : 'chevron-down'}
+                    color="black"
+                    size={20}
+                  />
+                </View> */}
+              </View>
+            </TouchableNativeFeedback>
+            <View style={{padding: 20}}>
+              <Text style={styles.textOrderTitle}>Order Barang</Text>
+              <Gap height={20} />
+              <View style={styles.viewRecipt}>
+                <Text style={{color: 'black'}}>Nama produk</Text>
+                <Text style={{color: 'black', maxWidth: 150}} numberOfLines={1}>
+                  {nama_produk}
+                </Text>
+              </View>
+              <View style={styles.viewRecipt}>
+                <Text style={{color: 'black'}}>Nama member</Text>
+                <Text style={{color: 'black'}}>Member Masbro</Text>
+              </View>
+              <View style={styles.viewRecipt}>
+                <Text style={{color: 'black'}}>No Rek Pembayaran</Text>
+                <Text style={{color: 'black'}}>09123091238</Text>
+              </View>
+              <View style={styles.viewRecipt}>
+                <Text style={{color: 'black'}}>Tanggal pembayaran</Text>
+                <Text style={{color: 'black'}}>
+                  {new Date().toDateString()}
+                </Text>
+              </View>
+              <View style={styles.viewRecipt}>
+                <Text style={{color: 'black'}}>Jumlah</Text>
+                <TextInput
+                  placeholder="Masukan Angka"
+                  placeholderTextColor="grey"
+                  style={styles.textInput}
+                  value={jumlah === 0 ? '' : jumlah.toString()} // Mengizinkan input kosong jika jumlah adalah 0
+                  onChangeText={text => {
+                    if (/^\d*$/.test(text)) {
+                      // Menggunakan regex untuk memastikan hanya angka yang valid diizinkan
+                      if (text === '') {
+                        setJumlah(0); // Setel ke 0 jika input kosong
+                      } else {
+                        setJumlah(Math.max(1, parseInt(text))); // Gunakan Math.max untuk memastikan angka minimum adalah 1
+                      }
                     }
-                  }
-                }}
-              />
-            </View>
-            <View style={styles.viewRecipt}>
-              <Text style={{color: 'black'}}>Total order</Text>
-              <Text style={{color: 'black'}}>Rp {harga},-</Text>
-            </View>
-            <View style={styles.viewReciptKet}>
-              <Text style={{color: 'black'}}>keterangan</Text>
-              <TextInput
-                placeholder="tuliskan keterangan"
-                multiline={true}
-                style={styles.textInput}
-                onChangeText={text => {
-                  setKeterangan(text);
-                }}
-                value={isKeterangan}
-              />
+                  }}
+                />
+              </View>
+              <View style={styles.viewRecipt}>
+                <Text style={{color: 'black'}}>Total order</Text>
+                <Text style={{color: 'black'}}>Rp {harga},-</Text>
+              </View>
+              <View style={styles.viewReciptKet}>
+                <Text style={{color: 'black'}}>keterangan</Text>
+                <TextInput
+                  placeholder="tuliskan keterangan"
+                  placeholderTextColor="grey"
+                  multiline={true}
+                  style={styles.textInput}
+                  onChangeText={text => {
+                    setKeterangan(text);
+                  }}
+                  value={isKeterangan}
+                />
+              </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
-      <ButtonAction title="Beli Sekarang" onPress={handleCheckOut} />
-      <Gap height={20} />
-    </View>
+        </ScrollView>
+        <ButtonAction title="Beli Sekarang" onPress={handleCheckOut} />
+        <Gap height={20} />
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -218,7 +227,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     elevation: 3,
     borderRadius: 20,
-    padding: 20,
+    padding: 10,
   },
   paragraphStyle: {
     fontSize: 16,

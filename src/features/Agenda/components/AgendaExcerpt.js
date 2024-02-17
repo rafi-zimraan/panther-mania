@@ -22,15 +22,13 @@ export default function AgendaExcerpt({data}) {
     `${'https://panther-mania.id'}/images/posts/${uuid}.jpg`,
   );
 
-  //   panther-mania.id/images/posts/882320231203132225.jpg
-
   https: return (
     <TouchableNativeFeedback
       useForeground
       onPress={() => navigate('AgendaDetail', {agenda: data})}>
       <View style={styles.btnAgenda}>
         <View style={styles.viewImgAgenda}>
-          <View style={styles.viewImg}>
+          {/* <View style={styles.viewImg}>
             <Image
               source={{uri: imgChapter}}
               onError={() =>
@@ -41,7 +39,7 @@ export default function AgendaExcerpt({data}) {
               style={{width: '100%', height: '100%'}}
               resizeMethod={'resize'}
             />
-          </View>
+          </View> */}
           <Gap width={10} />
           <View style={styles.viewImg}>
             <Image

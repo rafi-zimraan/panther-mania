@@ -13,10 +13,10 @@ import {Gap} from '../../../components';
 
 export default function AgendaExcerpt({data}) {
   const {navigate} = useNavigation();
-  const {chapter_uuid, korwil_uuid} = data;
+  const {chapter_uuid, korwil_uuid, uuid} = data;
 
   const [imgKorwil, setImgKorwil] = useState(
-    `${'https://panther-mania.id'}/images/posts/korwil/${korwil_uuid}.jpg`,
+    `${'https://panther-mania.id'}/images/posts/${uuid}.jpg`,
   );
   const [imgChapter, setImgChapter] = useState(
     `${'https://panther-mania.id'}/images/chapter/${chapter_uuid}.jpg`,
@@ -28,7 +28,7 @@ export default function AgendaExcerpt({data}) {
       onPress={() => navigate('AgendaDetail', {agenda: data})}>
       <View style={styles.btnAgenda}>
         <View style={styles.viewImgAgenda}>
-          <View style={styles.viewImg}>
+          {/* <View style={styles.viewImg}>
             <Image
               source={{uri: imgChapter}}
               onError={() =>
@@ -39,14 +39,14 @@ export default function AgendaExcerpt({data}) {
               style={{width: '100%', height: '100%'}}
               resizeMethod={'resize'}
             />
-          </View>
+          </View> */}
           <Gap width={10} />
           <View style={styles.viewImg}>
             <Image
               source={{uri: imgKorwil}}
               onError={() =>
                 setImgKorwil(
-                  `${'https://panther-mania.id'}/images/posts/${korwil_uuid}.png`,
+                  `${'https://panther-mania.id'}/images/posts/${uuid}.png`,
                 )
               }
               style={{width: '100%', height: '100%'}}

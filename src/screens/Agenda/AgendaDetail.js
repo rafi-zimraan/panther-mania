@@ -52,10 +52,10 @@ export default function AgendaDetail({navigation, route}) {
   const {width} = useOrientation();
 
   const [chapterImgUri, setChapterImgUri] = useState(
-    `${'https://panther-mania.id'}/chapter/${uuid}.jpg`,
+    `${'https://panther-mania.id'}/images/posts/${uuid}.jpg`,
   );
   const [korwilImgUri, setKorwilImgUri] = useState(
-    `${'https://panther-mania.id'}/korwil/${uuid}.jpg`,
+    `${'https://panther-mania.id'}/images/posts/${uuid}.jpg`,
   );
 
   function handleJoinAgenda() {
@@ -88,22 +88,22 @@ export default function AgendaDetail({navigation, route}) {
               source={{uri: chapterImgUri}}
               onError={() =>
                 setChapterImgUri(
-                  `${'https://panther-mania.id'}/images/posts/${uuid}.png`,
+                  `${'https://panther-mania.id'}/images/posts/korwil/${gambar}.png`,
                 )
               }
               style={{width: 100, height: 100}}
               resizeMethod={'resize'}
             />
-            <Image
+            {/* <Image
               source={{uri: korwilImgUri}}
               onError={() =>
                 setKorwilImgUri(
-                  `${'https://panther-mania.id'}/korwil/${uuid}.png`,
+                  `${'https://panther-mania.id'}/images/posts/korwil/${gambar}.png`,
                 )
               }
               style={{width: 100, height: 100}}
               resizeMethod={'resize'}
-            />
+            /> */}
           </View>
           <Text style={styles.textAgendaTitle}>{judul}</Text>
           <View style={styles.viewDetail}>
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 3,
     marginBottom: 0,
-    backgroundColor: 'grey',
+    backgroundColor: 'white',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     paddingVertical: 10,

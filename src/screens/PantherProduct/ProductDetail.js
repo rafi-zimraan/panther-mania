@@ -10,6 +10,7 @@ import {
   LayoutAnimation,
   TextInput,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
@@ -17,10 +18,7 @@ import HTML from 'react-native-render-html';
 import {useOrientation} from '../../hooks';
 import {Linking} from 'react-native';
 import {KeyboardAvoidingView} from 'react-native';
-
-const renderers = {
-  font: (_, children) => <Text>{children}</Text>,
-};
+import {useSelector} from 'react-redux';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -29,6 +27,7 @@ if (Platform.OS === 'android') {
 }
 
 export default function ProductDetail({route, navigation}) {
+  const {nama_lengkap} = useSelector(state => state.auth.user_data) || {};
   const {width} = useOrientation();
   const {
     id,
@@ -47,16 +46,26 @@ export default function ProductDetail({route, navigation}) {
 
   const [showDesc, setShowDesc] = useState(false);
   const [isKeterangan, setKeterangan] = useState('');
-  const [jumlah, setJumlah] = useState(0); // State untuk menyimpan nilai jumlah barang
+  const [jumlah, setJumlah] = useState(0);
 
   const handleCheckOut = () => {
+    if (!isKeterangan.trim() || jumlah === 0) {
+      Alert.alert(
+        'Perhatian',
+        'Silahkan masukan keterangan dan jumlah produck yang akan dibeli',
+        [{text: 'Ok'}],
+        [{cancelable: true}],
+      );
+      return;
+    }
+
     const id_product = route.params.product.id;
-    const jumlahToSend = jumlah; // Menggunakan nilai jumlah dari state
-    const keteranganToSend = isKeterangan; // Menggunakan nilai keterangan dari state
+    const jumlahToSend = jumlah;
+    const keteranganToSend = isKeterangan;
 
     var formdata = new FormData();
-    formdata.append('keterangan', keteranganToSend); // Menggunakan nilai keterangan dari state
-    formdata.append('jumlah', jumlahToSend.toString()); // Menggunakan nilai jumlah dari state
+    formdata.append('keterangan', keteranganToSend);
+    formdata.append('jumlah', jumlahToSend.toString());
 
     var requestOptions = {
       method: 'POST',
@@ -70,23 +79,35 @@ export default function ProductDetail({route, navigation}) {
     )
       .then(response => response.json())
       .then(result => {
-        ToastAndroid.show('Suksess', ToastAndroid.SHORT);
-        console.log(result);
-        handleWhatsApp();
+        Alert.alert(
+          'Berhasil Membeli Product ',
+          '',
+          [
+            {
+              text: 'Ok',
+              onPress: () => {
+                navigation.replace('Home');
+              },
+            },
+          ],
+          {cancelable: false},
+        ),
+          console.log(result);
+
+        // handleWhatsApp();
       })
       .catch(error => {
         console.log('error mass bro..', error);
       });
   };
 
-  async function handleWhatsApp() {
-    // const number = whatsapp.slice(1, whatsapp?.lenght);
-    const message = `Permisi, Saya ingin membeli produk panther-mania. Berikut produk yang saya beli ${nama_produk} dengan harga senilai ${harga}`;
-    const encodedMessage = encodeURIComponent(message);
-    const url = `https://wa.me/${whatsapp}?text=${encodedMessage}`;
-    await Linking.openURL(url);
-  }
-  console.log('deskripsi', deskripsi);
+  //   async function handleWhatsApp() {
+  //     // const number = whatsapp.slice(1, whatsapp?.lenght);
+  //     const message = `Permisi, Saya ingin membeli produk panther-mania. Berikut produk yang saya beli ${nama_produk} dengan harga senilai ${harga}`;
+  //     const encodedMessage = encodeURIComponent(message);
+  //     const url = `https://wa.me/${whatsapp}?text=${encodedMessage}`;
+  //     await Linking.openURL(url);
+  //   }
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -156,7 +177,7 @@ export default function ProductDetail({route, navigation}) {
               </View>
               <View style={styles.viewRecipt}>
                 <Text style={{color: 'black'}}>Nama member</Text>
-                <Text style={{color: 'black'}}>Member Masbro</Text>
+                <Text style={{color: 'black'}}>{nama_lengkap}</Text>
               </View>
               <View style={styles.viewRecipt}>
                 <Text style={{color: 'black'}}>No Rek Pembayaran</Text>

@@ -7,11 +7,14 @@ import {
   AuthMethod,
   EditUserProfile,
   Home,
+  Keranjang,
+  KeranjangDetails,
   LibsTest,
   OnBoarding,
   PantherProduct,
   ProductDetail,
   QRSignIn,
+  RiwayatPembelian,
   SaveOurSouls,
   ScanQR,
   SignIn,
@@ -62,6 +65,9 @@ export default function Navigator() {
         <Stack.Screen component={EditUserProfile} name={'EditUserProfile'} />
         <Stack.Screen component={ScanQR} name={'ScanQR'} />
         <Stack.Screen component={QRSignIn} name={'QRSignIn'} />
+        <Stack.Screen component={Keranjang} name={'Keranjang'} />
+        <Stack.Screen component={KeranjangDetails} name={'KeranjangDetails'} />
+        <Stack.Screen component={RiwayatPembelian} name={'RiwayatPembelian'} />
         <Stack.Screen
           component={SqaanQrUserDetails}
           name={'SqanQrUserDetails'}

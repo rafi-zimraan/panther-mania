@@ -6,6 +6,8 @@ import {
   Image,
   TextInput,
   ToastAndroid,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import React, {useState} from 'react';
 import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
@@ -78,23 +80,26 @@ export default function AgendaDetail({navigation, route}) {
   }
 
   return (
-    <View style={{flex: 1}}>
-      <BackgroundImage />
-      <ScrollView>
-        <Header title="Rincian Agenda" onPress={() => navigation.goBack()} />
-        <View style={styles.container}>
-          <View style={styles.viewImgAgenda}>
-            <Image
-              source={{uri: chapterImgUri}}
-              onError={() =>
-                setChapterImgUri(
-                  `${'https://panther-mania.id'}/images/posts/korwil/${gambar}.png`,
-                )
-              }
-              style={{width: 100, height: 100}}
-              resizeMethod={'resize'}
-            />
-            {/* <Image
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
+      <View style={{flex: 1}}>
+        <BackgroundImage />
+        <ScrollView>
+          <Header title="Rincian Agenda" onPress={() => navigation.goBack()} />
+          <View style={styles.container}>
+            <View style={styles.viewImgAgenda}>
+              <Image
+                source={{uri: chapterImgUri}}
+                onError={() =>
+                  setChapterImgUri(
+                    `${'https://panther-mania.id'}/images/posts/korwil/${gambar}.png`,
+                  )
+                }
+                style={{width: 100, height: 100}}
+                resizeMethod={'resize'}
+              />
+              {/* <Image
               source={{uri: korwilImgUri}}
               onError={() =>
                 setKorwilImgUri(
@@ -104,71 +109,72 @@ export default function AgendaDetail({navigation, route}) {
               style={{width: 100, height: 100}}
               resizeMethod={'resize'}
             /> */}
-          </View>
-          <Text style={styles.textAgendaTitle}>{judul}</Text>
-          <View style={styles.viewDetail}>
-            <View style={styles.viewDate}>
-              <Image
-                source={IconCalendar}
-                style={styles.imgDetail}
-                resizeMethod={'resize'}
-              />
-              <Text style={styles.textDetail}>
-                {tanggal} - {jam?.slice(0, 5)}
-              </Text>
             </View>
-            {/* <View style={styles.viewKorwil}>
-              <Image
-                source={IconFlagGreen}
-                style={{...styles.imgDetail, left: -5, top: -10}}
-                resizeMethod={'resize'}
-              />
-              <Text style={styles.textDetail}>Korwil Aceh</Text>
-            </View> */}
-          </View>
-          <View style={styles.viewAgendaDetail}>
-            <HTML
-              source={{html: deskripsi}}
-              contentWidth={width}
-              baseStyle={{color: 'black'}}
-            />
-            {/* <Text style={{color: 'black'}}>{deskripsi}</Text> */}
-          </View>
-          <Gap height={20} />
-          {formVisible && (
-            <View style={styles.containerForm}>
-              <TextInput
-                placeholderTextColor={'grey'}
-                placeholder="Jumlah peserta dewasa.."
-                keyboardType="number-pad"
-                onChangeText={setDewasa}
-                style={{color: 'black'}}
-              />
-              <TextInput
-                placeholderTextColor={'grey'}
-                placeholder="Jumlah anak dewasa.."
-                keyboardType="number-pad"
-                onChangeText={setAnak}
-                style={{color: 'black'}}
-              />
-              <TextInput
-                placeholderTextColor={'grey'}
-                placeholder="Tipe kendaraan yang dibawa.."
-                onChangeText={setKendaraan}
-                style={{color: 'black'}}
-              />
+            <Text style={styles.textAgendaTitle}>{judul}</Text>
+            <View style={styles.viewDetail}>
+              <View style={styles.viewDate}>
+                <Image
+                  source={IconCalendar}
+                  style={styles.imgDetail}
+                  resizeMethod={'resize'}
+                />
+                <Text style={styles.textDetail}>
+                  {tanggal} - {jam?.slice(0, 5)}
+                </Text>
+              </View>
+              {/* <View style={styles.viewKorwil}>
+                <Image
+                  source={IconFlagGreen}
+                  style={{...styles.imgDetail, left: -5, top: -10}}
+                  resizeMethod={'resize'}
+                />
+                <Text style={styles.textDetail}>Korwil Aceh</Text>
+              </View> */}
             </View>
-          )}
-        </View>
-      </ScrollView>
-      <Gap height={20} />
-      <ButtonAction
-        title="Gabung Agenda"
-        loading={status_join == 'pending'}
-        onPress={handleJoinAgenda}
-      />
-      <Gap height={20} />
-    </View>
+            <View style={styles.viewAgendaDetail}>
+              <HTML
+                source={{html: deskripsi}}
+                contentWidth={width}
+                baseStyle={{color: 'black'}}
+              />
+              {/* <Text style={{color: 'black'}}>{deskripsi}</Text> */}
+            </View>
+            <Gap height={20} />
+            {formVisible && (
+              <View style={styles.containerForm}>
+                <TextInput
+                  placeholderTextColor={'grey'}
+                  placeholder="Jumlah peserta dewasa.."
+                  keyboardType="number-pad"
+                  onChangeText={setDewasa}
+                  style={{color: 'black'}}
+                />
+                <TextInput
+                  placeholderTextColor={'grey'}
+                  placeholder="Jumlah anak dewasa.."
+                  keyboardType="number-pad"
+                  onChangeText={setAnak}
+                  style={{color: 'black'}}
+                />
+                <TextInput
+                  placeholderTextColor={'grey'}
+                  placeholder="Tipe kendaraan yang dibawa.."
+                  onChangeText={setKendaraan}
+                  style={{color: 'black'}}
+                />
+              </View>
+            )}
+          </View>
+        </ScrollView>
+        <Gap height={20} />
+        <ButtonAction
+          title="Gabung Agenda"
+          loading={status_join == 'pending'}
+          onPress={handleJoinAgenda}
+        />
+        <Gap height={20} />
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -178,12 +184,11 @@ const styles = StyleSheet.create({
     padding: 20,
     elevation: 5,
     marginBottom: 5,
+    borderRadius: 50,
   },
   viewAgendaDetail: {
     backgroundColor: 'white',
     padding: 30,
-    // borderTopRightRadius: 50,
-    // borderTopLeftRadius: 50,
     borderRadius: 50,
     elevation: 3,
     marginBottom: 3,
@@ -236,7 +241,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   viewImgAgenda: {
-    margin: 15,
     overflow: 'hidden',
     borderRadius: 20,
     elevation: 3,
@@ -251,5 +255,6 @@ const styles = StyleSheet.create({
     maxWidth: 580,
     alignSelf: 'center',
     flex: 1,
+    padding: 20,
   },
 });

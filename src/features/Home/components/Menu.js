@@ -14,6 +14,7 @@ import {
   IconSOS,
   IconUser,
   IconWhatsApp,
+  IconKeranjang,
 } from '../../../assets';
 import {Gap} from '../../../components';
 import {useNavigation} from '@react-navigation/native';
@@ -33,6 +34,8 @@ export default function Menu() {
         case 3:
           return navigate('SaveOurSouls');
         case 4:
+          return navigate('Keranjang');
+        case 5:
           return navigate('UserProfile');
         default:
           console.log('index tidak ditemukan');
@@ -44,7 +47,7 @@ export default function Menu() {
 
   return (
     <View style={styles.container}>
-      {[...new Array(5).keys()].map((v, i) => {
+      {[...new Array(6).keys()].map((v, i) => {
         // image sources and text titles are based on array index
         const source =
           i == 0
@@ -55,6 +58,8 @@ export default function Menu() {
             ? {icon: IconProduct, title: 'Produk'}
             : i == 3
             ? {icon: IconSOS, title: 'SOS'}
+            : i == 4
+            ? {icon: IconKeranjang, title: 'keranjang'}
             : {icon: IconUser, title: 'Profil'};
         return (
           <View key={i} style={{alignItems: 'center', marginBottom: 10}}>
@@ -85,14 +90,14 @@ const styles = StyleSheet.create({
     height: 35,
     position: 'absolute',
     alignSelf: 'center',
-    marginTop: 12,
+    marginTop: 7,
   },
   btnMenu: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     backgroundColor: 'white',
     elevation: 3,
-    borderRadius: 60 / 2,
+    borderRadius: 50 / 2,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: 'grey',

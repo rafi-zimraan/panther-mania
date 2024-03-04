@@ -67,7 +67,6 @@ export default function Navigator() {
         <Stack.Screen component={QRSignIn} name={'QRSignIn'} />
         <Stack.Screen component={Keranjang} name={'Keranjang'} />
         <Stack.Screen component={KeranjangDetails} name={'KeranjangDetails'} />
-        <Stack.Screen component={RiwayatPembelian} name={'RiwayatPembelian'} />
         <Stack.Screen
           component={SqaanQrUserDetails}
           name={'SqanQrUserDetails'}

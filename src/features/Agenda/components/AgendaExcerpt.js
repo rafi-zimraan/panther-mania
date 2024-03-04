@@ -7,9 +7,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {API_KEY_IMAGE} from '@env';
 import {Gap} from '../../../components';
-// console.log(API_KEY_IMAGE);
 
 export default function AgendaExcerpt({data}) {
   const {navigate} = useNavigation();

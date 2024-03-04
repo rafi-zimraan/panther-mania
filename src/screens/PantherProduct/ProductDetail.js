@@ -9,14 +9,12 @@ import {
   UIManager,
   LayoutAnimation,
   TextInput,
-  ToastAndroid,
   Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
 import HTML from 'react-native-render-html';
 import {useOrientation} from '../../hooks';
-import {Linking} from 'react-native';
 import {KeyboardAvoidingView} from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -93,8 +91,6 @@ export default function ProductDetail({route, navigation}) {
           {cancelable: false},
         ),
           console.log(result);
-
-        // handleWhatsApp();
       })
       .catch(error => {
         console.log('error mass bro..', error);

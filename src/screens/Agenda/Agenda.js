@@ -28,11 +28,9 @@ export default function Agenda({navigation}) {
 
 const styles = StyleSheet.create({
   viewImgAgenda: {
-    // margin: 15,
     overflow: 'hidden',
     borderRadius: 20,
     elevation: 3,
-    // marginBottom: 0,
     backgroundColor: 'white',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
@@ -78,6 +76,5 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 20,
     paddingTop: 0,
-    // backgroundColor: 'aqua',
   },
 });

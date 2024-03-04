@@ -18,7 +18,6 @@ import SqaanQrUserDetails from './QrScanUser/SqaanQrUserDetails';
 import QRSignIn from './QRSignIn/QRSignIn';
 import Keranjang from './Keranjang/Keranjang';
 import KeranjangDetails from './Keranjang/KeranjangDetails';
-import RiwayatPembelian from './Keranjang/RiwayatPembelian';
 
 export {
   QRSignIn,
@@ -41,5 +40,4 @@ export {
   SqaanQrUserDetails,
   Keranjang,
   KeranjangDetails,
-  RiwayatPembelian,
 };

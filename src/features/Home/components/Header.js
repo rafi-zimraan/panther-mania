@@ -14,7 +14,7 @@ import SqaanQrUser from '../../../screens/QrScanUser/SqaanQrUser';
 
 export default function HomeHeader({navigation}) {
   const {nama_lengkap} = useSelector(state => state.auth.user_data) || {};
-  console.log(nama_lengkap);
+  //   console.log(nama_lengkap);
 
   return (
     <View style={{padding: 20}}>

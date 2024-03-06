@@ -36,6 +36,7 @@ export default function Keranjang({navigation}) {
     fetch('https://panther-mania.id/api/v1/riwayat_order', requestOptions)
       .then(response => response.json())
       .then(result => {
+        // console.log(result.data);
         setOderProduct(result.data);
       })
       .catch(error => {
@@ -60,7 +61,7 @@ export default function Keranjang({navigation}) {
                 style={styles.container}
                 onPress={() =>
                   navigation.navigate('KeranjangDetails', {
-                    order_id: val.order_id,
+                    id_order: val.id_order,
                   })
                 }
                 key={ind}>
@@ -89,9 +90,23 @@ export default function Keranjang({navigation}) {
                   ) : (
                     <Text>No description avilable</Text>
                   )}
-                  <Gap height={4} />
+                  <Gap height={2} />
+                  <Text style={styles.keterangan}>
+                    Keterangan: {val.keterangan}
+                  </Text>
+                  <Gap height={2} />
                   <Text style={styles.price}>Rp.{val.produk?.harga}</Text>
                 </View>
+                <Image
+                  source={
+                    val?.bukti_transfer
+                      ? {
+                          uri: `https://www.panther-mania.id/images/orders/${val.bukti_transfer}`,
+                        }
+                      : IconCoffe
+                  }
+                  style={styles.imgBuktiTf}
+                />
               </TouchableOpacity>
             );
           })}
@@ -104,6 +119,20 @@ export default function Keranjang({navigation}) {
 }
 
 const styles = StyleSheet.create({
+  imgBuktiTf: {
+    height: 40,
+    width: 40,
+    position: 'absolute',
+    alignSelf: 'flex-end',
+    bottom: 20,
+    right: 25,
+    borderWidth: 1,
+    borderColor: colors.black,
+  },
+  keterangan: {
+    color: 'black',
+    fontSize: 14,
+  },
   textLoading: {
     position: 'absolute',
     width: '100%',

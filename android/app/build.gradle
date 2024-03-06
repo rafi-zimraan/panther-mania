@@ -79,8 +79,8 @@ android {
         applicationId "com.panthermania"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5
-        versionName "0.3.3-beta-rc"
+        versionCode 6
+        versionName "0.4.4-beta-rc"
     }
     signingConfigs {    
         debug {

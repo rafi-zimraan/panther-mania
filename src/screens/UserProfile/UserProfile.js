@@ -1,23 +1,10 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  ScrollView,
-  TouchableNativeFeedback,
-  ActivityIndicator,
-  Alert,
-  Image,
-} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Alert, Image} from 'react-native';
 import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import {ResetUserCredential} from '../../redux/slices/authSlice';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useOrientation from '../../hooks/useOrientation';
 import {fetchSignOut} from '../../features/Auth/services/signOutServices';
-import {API_KEY_IMAGE} from '@env';
 
 export default function UserProfile({navigation}) {
   const dispatch = useDispatch();

@@ -20,16 +20,12 @@ import {Picker} from '@react-native-picker/picker';
 import DatePicker from '@react-native-community/datetimepicker';
 import {ButtonSubmit, FormInput} from '../../features/Auth';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchSignUp} from '../../features/Auth/services/signUpServices';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
-// import formExample from './formExample';
 import Geolocation from 'react-native-geolocation-service';
 import {API_KEY_IMAGE} from '@env';
 import {fetchUpdateUserProfile} from '../../features/UserProfile/services/userProfileServices';
 
 export default function EditUserProfile({navigation}) {
-  // console.log(API_KEY_IMAGE);
   const dispatch = useDispatch();
   const {status_user_profile, user_data} = useSelector(state => state.auth);
 

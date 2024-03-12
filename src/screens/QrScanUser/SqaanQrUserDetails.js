@@ -1,37 +1,25 @@
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
-  Image,
   StatusBar,
-  Linking,
-  ActivityIndicator,
-  Alert,
   ToastAndroid,
+  PermissionsAndroid,
+  Text,
 } from 'react-native';
-import {
-  useCameraDevice,
-  Camera,
-  useCodeScanner,
-  useCameraPermission,
-} from 'react-native-vision-camera';
+
 import {colors} from '../../utils/constant';
-import Modal from 'react-native-modal';
 import * as Animatable from 'react-native-animatable';
 import {useDispatch, useSelector} from 'react-redux';
-import {SetQrLoading} from '../../redux/slices/authSlice';
 import ModalUserDetailQR from '../../features/SqanQr/ModalUserDetailQR';
+import {RNCamera} from 'react-native-camera';
+import QRCodeScanner from 'react-native-qrcode-scanner';
 
 export default function SqaanQrUserDetails() {
   const dispatch = useDispatch();
   const {qr_loading, token} = useSelector(state => state.auth);
   const [animationDuration, setAnimationDuration] = useState(3000);
-  const [errorOccured, setErrorOccured] = useState(false);
-  const device = useCameraDevice('back');
   const [modal, setModal] = useState(false);
-  const [stateCamera, setStateCamera] = useState(true);
   const [userData, setUserData] = useState({
     user_id: null,
     photo_profile: '',
@@ -42,56 +30,17 @@ export default function SqaanQrUserDetails() {
   });
 
   const check_permission = async () => {
-    try {
-      let permission = await Camera.getCameraPermissionStatus();
-
-      if (permission === 'granted') {
-        setAnimationDuration(100);
-      } else {
-        setAnimationDuration(3000);
-        requestCameraPermission();
-      }
-    } catch (error) {
-      console.error('Error checking camera permission:', error);
-      setErrorOccured(true);
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      setAnimationDuration(3000);
     }
   };
-
-  const requestCameraPermission = async () => {
-    const granted = await requestPermission();
-    if (granted) {
-      // Izin kamera diberikan, lakukan tindakan yang diperlukan
-      setErrorOccured(false);
-    } else {
-      // Izin kamera tidak diberikan, Anda bisa menampilkan pesan tambahan atau menangani dengan cara lain
-      Alert.alert(
-        'Izin kamera tidak diberikan',
-        'Anda perlu memberikan izin kamera untuk menggunakan fitur ini.',
-      );
-    }
-  };
-
-  const {hasPermission, requestPermission} = useCameraPermission();
-  console.log('Has camera permission:', hasPermission);
 
   useEffect(() => {
     check_permission();
   }, []);
-
-  // ! Untuk Navigate ke setting user
-  const OpenSettings = async () => {
-    try {
-      // Membuka pengaturan aplikasi
-      await Linking.openSettings();
-    } catch (err) {
-      Alert.alert('Tidak dapat membuka pengaturan', [
-        {
-          text: 'ok',
-        },
-      ]);
-      console.error('Tidak dapat membuka pengaturan:', err);
-    }
-  };
 
   const handleScanQR = nomor => {
     console.log('Scan BarCode User:', nomor);
@@ -121,74 +70,6 @@ export default function SqaanQrUserDetails() {
       });
   };
 
-  // function handleScanWithQrCode(nomor) {
-  //   dispatch(SetQrLoading(true));
-  //   handleScanQR(nomor);
-  // }
-
-  //! Scanner
-  const codeScanner = useCodeScanner({
-    codeTypes: ['qr'],
-    onCodeScanned: codes => {
-      console.log(codes);
-      setStateCamera(false);
-      if (codes[0].value.includes('PM')) {
-        handleScanQR(codes[0].value);
-      } else {
-        setStateCamera(true);
-        ToastAndroid.show('QRCode Tidak di kenali', ToastAndroid.LONG);
-      }
-    },
-  });
-
-  // ! Ketika Error Permission
-  // if (errorOccured) {
-  //   return (
-  //     <Modal
-  //       transparent={true}
-  //       isVisible={errorOccured}
-  //       backdropColor={'#FFF'}
-  //       backdropOpacity={0.8}
-  //       animationIn="zoomInDown"
-  //       animationOut="zoomOutUp"
-  //       animationInTiming={2000}
-  //       animationOutTiming={2000}
-  //       backdropTransitionInTiming={1000}
-  //       backdropTransitionOutTiming={1000}>
-  //       <View style={styles.errorModalContainer}>
-  //         <Image
-  //           source={require('../../assets/icons/silang.png')}
-  //           style={{
-  //             width: 60,
-  //             height: 60,
-  //           }}
-  //         />
-  //         <Text style={styles.errorText}>
-  //           Terjadi kesalahan saat memeriksa izin kamera.
-  //         </Text>
-  //         <TouchableOpacity onPress={OpenSettings}>
-  //           <Text style={styles.errorButton}>Coba Lagi</Text>
-  //         </TouchableOpacity>
-  //       </View>
-  //     </Modal>
-  //   );
-  // }
-
-  // Menampilkan loading indicator jika isLoading adalah true
-  // if (qr_loading) {
-  //   return (
-  //     <View style={styles.loadingContainer}>
-  //       <StatusBar
-  //         barStyle={'dark-content'}
-  //         translucent={true}
-  //         backgroundColor="transparent"
-  //       />
-  //       <ActivityIndicator size="large" color={colors.primary} />
-  //       <Text style={styles.loadingText}>Memuat...</Text>
-  //     </View>
-  //   );
-  // }
-
   return (
     <View style={styles.Container}>
       <StatusBar
@@ -196,12 +77,19 @@ export default function SqaanQrUserDetails() {
         translucent={true}
         backgroundColor="transparent"
       />
-      <Camera
-        style={StyleSheet.absoluteFill}
-        device={device}
-        isActive={stateCamera}
-        codeScanner={codeScanner}
+
+      <QRCodeScanner
+        onRead={event => handleScanQR(event.data)}
+        flashMode={RNCamera.Constants.FlashMode.torch}
+        topContent={
+          <Text style={styles.centerText}>
+            Go for{' '}
+            <Text style={styles.textBold}>Search Member Panther Mania </Text>
+            from scan the QR code.
+          </Text>
+        }
       />
+
       <Animatable.View
         style={styles.qrScannBox}
         animation="pulse"
@@ -217,6 +105,18 @@ export default function SqaanQrUserDetails() {
 }
 
 const styles = StyleSheet.create({
+  centerText: {
+    flex: 1,
+    fontSize: 18,
+    padding: 20,
+    color: '#777',
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  textBold: {
+    fontWeight: '500',
+    color: '#000',
+  },
   errorModalContainer: {
     backgroundColor: '#FFF',
     padding: 20,

@@ -1,13 +1,11 @@
 import {
   Alert,
-  Button,
   Image,
   Linking,
   PermissionsAndroid,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   ToastAndroid,
   TouchableNativeFeedback,
   View,

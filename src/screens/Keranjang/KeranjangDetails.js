@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {BackgroundImage, Gap, Header, ButtonAction} from '../../components';
 import {colors} from '../../utils/constant';
-import {IconCoffe, ImgAppLogo} from '../../assets';
+import {ImgNotAvailable} from '../../assets';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import {useSelector} from 'react-redux';
 import HTML from 'react-native-render-html';
@@ -30,6 +30,7 @@ export default function KeranjangDetails({navigation, route}) {
   const {width} = useOrientation();
   const [imageUploaded, setImageUploaded] = useState(null);
   const [isImageZoomed, setIsImageZoomed] = useState(false);
+  const [isOrderDeleted, setIsOrderDeleted] = useState(false);
 
   const [ready, setReady] = useState(false);
   setTimeout(() => setReady(true), 1000); // "lazy render"
@@ -84,7 +85,6 @@ export default function KeranjangDetails({navigation, route}) {
   const handleDetailOrder = () => {
     const myHeaders = new Headers();
     myHeaders.append('Authorization', `Bearer ${token}`);
-
     const requestOptions = {
       method: 'GET',
       headers: myHeaders,
@@ -127,7 +127,6 @@ export default function KeranjangDetails({navigation, route}) {
       },
       body: formdata,
     };
-    // console.log(requestOptions);
 
     fetch(
       `https://panther-mania.id/api/v1/upload_bukti_transfer/${id_order}`,
@@ -162,123 +161,163 @@ export default function KeranjangDetails({navigation, route}) {
     setIsModalVisible(!isModalVisible);
   };
 
+  // ! handle sembuyikan order
+  const handleDeleteOrder = () => {
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${token}`);
+
+    const requestOptions = {
+      method: 'DELETE',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    fetch(`https://panther-mania.id/api/v1/hide/${id_order}`, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        ToastAndroid.show(result.message, ToastAndroid.LONG);
+        navigation.goBack();
+        setIsOrderDeleted(true);
+      })
+      .catch(error => {
+        console.error(error);
+        return error.message;
+      });
+  };
+
   useEffect(() => {
     handleDetailOrder();
   }, []);
 
   return (
-    <View style={{flex: 1}}>
+    <View view style={{flex: 1}}>
       <BackgroundImage />
-      {ready ? (
-        <ScrollView stickyHeaderHiddenOnScroll stickyHeaderIndices={[0]}>
-          <Header
-            title="Detail Riwayat Order"
-            onPress={() => navigation.goBack()}
-          />
-          <View style={styles.container}>
-            <View style={styles.viewImgKeranjang}>
-              <Image
-                source={{
-                  uri: `${'https://panther-mania.id'}/images/products/${
-                    dataDetailOrder?.produk?.gambar || ''
-                  }`,
-                }}
-                style={{height: 221, width: 100}}
-                defaultSource={IconCoffe}
+      <Header
+        title="Detail Riwayat Order"
+        onPress={() => navigation.goBack()}
+      />
+
+      {!isOrderDeleted && (
+        <>
+          {ready ? (
+            <View>
+              <View style={styles.container}>
+                <View style={styles.viewImgKeranjang}>
+                  <Image
+                    source={{
+                      uri: `${'https://panther-mania.id'}/images/products/${
+                        dataDetailOrder?.produk?.gambar || ''
+                      }`,
+                    }}
+                    style={{height: 221, width: 100}}
+                    defaultSource={ImgNotAvailable}
+                  />
+                </View>
+                <View style={styles.viewContentProduct}>
+                  <Text style={styles.titleFont}>
+                    {dataDetailOrder?.produk?.nama_produk ||
+                      'Product Name Not Available'}
+                  </Text>
+                  <Gap height={12} />
+                  <HTML
+                    key={dataDetailOrder?.produk?.deskripsi}
+                    source={{
+                      html:
+                        dataDetailOrder?.produk?.deskripsi ||
+                        'Deskirpsi Not Available',
+                    }}
+                    contentWidth={width}
+                    baseStyle={{color: 'black'}}
+                    tagsStyles={{
+                      p: {margin: 0, padding: 0, color: 'black', fontSize: 14},
+                    }}
+                    customHTMLElementModels={{}}
+                  />
+                  <Gap height={5} />
+                  <Text style={styles.keterangan}>
+                    keterangan:{' '}
+                    {dataDetailOrder?.keterangan || 'Keterangan Not Available'}
+                  </Text>
+                  <Gap height={5} />
+                  <Text style={styles.price}>
+                    harga: Rp.
+                    {dataDetailOrder?.produk?.harga || 'Price Not Available'}
+                  </Text>
+                </View>
+                {imageUploaded || selectedImage ? (
+                  <TouchableOpacity
+                    onPress={() => toggleModal()}
+                    style={styles.expendedImage}>
+                    <Image
+                      source={{
+                        uri: imageUploaded
+                          ? `https://www.panther-mania.id/images/orders/${imageUploaded}`
+                          : selectedImage?.uri,
+                      }}
+                      style={{height: '100%', width: '100%'}}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={styles.buttonUploadTF}
+                    onPress={() => handleImagePicker()}>
+                    <Text style={{fontSize: 10, color: colors.white}}>
+                      Upload Bukti tranfers
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+
+              <Gap height={20} />
+              <ButtonAction
+                title="Kirim Data"
+                onPress={() => handleBuktiTranfer()}
               />
+              <Gap height={20} />
+              {imageUploaded && (
+                <ButtonAction
+                  title="Hapus data"
+                  backgroundColor="tomato"
+                  onPress={handleDeleteOrder}
+                />
+              )}
             </View>
-            <View style={styles.viewContentProduct}>
-              <Text style={styles.titleFont}>
-                {dataDetailOrder?.produk?.nama_produk ||
-                  'Product Name Not Available'}
-              </Text>
-              <Gap height={12} />
-              <HTML
-                key={dataDetailOrder?.produk?.deskripsi}
-                source={{html: dataDetailOrder?.produk?.deskripsi || ''}}
-                contentWidth={width}
-                baseStyle={{color: 'black'}}
-                tagsStyles={{
-                  p: {margin: 0, padding: 0, color: 'black', fontSize: 14},
-                }}
-                customHTMLElementModels={{}}
-              />
-              <Gap height={5} />
-              <Text style={styles.keterangan}>
-                keterangan:{' '}
-                {dataDetailOrder?.keterangan || 'Description Not Available'}
-              </Text>
-              <Gap height={5} />
-              <Text style={styles.price}>
-                harga: Rp.
-                {dataDetailOrder?.produk?.harga || 'Price Not Available'}
-              </Text>
-            </View>
-            {imageUploaded || selectedImage ? (
-              <TouchableOpacity
-                onPress={() => toggleModal()}
-                style={styles.expendedImage}>
-                <Image
+          ) : (
+            <Text style={styles.textLoading}>Memuat formulir</Text>
+          )}
+
+          {/* Modal Image */}
+          <Modal
+            visible={isModalVisible}
+            transparent={true}
+            onRequestClose={() => setIsModalVisible(false)}>
+            <View style={styles.ContainerModal}>
+              {(imageUploaded || selectedImage) && (
+                <ImageBackground
                   source={{
                     uri: imageUploaded
                       ? `https://www.panther-mania.id/images/orders/${imageUploaded}`
                       : selectedImage?.uri,
                   }}
-                  style={{height: '100%', width: '100%'}}
-                />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={styles.buttonUploadTF}
-                onPress={() => handleImagePicker()}>
-                <Text style={{fontSize: 10, color: colors.white}}>
-                  Upload Bukti tranfers
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
-
-          <Gap height={20} />
-          <ButtonAction
-            title="Kirim Data"
-            onPress={() => handleBuktiTranfer()}
-          />
-          <Gap height={30} />
-        </ScrollView>
-      ) : (
-        <Text style={styles.textLoading}>Memuat formulir</Text>
+                  resizeMode={isImageZoomed ? 'contain' : 'cover'}
+                  style={{
+                    // flex: 1,
+                    height: isImageZoomed ? undefined : 550,
+                    width: isImageZoomed ? undefined : 300,
+                  }}>
+                  <TouchableOpacity
+                    style={styles.modalCloseView}
+                    onPress={() => {
+                      setIsModalVisible(false);
+                    }}>
+                    <Text style={styles.modalCloseText}>{'Tutup'}</Text>
+                  </TouchableOpacity>
+                </ImageBackground>
+              )}
+            </View>
+          </Modal>
+        </>
       )}
-
-      {/* Modal Image */}
-      <Modal
-        visible={isModalVisible}
-        transparent={true}
-        onRequestClose={() => setIsModalVisible(false)}>
-        <View style={styles.ContainerModal}>
-          {(imageUploaded || selectedImage) && (
-            <ImageBackground
-              source={{
-                uri: imageUploaded
-                  ? `https://www.panther-mania.id/images/orders/${imageUploaded}`
-                  : selectedImage?.uri,
-              }}
-              resizeMode={isImageZoomed ? 'contain' : 'cover'}
-              style={{
-                // flex: 1,
-                height: isImageZoomed ? undefined : 550,
-                width: isImageZoomed ? undefined : 300,
-              }}>
-              <TouchableOpacity
-                style={styles.modalCloseView}
-                onPress={() => {
-                  setIsModalVisible(false);
-                }}>
-                <Text style={styles.modalCloseText}>{'Tutup'}</Text>
-              </TouchableOpacity>
-            </ImageBackground>
-          )}
-        </View>
-      </Modal>
     </View>
   );
 }
@@ -307,21 +346,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalCloseText: {
-    fontSize: 19,
+    fontSize: 20,
     bottom: 20,
-    height: 26,
+    height: 29,
     borderRadius: 10,
-    width: 50,
+    width: 55,
     fontWeight: '800',
-    color: 'black',
+    color: 'white',
   },
   expendedImage: {
-    height: '25%',
-    width: '18%',
+    height: '20%',
+    width: '15%',
     position: 'absolute',
     alignSelf: 'flex-end',
     right: 20,
-    top: 177,
+    top: 188,
     borderWidth: 1,
     borderColor: colors.black,
   },

@@ -43,7 +43,3 @@ export const getUsersLocation = access =>
 // QRCODE
 export const postLoginQRCode = rfid =>
   axios.post(`${host}/login_rfid`, {rfid}, config());
-
-// //   Riwayat Order
-// export const riwayatorder = access =>
-//   axios.get(`${host}/riwayat_order`, config(access));

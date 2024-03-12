@@ -8,7 +8,7 @@ import ModalUserDetail from '../../features/SOS/components/ModalUserDetail';
 import {SetModal} from '../../redux/slices/sosSlice';
 import Geolocation from '@react-native-community/geolocation';
 
-export default function () {
+export default function ({navigation}) {
   const dispatch = useDispatch();
   const {users_data, coords} = useSelector(state => state.save_our_souls);
   const {latitude, longitude} = coords;
@@ -24,36 +24,36 @@ export default function () {
     user_id: 0,
   });
 
-  // useEffect(() => {
-  //   const fetchUserLocation = () => {
-  //     Geolocation.getCurrentPosition(
-  //       info => {
-  //         console.log('ini koordinat user', info);
-  //         const coordinates = {
-  //           latitude: info.coords.latitude,
-  //           longitude: info.coords.longitude,
-  //         };
-  //         setUserLocation([coordinates]);
-  //       },
-  //       error => {
-  //         console.log(error);
-  //       },
-  //     );
-  //   };
+  //   useEffect(() => {
+  //     const fetchUserLocation = () => {
+  //       Geolocation.getCurrentPosition(
+  //         info => {
+  //           console.log('ini koordinat user', info);
+  //           const coordinates = {
+  //             latitude: info.coords.latitude,
+  //             longitude: info.coords.longitude,
+  //           };
+  //           setUserLocation([coordinates]);
+  //         },
+  //         error => {
+  //           console.log(error);
+  //         },
+  //       );
+  //     };
 
-  //   fetchUserLocation();
+  //     fetchUserLocation();
 
-  //   const interval = setInterval(() => {
-  //     dispatch(fetchUsersLocation());
-  //   }, 1000);
+  //     const interval = setInterval(() => {
+  //       dispatch(fetchUsersLocation());
+  //     }, 1000);
 
-  //   return () => clearInterval(interval);
-  // }, []);
+  //     return () => clearInterval(interval);
+  //   }, [navigation]);
 
   useEffect(() => {
     setTimeout(() => {
       dispatch(fetchUsersLocation());
-    }, 100);
+    }, 2000);
   }, []);
 
   const mapRegion = {

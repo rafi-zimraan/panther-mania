@@ -9,13 +9,10 @@ import {
 } from 'react-native';
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {IconUser, ImgShirt} from '../../../assets';
-import {Gap} from '../../../components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {fetchProduct} from '../../PantherProduct/services/pantherProductServices';
 import {colors} from '../../../utils/constant';
-import {API_KEY_IMAGE} from '@env';
 import {useCurrencyFormat} from '../../../hooks';
 
 export default function Products() {

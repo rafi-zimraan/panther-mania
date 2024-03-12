@@ -7,17 +7,12 @@ import {
   StyleSheet,
   Text,
   ToastAndroid,
-  TouchableNativeFeedback,
   View,
 } from 'react-native';
 import React, {useState} from 'react';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
-// import formExample from './formExample';
 import Geolocation from '@react-native-community/geolocation';
-import {API_KEY_IMAGE} from '@env';
 import {fetchUpdateUserProfile} from '../../features/UserProfile/services/userProfileServices';
 import {useForm} from 'react-hook-form';
 import {ButtonSubmit, FormInput} from '../../features/Auth';

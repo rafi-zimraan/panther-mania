@@ -6,6 +6,7 @@ import ImgAppLogo from './images/app-logo.png';
 import ImgShirt from './images/shirt-sleeve.png';
 import ImgCommunity from './images/community.jpg';
 import ImgExampleProduct from './images/Example_product.jpg';
+import ImgNotAvailable from './images/ImgAvailable.png';
 
 import IconWhatsApp from './icons/whatsapp.png';
 import IconCalendar from './icons/timetable.png';
@@ -17,7 +18,6 @@ import IconPfpMapDefault from './icons/user-map-default.png';
 import IconSilangModal from './icons/silang.png';
 import IconSqaanQR from './icons/qr-scan.png';
 import IconKeranjang from './icons/keranjang.png';
-import IconCoffe from './icons/tumbler_couve.jpg';
 
 export {
   ImgCommunity,
@@ -38,5 +38,5 @@ export {
   IconSilangModal,
   IconSqaanQR,
   IconKeranjang,
-  IconCoffe,
+  ImgNotAvailable,
 };

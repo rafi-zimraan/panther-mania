@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {BackgroundImage, Gap, Header} from '../../components';
-import {IconCoffe} from '../../assets';
+import {ImgNotAvailable} from '../../assets';
 import {colors} from '../../utils/constant';
 import {useSelector} from 'react-redux';
 import HTML from 'react-native-render-html';
@@ -22,7 +22,7 @@ export default function Keranjang({navigation}) {
   const [ready, setReady] = useState(false);
   setTimeout(() => setReady(true), 1000); // "lazy render"
 
-  // Transaksi Order
+  // ! Transaksi Order
   const hanldeRiwayatOrder = () => {
     const myHeaders = new Headers();
     myHeaders.append('Authorization', `Bearer ${token}`);
@@ -37,7 +37,8 @@ export default function Keranjang({navigation}) {
       .then(response => response.json())
       .then(result => {
         // console.log(result.data);
-        setOderProduct(result.data);
+        const orders = result.data.filter(order => order.status !== 'success');
+        setOderProduct(orders);
       })
       .catch(error => {
         console.error(error);
@@ -46,8 +47,11 @@ export default function Keranjang({navigation}) {
   };
 
   useEffect(() => {
-    hanldeRiwayatOrder();
-  }, []);
+    const refresh = navigation.addListener('focus', () => {
+      hanldeRiwayatOrder();
+    });
+    return refresh;
+  }, [navigation]);
 
   return (
     <View style={{flex: 1}}>
@@ -55,61 +59,67 @@ export default function Keranjang({navigation}) {
       {ready ? (
         <ScrollView stickyHeaderHiddenOnScroll stickyHeaderIndices={[0]}>
           <Header title="Riwayat Order" onPress={() => navigation.goBack()} />
-          {orderProduct.map((val, ind) => {
-            return (
-              <TouchableOpacity
-                style={styles.container}
-                onPress={() =>
-                  navigation.navigate('KeranjangDetails', {
-                    id_order: val.id_order,
-                  })
-                }
-                key={ind}>
-                <Image
-                  source={{
-                    uri: `${'https://panther-mania.id'}/images/products/${
-                      val.produk?.gambar
-                    }`,
-                  }}
-                  style={{height: '100%', width: 100}}
-                  defaultSource={IconCoffe}
-                />
-                <View style={styles.viewContentProduct}>
-                  <Text style={styles.titleFont}>
-                    {val.produk?.nama_produk}
-                  </Text>
-                  <Gap height={12} />
-                  {val.produk?.deskripsi ? (
-                    <HTML
-                      source={{html: val.produk?.deskripsi}}
-                      contentWidth={width}
-                      baseStyle={{color: 'black'}}
-                      tagsStyles={{p: {margin: 0, padding: 0}}} // menambahkan gaya untuk tag 'p'
-                      customHTMLElementModels={{}}
-                    />
-                  ) : (
-                    <Text>No description avilable</Text>
-                  )}
-                  <Gap height={2} />
-                  <Text style={styles.keterangan}>
-                    Keterangan: {val.keterangan}
-                  </Text>
-                  <Gap height={2} />
-                  <Text style={styles.price}>Rp.{val.produk?.harga}</Text>
-                </View>
-                <Image
-                  source={
-                    val?.bukti_transfer
-                      ? {
-                          uri: `https://www.panther-mania.id/images/orders/${val.bukti_transfer}`,
-                        }
-                      : IconCoffe
+          {orderProduct.length > 0 ? (
+            orderProduct.map((val, ind) => {
+              return (
+                <TouchableOpacity
+                  style={styles.container}
+                  onPress={() =>
+                    navigation.navigate('KeranjangDetails', {
+                      id_order: val?.id_order,
+                    })
                   }
-                  style={styles.imgBuktiTf}
-                />
-              </TouchableOpacity>
-            );
-          })}
+                  key={ind}>
+                  <Image
+                    source={{
+                      uri: `${'https://panther-mania.id'}/images/products/${
+                        val?.produk?.gambar
+                      }`,
+                    }}
+                    style={{height: '100%', width: 100}}
+                    defaultSource={ImgNotAvailable}
+                  />
+                  <View style={styles.viewContentProduct}>
+                    <Text style={styles.titleFont}>
+                      {val?.produk?.nama_produk}
+                    </Text>
+                    <Gap height={12} />
+                    {val?.produk?.deskripsi ? (
+                      <HTML
+                        source={{html: val?.produk?.deskripsi}}
+                        contentWidth={width}
+                        baseStyle={{color: 'black'}}
+                        tagsStyles={{p: {margin: 0, padding: 0}}} // menambahkan gaya untuk tag 'p'
+                        customHTMLElementModels={{}}
+                      />
+                    ) : (
+                      <Text>No description avilable</Text>
+                    )}
+                    <Gap height={2} />
+                    <Text style={styles.keterangan}>
+                      Keterangan: {val?.keterangan}
+                    </Text>
+                    <Gap height={2} />
+                    <Text style={styles.price}>Rp.{val?.produk?.harga}</Text>
+                  </View>
+                  <Image
+                    source={
+                      val?.bukti_transfer
+                        ? {
+                            uri: `https://www.panther-mania.id/images/orders/${val?.bukti_transfer}`,
+                          }
+                        : ImgNotAvailable
+                    }
+                    style={styles.imgBuktiTf}
+                  />
+                </TouchableOpacity>
+              );
+            })
+          ) : (
+            <Text style={styles.textNothingRiwayatOrder}>
+              Tidak ada riwayat order
+            </Text>
+          )}
         </ScrollView>
       ) : (
         <Text style={styles.textLoading}>Memuat formulir</Text>
@@ -119,6 +129,16 @@ export default function Keranjang({navigation}) {
 }
 
 const styles = StyleSheet.create({
+  textNothingRiwayatOrder: {
+    justifyContent: 'center',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color: 'black',
+    fontStyle: 'italic',
+    fontWeight: '600',
+    flex: 1,
+    fontSize: 16,
+  },
   imgBuktiTf: {
     height: 40,
     width: 40,

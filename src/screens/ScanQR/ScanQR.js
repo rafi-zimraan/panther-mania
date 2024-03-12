@@ -2,103 +2,59 @@ import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
-  Image,
   StatusBar,
-  Linking,
-  ActivityIndicator,
-  Alert,
+  PermissionsAndroid,
 } from 'react-native';
-import {
-  useCameraDevice,
-  Camera,
-  useCodeScanner,
-  useCameraPermission,
-} from 'react-native-vision-camera';
 import {colors} from '../../utils/constant';
-import Modal from 'react-native-modal';
 import * as Animatable from 'react-native-animatable';
 import {useDispatch} from 'react-redux';
 import {signQrCode} from '../../features/Auth/services/signQrCode';
 import {useSelector} from 'react-redux';
 import {SetQrLoading} from '../../redux/slices/authSlice';
+import {RNCamera} from 'react-native-camera';
+import QRCodeScanner from 'react-native-qrcode-scanner';
 
 export default function ScanQR({navigation}) {
   const dispatch = useDispatch();
   const {qr_loading} = useSelector(state => state.auth);
-  const [isModalVisible, setIsModalVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [animationDuration, setAnimasionDuration] = useState(3000);
-  const [errorOccured, setErrorOccured] = useState(false);
-  const device = useCameraDevice('back');
-
+  const [isCameraAuthorized, setIsCameraAuthorized] = useState(false);
   const check_permission = async () => {
     try {
-      let permission = await Camera.getCameraPermissionStatus();
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+      );
 
-      if (permission === 'granted') {
-        setIsModalVisible(false);
-        setAnimasionDuration(100);
-      } else {
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        setIsCameraAuthorized(true);
         setAnimasionDuration(3000);
-        setIsModalVisible(true);
       }
     } catch (error) {
-      console.error('Error checking camera permission:', error);
-      setErrorOccured(true);
+      console.log('Error Chaking camera', error);
     }
-  };
-
-  const {hasPermission, requestPermission} = useCameraPermission();
-  console.log('Has camera permission:', hasPermission);
-
-  const CloseModal = () => {
-    setIsModalVisible(false);
   };
 
   useEffect(() => {
-    check_permission();
-  }, []);
-
-  // ! Untuk Navigate ke setting user
-  const OpenSettings = async () => {
-    try {
-      // Membuka pengaturan aplikasi
-      await Linking.openSettings();
-    } catch (err) {
-      Alert.alert('Tidak dapat membuka pengaturan', [
-        {
-          text: 'ok',
-        },
-      ]);
-      console.error('Tidak dapat membuka pengaturan:', err);
-    }
-  };
+    const refresh = navigation.addListener('focus', () => {
+      check_permission();
+      dispatch(SetQrLoading(false));
+    });
+    return refresh;
+  }, [navigation]);
 
   function handleSignWithQrCode(rfid) {
     dispatch(SetQrLoading(true));
-    setIsLoading(true);
     console.log('Signing in with QR code:', rfid);
     dispatch(signQrCode({rfid, navigation}));
 
     // Setelah pemindaian QR code selesai, kembalikan ke tampilan awal
-    setIsLoading(false);
-    setIsModalVisible(true);
+    dispatch(SetQrLoading(false));
   }
 
-  const codeScanner = useCodeScanner({
-    codeTypes: ['qr'],
-    onCodeScanned: codes => {
-      if (codes.length >= 1 && codes[0].value) {
-        console.log('QR code scanned:', codes[0].value);
-        handleSignWithQrCode(codes[0].value);
-      }
-    },
-  });
-
   // Menampilkan loading indicator jika isLoading adalah true
-  if (qr_loading) {
+  if (!isCameraAuthorized) {
     return (
       <View style={styles.loadingContainer}>
         <StatusBar
@@ -106,7 +62,6 @@ export default function ScanQR({navigation}) {
           translucent={true}
           backgroundColor="transparent"
         />
-        <ActivityIndicator size="large" color={colors.primary} />
         <Text style={styles.loadingText}>Memuat...</Text>
       </View>
     );
@@ -120,49 +75,15 @@ export default function ScanQR({navigation}) {
         backgroundColor="transparent"
       />
 
-      {/* MODAL PERMISSION CAMERA */}
-      <Modal
-        transparent={true}
-        isVisible={isModalVisible}
-        backdropColor={'#FFF'}
-        backdropOpacity={0.8}
-        animationIn="zoomInDown"
-        animationOut="zoomOutUp"
-        animationInTiming={2000}
-        animationOutTiming={2000}
-        backdropTransitionInTiming={1000}
-        backdropTransitionOutTiming={1000}>
-        <View style={styles.ContentModal}>
-          {/* input utama */}
-          <View style={styles.HeaderModal}>
-            <Image
-              source={require('../../assets/icons/silang.png')}
-              style={{
-                width: 60,
-                height: 60,
-              }}
-            />
-            <Text style={styles.TextWarning}>Peringatan!,</Text>
-            <Text style={styles.txtDesciption}>
-              Silahkan check permission camera anda
-            </Text>
-            <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
-              <TouchableOpacity onPress={OpenSettings}>
-                <Text style={styles.AboutData}>Ok</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={CloseModal}>
-                <Text style={styles.AboutData}>Cancel</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-
-      <Camera
-        style={StyleSheet.absoluteFill}
-        device={device}
-        isActive={true}
-        codeScanner={codeScanner}
+      <QRCodeScanner
+        onRead={event => handleSignWithQrCode(event.data)}
+        flashMode={RNCamera.Constants.FlashMode.torch}
+        topContent={
+          <Text style={styles.centerText}>
+            Go for <Text style={styles.textBold}>Login Panther Mania </Text>
+            from scan the QR code.
+          </Text>
+        }
       />
 
       <Animatable.View
@@ -179,6 +100,18 @@ export default function ScanQR({navigation}) {
 }
 
 const styles = StyleSheet.create({
+  centerText: {
+    flex: 1,
+    fontSize: 18,
+    padding: 32,
+    color: '#777',
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  textBold: {
+    fontWeight: '500',
+    color: '#000',
+  },
   Container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,

@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {
   Image,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ActivityIndicator,
@@ -11,7 +10,6 @@ import {
 import {IconSqaanQR} from '../../assets';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
-import {Gap} from '../../components';
 
 export default function SqaanQrUser() {
   const {qr_loading} = useSelector(state => state.auth);

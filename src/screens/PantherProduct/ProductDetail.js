@@ -11,12 +11,13 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {BackgroundImage, ButtonAction, Gap, Header} from '../../components';
 import HTML from 'react-native-render-html';
 import {useOrientation} from '../../hooks';
 import {KeyboardAvoidingView} from 'react-native';
 import {useSelector} from 'react-redux';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -25,6 +26,7 @@ if (Platform.OS === 'android') {
 }
 
 export default function ProductDetail({route, navigation}) {
+  const token = useSelector(state => state.auth.token);
   const {nama_lengkap} = useSelector(state => state.auth.user_data) || {};
   const {width} = useOrientation();
   const {
@@ -60,6 +62,8 @@ export default function ProductDetail({route, navigation}) {
     const id_product = route.params.product.id;
     const jumlahToSend = jumlah;
     const keteranganToSend = isKeterangan;
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${token}`);
 
     var formdata = new FormData();
     formdata.append('keterangan', keteranganToSend);
@@ -69,6 +73,7 @@ export default function ProductDetail({route, navigation}) {
       method: 'POST',
       body: formdata,
       redirect: 'follow',
+      headers: myHeaders,
     };
 
     fetch(
@@ -77,6 +82,8 @@ export default function ProductDetail({route, navigation}) {
     )
       .then(response => response.json())
       .then(result => {
+        // console.log(result.data);
+        // console.log(result.status);
         Alert.alert(
           'Berhasil Membeli Product ',
           '',
@@ -84,26 +91,18 @@ export default function ProductDetail({route, navigation}) {
             {
               text: 'Ok',
               onPress: () => {
-                navigation.replace('Home');
+                navigation.goBack();
               },
             },
           ],
           {cancelable: false},
-        ),
-          console.log(result);
+        );
       })
       .catch(error => {
         console.log('error mass bro..', error);
       });
   };
 
-  //   async function handleWhatsApp() {
-  //     // const number = whatsapp.slice(1, whatsapp?.lenght);
-  //     const message = `Permisi, Saya ingin membeli produk panther-mania. Berikut produk yang saya beli ${nama_produk} dengan harga senilai ${harga}`;
-  //     const encodedMessage = encodeURIComponent(message);
-  //     const url = `https://wa.me/${whatsapp}?text=${encodedMessage}`;
-  //     await Linking.openURL(url);
-  //   }
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -133,7 +132,7 @@ export default function ProductDetail({route, navigation}) {
                   source={{html: deskripsi}}
                   contentWidth={width}
                   baseStyle={{color: 'black'}}
-                  //   customHTMLElementModels={{}}
+                  customHTMLElementModels={{}}
                   ignoredDomTags={['font']}
                   tagsStyles={{
                     p: {fontSize: 14, textAlign: 'center'},
@@ -188,17 +187,18 @@ export default function ProductDetail({route, navigation}) {
               <View style={styles.viewRecipt}>
                 <Text style={{color: 'black'}}>Jumlah</Text>
                 <TextInput
-                  placeholder="Masukan Angka"
+                  placeholder="Jumlah nomimal"
                   placeholderTextColor="grey"
                   style={styles.textInput}
-                  value={jumlah === 0 ? '' : jumlah.toString()} // Mengizinkan input kosong jika jumlah adalah 0
+                  value={jumlah === 0 ? '' : jumlah.toString()}
+                  keyboardType="number-pad"
                   onChangeText={text => {
                     if (/^\d*$/.test(text)) {
                       // Menggunakan regex untuk memastikan hanya angka yang valid diizinkan
                       if (text === '') {
-                        setJumlah(0); // Setel ke 0 jika input kosong
+                        setJumlah(0);
                       } else {
-                        setJumlah(Math.max(1, parseInt(text))); // Gunakan Math.max untuk memastikan angka minimum adalah 1
+                        setJumlah(Math.max(1, parseInt(text)));
                       }
                     }
                   }}

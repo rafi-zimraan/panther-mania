@@ -20,8 +20,6 @@ import {useOrientation} from '../../hooks';
 import {colors} from '../../utils/constant';
 
 export default function AgendaDetail({navigation, route}) {
-  // console.log(API_KEY_IMAGE);
-
   const {
     created_at,
     deadline,
@@ -122,14 +120,6 @@ export default function AgendaDetail({navigation, route}) {
                   {tanggal} - {jam?.slice(0, 5)}
                 </Text>
               </View>
-              {/* <View style={styles.viewKorwil}>
-                <Image
-                  source={IconFlagGreen}
-                  style={{...styles.imgDetail, left: -5, top: -10}}
-                  resizeMethod={'resize'}
-                />
-                <Text style={styles.textDetail}>Korwil Aceh</Text>
-              </View> */}
             </View>
             <View style={styles.viewAgendaDetail}>
               <HTML
@@ -137,7 +127,6 @@ export default function AgendaDetail({navigation, route}) {
                 contentWidth={width}
                 baseStyle={{color: 'black'}}
               />
-              {/* <Text style={{color: 'black'}}>{deskripsi}</Text> */}
             </View>
             <Gap height={20} />
             {formVisible && (

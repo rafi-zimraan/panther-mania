@@ -13,13 +13,10 @@ import {Gap} from '../../../components';
 
 export default function AgendaExcerpt({data}) {
   const {navigate} = useNavigation();
-  const {chapter_uuid, korwil_uuid, uuid} = data;
+  const {uuid} = data;
 
   const [imgKorwil, setImgKorwil] = useState(
     `${'https://panther-mania.id'}/images/posts/${uuid}.jpg`,
-  );
-  const [imgChapter, setImgChapter] = useState(
-    `${'https://panther-mania.id'}/images/chapter/${chapter_uuid}.jpg`,
   );
 
   return (

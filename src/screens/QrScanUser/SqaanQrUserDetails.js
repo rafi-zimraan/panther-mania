@@ -43,7 +43,6 @@ export default function SqaanQrUserDetails() {
   }, []);
 
   const handleScanQR = nomor => {
-    console.log('Scan BarCode User:', nomor);
     var myHeaders = new Headers();
     myHeaders.append('Authorization', `Bearer ${token}`);
 

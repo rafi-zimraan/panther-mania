@@ -48,6 +48,11 @@ export default function ProductDetail({route, navigation}) {
   const [isKeterangan, setKeterangan] = useState('');
   const [jumlah, setJumlah] = useState(0);
 
+  const cleanHtml = html => {
+    if (!html) return '';
+    return html.replace(/<\/?font[^>]*>/g, '');
+  };
+
   const handleCheckOut = () => {
     if (!isKeterangan.trim() || jumlah === 0) {
       Alert.alert(
@@ -129,14 +134,15 @@ export default function ProductDetail({route, navigation}) {
               }}>
               <View style={{...styles.containerDesc}}>
                 <HTML
-                  source={{html: deskripsi}}
+                  source={{html: cleanHtml(deskripsi)}}
                   contentWidth={width}
                   baseStyle={{color: 'black'}}
                   customHTMLElementModels={{}}
                   ignoredDomTags={['font']}
                   tagsStyles={{
-                    p: {fontSize: 14, textAlign: 'center'},
-                    li: {fontSize: 16},
+                    p: {fontSize: 14},
+                    ul: {paddingLeft: 20, marginVertical: 8},
+                    li: {fontSize: 14, marginBottom: 6},
                   }}
                 />
 

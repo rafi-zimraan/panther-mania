@@ -46,9 +46,7 @@ export default function ScanQR({navigation}) {
 
   function handleSignWithQrCode(rfid) {
     dispatch(SetQrLoading(true));
-    console.log('Signing in with QR code:', rfid);
     dispatch(signQrCode({rfid, navigation}));
-
     // Setelah pemindaian QR code selesai, kembalikan ke tampilan awal
     dispatch(SetQrLoading(false));
   }

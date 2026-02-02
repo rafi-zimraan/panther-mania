@@ -24,32 +24,6 @@ export default function ({navigation}) {
     user_id: 0,
   });
 
-  //   useEffect(() => {
-  //     const fetchUserLocation = () => {
-  //       Geolocation.getCurrentPosition(
-  //         info => {
-  //           console.log('ini koordinat user', info);
-  //           const coordinates = {
-  //             latitude: info.coords.latitude,
-  //             longitude: info.coords.longitude,
-  //           };
-  //           setUserLocation([coordinates]);
-  //         },
-  //         error => {
-  //           console.log(error);
-  //         },
-  //       );
-  //     };
-
-  //     fetchUserLocation();
-
-  //     const interval = setInterval(() => {
-  //       dispatch(fetchUsersLocation());
-  //     }, 1000);
-
-  //     return () => clearInterval(interval);
-  //   }, [navigation]);
-
   useEffect(() => {
     setTimeout(() => {
       dispatch(fetchUsersLocation());

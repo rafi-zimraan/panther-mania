@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Text,
   StyleSheet,
@@ -6,202 +6,199 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
-import {BackgroundImage, Gap, Header} from '../../components';
+import {useSelector} from 'react-redux';
+import {BackgroundImage, Header} from '../../components';
 import {ImgNotAvailable} from '../../assets';
 import {colors} from '../../utils/constant';
-import {useSelector} from 'react-redux';
-import HTML from 'react-native-render-html';
 import {useOrientation} from '../../hooks';
 
 export default function Keranjang({navigation}) {
   const token = useSelector(state => state.auth.token);
-  const [orderProduct, setOderProduct] = useState([]);
   const {width} = useOrientation();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const [ready, setReady] = useState(false);
-  setTimeout(() => setReady(true), 1000); // "lazy render"
-
-  // ! Transaksi Order
-  const hanldeRiwayatOrder = () => {
-    const myHeaders = new Headers();
-    myHeaders.append('Authorization', `Bearer ${token}`);
-
-    const requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow',
-    };
-
-    fetch('https://panther-mania.id/api/v1/riwayat_order', requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        // console.log(result.data);
-        const orders = result.data.filter(order => order.status !== 'success');
-        setOderProduct(orders);
-      })
-      .catch(error => {
-        console.error(error);
-        return error.message;
+  const fetchOrders = async () => {
+    try {
+      const res = await fetch('https://panther-mania.id/api/v1/riwayat_order', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
+      const json = await res.json();
+      const filtered = json?.data?.filter(item => item.status !== 'success');
+
+      setOrders(filtered || []);
+    } catch (e) {
+      console.error('Riwayat order error:', e);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   };
 
   useEffect(() => {
-    const refresh = navigation.addListener('focus', () => {
-      hanldeRiwayatOrder();
+    const unsub = navigation.addListener('focus', () => {
+      setLoading(true);
+      fetchOrders();
     });
-    return refresh;
+    return unsub;
   }, [navigation]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchOrders();
+  }, []);
+
+  const extractSummary = html => {
+    if (!html || typeof html !== 'string') return '';
+
+    const clean = html
+      .replace(/<font[^>]*>/gi, '')
+      .replace(/<\/font>/gi, '')
+      .replace(/<[^>]+>/g, '|')
+      .replace(/\s+/g, ' ');
+
+    const parts = clean
+      .split('|')
+      .map(t => t.trim())
+      .filter(Boolean);
+
+    return parts.slice(0, 3).join(' • ');
+  };
+
+  const renderItem = val => {
+    const summary = extractSummary(val?.produk?.deskripsi);
+
+    return (
+      <TouchableOpacity
+        key={val.id_order}
+        activeOpacity={0.9}
+        style={styles.card}
+        onPress={() =>
+          navigation.navigate('KeranjangDetails', {
+            id_order: val.id_order,
+          })
+        }>
+        <Image
+          source={
+            val?.produk?.gambar
+              ? {
+                  uri: `https://panther-mania.id/images/products/${val.produk.gambar}`,
+                }
+              : ImgNotAvailable
+          }
+          resizeMethod="resize"
+          resizeMode="contain"
+          style={styles.image}
+        />
+
+        <View style={styles.content}>
+          <Text style={styles.title} numberOfLines={1}>
+            {val?.produk?.nama_produk}
+          </Text>
+
+          {summary ? (
+            <Text style={styles.subtitle} numberOfLines={2}>
+              {summary}
+            </Text>
+          ) : null}
+
+          <View style={styles.bottomRow}>
+            <Text style={styles.location}>{val?.keterangan || '-'}</Text>
+
+            <Text style={styles.price}>
+              Rp {Number(val?.produk?.harga || 0).toLocaleString('id-ID')}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={{flex: 1}}>
       <BackgroundImage />
-      {ready ? (
-        <ScrollView stickyHeaderHiddenOnScroll stickyHeaderIndices={[0]}>
-          <Header title="Riwayat Order" onPress={() => navigation.goBack()} />
-          {orderProduct.length > 0 ? (
-            orderProduct.map((val, ind) => {
-              return (
-                <TouchableOpacity
-                  style={styles.container}
-                  onPress={() =>
-                    navigation.navigate('KeranjangDetails', {
-                      id_order: val?.id_order,
-                    })
-                  }
-                  key={ind}>
-                  <Image
-                    source={{
-                      uri: `${'https://panther-mania.id'}/images/products/${
-                        val?.produk?.gambar
-                      }`,
-                    }}
-                    style={{height: '100%', width: 100}}
-                    defaultSource={ImgNotAvailable}
-                  />
-                  <View style={styles.viewContentProduct}>
-                    <Text style={styles.titleFont}>
-                      {val?.produk?.nama_produk}
-                    </Text>
-                    <Gap height={12} />
-                    {val?.produk?.deskripsi ? (
-                      <HTML
-                        source={{html: val?.produk?.deskripsi}}
-                        contentWidth={width}
-                        baseStyle={{color: 'black'}}
-                        tagsStyles={{p: {margin: 0, padding: 0}}} // menambahkan gaya untuk tag 'p'
-                        customHTMLElementModels={{}}
-                      />
-                    ) : (
-                      <Text>No description avilable</Text>
-                    )}
-                    <Gap height={2} />
-                    <Text style={styles.keterangan}>
-                      Keterangan: {val?.keterangan}
-                    </Text>
-                    <Gap height={2} />
-                    <Text style={styles.price}>Rp.{val?.produk?.harga}</Text>
-                  </View>
-                  <Image
-                    source={
-                      val?.bukti_transfer
-                        ? {
-                            uri: `https://www.panther-mania.id/images/orders/${val?.bukti_transfer}`,
-                          }
-                        : ImgNotAvailable
-                    }
-                    style={styles.imgBuktiTf}
-                  />
-                </TouchableOpacity>
-              );
-            })
-          ) : (
-            <Text style={styles.textNothingRiwayatOrder}>
-              Tidak ada riwayat order
-            </Text>
-          )}
-        </ScrollView>
-      ) : (
-        <Text style={styles.textLoading}>Memuat formulir</Text>
-      )}
+
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
+        <Header title="Riwayat Order" onPress={() => navigation.goBack()} />
+
+        {loading ? (
+          <View style={styles.center}>
+            <Text style={styles.loading}>Memuat riwayat order...</Text>
+          </View>
+        ) : orders.length > 0 ? (
+          orders.map(renderItem)
+        ) : (
+          <View style={styles.center}>
+            <Text style={styles.empty}>Tidak ada riwayat order</Text>
+          </View>
+        )}
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  textNothingRiwayatOrder: {
-    justifyContent: 'center',
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    color: 'black',
-    fontStyle: 'italic',
-    fontWeight: '600',
-    flex: 1,
-    fontSize: 16,
+  card: {
+    backgroundColor: colors.white,
+    marginHorizontal: 16,
+    marginVertical: 12,
+    borderRadius: 18,
+    overflow: 'hidden',
+    elevation: 4,
   },
-  imgBuktiTf: {
-    height: 40,
-    width: 40,
-    position: 'absolute',
-    alignSelf: 'flex-end',
-    bottom: 20,
-    right: 25,
-    borderWidth: 1,
-    borderColor: colors.black,
-  },
-  keterangan: {
-    color: 'black',
-    fontSize: 14,
-  },
-  textLoading: {
-    position: 'absolute',
+  image: {
     width: '100%',
-    height: '100%',
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    color: 'grey',
-    flex: 1,
-    fontStyle: 'italic',
+    height: 160,
   },
-
-  description: {
+  content: {
+    padding: 14,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '700',
     color: colors.black,
-    fontSize: 14,
-    fontWeight: '600',
+  },
+  subtitle: {
+    fontSize: 13,
+    color: colors.grey,
+    marginTop: 4,
+    lineHeight: 18,
+  },
+  bottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  location: {
+    fontSize: 12,
+    color: colors.grey,
   },
   price: {
-    color: colors.grey,
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '700',
+    color: colors.primary,
   },
-  titleFont: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: colors.black,
+  center: {
+    height: 260,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  viewContentProduct: {
-    backgroundColor: colors.white,
-    width: 230,
-    borderBottomRightRadius: 5,
-    borderTopRightRadius: 10,
-    padding: 10,
-    borderWidth: 0.3,
-    borderColor: colors.black,
+  loading: {
+    fontStyle: 'italic',
+    color: colors.grey,
   },
-  viewImgKeranjang: {
-    backgroundColor: colors.white,
-    height: 170,
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-    overflow: 'hidden',
-    elevation: 2,
-    borderWidth: 0.4,
-    borderColor: colors.black,
-  },
-  container: {
-    width: '100%',
-    maxWidth: 520,
-    padding: 15,
-    flexDirection: 'row',
+  empty: {
+    fontStyle: 'italic',
+    color: colors.grey,
   },
 });

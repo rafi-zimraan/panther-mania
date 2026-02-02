@@ -1,20 +1,12 @@
-import React, {useEffect} from 'react';
-import {
-  ActivityIndicator,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import React from 'react';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import {useSelector} from 'react-redux';
 import {ImgAppLogo} from '../../../assets';
 import {Gap, SearchInput} from '../../../components';
 import SqaanQrUser from '../../../screens/QrScanUser/SqaanQrUser';
 
 export default function HomeHeader({navigation}) {
   const {nama_lengkap} = useSelector(state => state.auth.user_data) || {};
-  //   console.log(nama_lengkap);
 
   return (
     <View style={{padding: 20}}>
